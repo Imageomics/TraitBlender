@@ -1,0 +1,26 @@
+{
+    "id": "7C696DDE",
+    "path": "D:/uyeda_lab/Projects/Evolution Simulator/Evolution Simulator/Code/shinyapp/EvoSim/R/app.R",
+    "project_path": "R/app.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1687994199713.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "497,22",
+        "scrollLine": "464"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1686675554,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1686675554,
+    "read_only": false,
+    "read_only_alternatives": []
+}
