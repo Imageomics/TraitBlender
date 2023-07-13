@@ -1,0 +1,9 @@
+{
+   "active_mesh":"goblin_shark",
+   "predefined_meshes" : {
+  "goblin_shark": ["D:\\uyeda_lab\\Projects\\Evolution Simulator\\Evolution Simulator\\Code\\shinyapp\\EvoSim\\data\\defaults\\goblin_shark.obj"],
+  "lizard": ["D:\\uyeda_lab\\Projects\\Evolution Simulator\\Evolution Simulator\\Code\\shinyapp\\EvoSim\\data\\defaults\\lizard.obj"],
+  "suzanne": ["D:\\uyeda_lab\\Projects\\Evolution Simulator\\Evolution Simulator\\Code\\shinyapp\\EvoSim\\data\\defaults\\suzanne.obj"]
+   },
+   "paths" : {"blender":["C://Program Files/Blender Foundation/Blender 3.3/blender.exe"]}
+}
