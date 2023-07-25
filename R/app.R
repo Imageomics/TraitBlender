@@ -438,7 +438,6 @@ $('body').css('color', 'black');"))
         req(p())
     })
     
-    
     observeEvent(input$import_images_button, {
       
       print("Button pressed!")  # Debug print 1
@@ -498,98 +497,82 @@ $('body').css('color', 'black');"))
       file_names <- basename(obj_files)
       file_names <- sub("\\.obj$", "", file_names)
       
-      # Create a data frame where the first column is the file names and the second column is the paths
-      obj_files_df <- data.frame(file = file_names, path = obj_files)
-      
-      # Convert the data frame to a list
-      obj_files_list <- split(obj_files_df$path, obj_files_df$file)
+      # make a list of names for the path dropdown menu
+      obj_files_list <- as.list(obj_files)
+      names(obj_files_list) <- file_names
       
       # Write the paths to a .JSON file
-      jsonlite::write_json(obj_files_list, "../data/settings/predefined_meshes.json", pretty=TRUE)
+      settings_file <- jsonlite::read_json("../data/settings/settings.json")
+      settings_file$predefined_meshes <- obj_files_list
+      settings_file$active_mesh <- unlist(settings_file$active_mesh)
+      settings_file$paths <- as.list(unlist(settings_file$paths))
+      
+      jsonlite::write_json(settings_file, "../data/settings/settings.json", pretty=TRUE)
     }
-    
     # Create a reactive timer that invalidates every 1 second
-    timer <- reactiveTimer(1000)
-    
+    timer <- reactiveTimer(500)
     # Use an observer to call get_obj_files every time the timer invalidates
     observe({
       # This line is necessary to register the dependency on the timer
       timer()
-      
       # Call get_obj_files
       get_obj_files()
     })
     
-     predefined_meshes <- reactiveFileReader(intervalMillis = 5000, session = session,
-                                             filePath = "../data/settings/predefined_meshes.json",
-                                             readFunc = jsonlite::fromJSON)
     
-    # Store the current selection
-    current_selection <- reactiveVal()
-    
-    
+    # settings <- reactiveFileReader(intervalMillis = 5000, session = session,
+    #                                         filePath = "../data/settings/settings.json",
+    #                                         readFunc = jsonlite::fromJSON)
+  
+     
     # Watch for changes in the selected mesh
     observeEvent(input$meshSelect, {
       # Update the current selection
       current_selection(input$meshSelect)
       
-      # Write the active mesh to the JSON file
-      jsonlite::write_json(list(active_mesh = predefined_meshes()[[input$meshSelect]]), "../data/state/active_mesh.JSON")
     })
+    
+    # Store the current selection
+    current_selection <- reactiveVal()
     
     observe({
+      settings_file <- jsonlite::read_json("../data/settings/settings.json")
       # Update the choices
-      updateSelectInput(session, "meshSelect", choices = names(predefined_meshes()), selected = current_selection())
+      updateSelectInput(session, "meshSelect", 
+                        choices = names(settings_file$predefined_meshes),  
+                        selected = current_selection())
     })
     #--------------------------------------------------------------------------------#
+
     
-    
-    settings <- reactiveValues(paths = list(), predefined_meshes = list(), active_mesh = NULL)
     observeEvent(input$blenderPath, {
       # Check if input$blenderPath is not empty
       if (nchar(input$blenderPath) > 0) {
         # Update the path for Blender
-        settings$paths$blender <- input$blenderPath
+        
+        settings_file <- jsonlite::read_json("../data/settings/settings.json")
+        settings_file$paths$blender <- input$blenderPath[[1]]
+        jsonlite::write_json(settings_file, "../data/settings/settings.json", pretty=TRUE)
       }
     })
-    # Define a function to get the full paths of all .obj files in the ../data/defaults directory
-    get_obj_files <- function() {
-      
-      # Get the full paths of all .obj files in the ../data/defaults directory
-      obj_files <- list.files(path = "../data/defaults", pattern = "\\.obj$", full.names = TRUE)
-      
-      # Convert the relative paths to absolute paths
-      obj_files <- sapply(obj_files, normalizePath)
-      
-      # Get the file names without extensions
-      file_names <- basename(obj_files)
-      file_names <- sub("\\.obj$", "", file_names)
-      
-      # Create a data frame where the first column is the file names and the second column is the paths
-      obj_files_df <- data.frame(file = file_names, path = obj_files)
-      
-      # Convert the data frame to a list
-      obj_files_list <- split(obj_files_df$path, obj_files_df$file)
-      # Update the predefined_meshes in settings
-      settings$predefined_meshes <- obj_files_list
-    }
     
-    # Use an observer to call get_obj_files every time the timer invalidates
-    observe({
-      # This line is necessary to register the dependency on the timer
-      timer()
-      
-      # Call get_obj_files
-      get_obj_files()
-    })
-    # Watch for changes in the selected mesh
+    
+    
+    # Define a function to get the full paths of all .obj files in the ../data/defaults directory
+    
     observeEvent(input$meshSelect, {
       # Update the current selection
       current_selection(input$meshSelect)
       
       # Update the active_mesh in settings
-      settings$active_mesh <- predefined_meshes()[[input$meshSelect]]
+      settings_file <- jsonlite::read_json("../data/settings/settings.json")
+      settings_file$active_mesh <- input$meshSelect
+      settings_file$active_mesh <- unlist(settings_file$active_mesh)[1]
+      jsonlite::write_json(settings_file, "../data/settings/settings.json", pretty=TRUE)
     })
+    
+    
+    
     
     
     

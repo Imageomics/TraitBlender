@@ -1,0 +1,26 @@
+{
+    "id": "14F2E932",
+    "path": "D:/uyeda_lab/Projects/Evolution Simulator/Evolution Simulator/Code/shinyapp/EvoSim/Python/gui.py",
+    "project_path": "Python/gui.py",
+    "type": "python",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1689622272935.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "8,42",
+        "scrollLine": "0"
+    },
+    "folds": "12|45|33|27|\n34|53|53|27|\n56|48|138|36|\n139|46|167|27|\n168|48|203|27|\n204|46|209|5|\n210|51|243|27|\n244|42|264|89|\n265|44|266|85|\n267|44|268|85|\n269|44|270|85|\n272|43|280|43|\n282|56|313|32|\n314|60|352|27|\n354|57|430|36|\n431|55|460|27|\n463|50|488|5|\n489|56|506|31|\n508|52|528|87|\n532|56|552|32|\n553|34|554|88|\n556|41|599|83|\n604|15|674|82|\n675|17|708|82|\n",
+    "lastKnownWriteTime": 1690221394,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1690308978220,
+    "read_only": false,
+    "read_only_alternatives": []
+}
