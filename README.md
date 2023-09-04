@@ -1,3 +1,3 @@
 # TraitBlender
 
-<img src="imgs/snailtree.jpeg" width="250" height="250">
+<img src="imgs/snailtree.jpeg" width="400" height="400">
