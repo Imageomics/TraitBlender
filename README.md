@@ -18,7 +18,7 @@
   data, we mean images and 3D models of simulated taxa. 
 </p>
 <p>
-  There have long-been established software ecosystems for simulating tabular data under imaging evolutionary processes, such as the <a href="https://cran.r-project.org/web/packages/ape/index.html"><i>ape</i></a> or <a href="https://cran.r-project.org/web/packages/phytools/index.html">phytools</a> packages in R. These
+  There have long-been established software ecosystems for simulating tabular data under imaging evolutionary processes, such as the <a href="https://cran.r-project.org/web/packages/ape/index.html"><i>ape</i></a> or <a href="https://cran.r-project.org/web/packages/phytools/index.html"><i>phytools</i></a> packages in R. These
   packages have empowered many researchers who develop models to test those models under common assumptions. As far as we know, however, no such accessible 
   ecosystem previously existed for generating images are 3D models under these processes.
 </p>
