@@ -321,3 +321,27 @@ def delete_cameras_on_mesh_deletion(dummy):
         camera = bpy.data.objects.get(name)
         if camera is not None and bpy.data.objects.get(camera["original_mesh"]) is None:
             bpy.data.objects.remove(camera)
+
+
+
+class SelectRenderDirectoryOperator(bpy.types.Operator):
+    bl_idname = "object.select_render_directory"
+    bl_label = "Select Render Directory"
+    bl_options = {'REGISTER', 'INTERNAL'}
+
+    directory: bpy.props.StringProperty(
+        name="Output Directory",
+        description="Choose a directory to save the renders",
+        default="",
+        maxlen=1024,
+        subtype='DIR_PATH'
+    )
+
+    def execute(self, context):
+        context.scene.render_output_directory = self.directory
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        wm.fileselect_add(self)
+        return {'RUNNING_MODAL'}
