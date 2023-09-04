@@ -1,3 +1,5 @@
+import bpy
+
 class DeleteAllObjectsOperator(bpy.types.Operator):
     bl_idname = "object.delete_all_objects"
     bl_label = "Delete All Objects"
