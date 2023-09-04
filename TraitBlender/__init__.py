@@ -18,6 +18,7 @@ from .TraitDataCSV import *
 from .MeshGeneratingFunction import *
 from .CamerasRendering import *
 from .BackGroundPlanes import *
+from .Segmentation import *
 
 bl_info = {
     "name": "TraitBlender",
@@ -26,132 +27,7 @@ bl_info = {
 }
 
         
-class SegmentationControls(bpy.types.Panel):
-    bl_label = "Segmentation Controls"
-    bl_idname = "OBJECT_PT_segmentation"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "object"
-    bl_category = "TraitBlender"
 
-    def draw(self, context):
-        layout = self.layout
-        obj = context.object
-
-        # Draw the vertex group controls
-        row = layout.row()
-        row.template_list("MESH_UL_vgroups", "", obj, "vertex_groups", obj.vertex_groups, "active_index", rows=2)
-
-        col = row.column(align=True)
-        col.operator("object.vertex_group_add", icon='ADD', text="")
-        col.operator("object.vertex_group_remove", icon='REMOVE', text="").all = False
-        col.menu("MESH_MT_vertex_group_context_menu", icon='DOWNARROW_HLT', text="")
-        col.operator("object.vertex_group_move", icon='TRIA_UP', text="").direction = 'UP'
-        col.operator("object.vertex_group_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
-
-        # Add the new operators
-        layout.operator("object.save_vertex_groups_to_csv", text="Save Vertex Groups to CSV").csv_file_path = "path/to/save.csv"
-        layout.operator("object.load_vertex_groups_from_csv", text="Load Vertex Groups from CSV").csv_file_path = "path/to/load.csv"
-
-
-
-class SegmentationControlsProperty(bpy.types.PropertyGroup):
-    expanded: bpy.props.BoolProperty(default=False)
-    segmentation_controls: bpy.props.BoolProperty(default=False)  # Add this line
-
-
-class SunControlsPanel(bpy.types.Panel):
-    bl_label = "Lights"
-    bl_idname = "OBJECT_PT_sun_controls"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'Tool'  # Change this to the category where you want the panel to appear
-    bl_context = "objectmode"
-    bl_options = {'DEFAULT_CLOSED'}
-
-    def draw(self, context):
-        layout = self.layout
-
-        # Toggle Suns Button
-        row = layout.row()
-        row.operator("object.toggle_suns", text="Toggle Suns")
-
-        # Hide/Unhide Suns Button
-        row = layout.row()
-        row.operator("object.hide_suns", text="Hide/Unhide Suns")
-
-
-class UpdateSunStrengthOperator(bpy.types.Operator):
-    bl_idname = "object.update_sun_strength"
-    bl_label = "Update Sun Strength"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        sun_names = ["sun.top", "sun.bottom", "sun.right", "sun.left", "sun.front", "sun.back"]
-
-        for name in sun_names:
-            sun = bpy.data.objects.get(name)
-            if sun and sun.type == 'LIGHT':
-                sun.data.energy = context.scene.sun_strength
-
-        self.report({'INFO'}, "Sun strength updated successfully!")
-        return {'FINISHED'}
-
-
-class SaveVertexGroupsToCSVOperator(bpy.types.Operator):
-    bl_idname = "object.save_vertex_groups_to_csv"
-    bl_label = "Save Vertex Groups to CSV"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    csv_file_path: bpy.props.StringProperty(
-        name="CSV File Path",
-        subtype='FILE_PATH'
-    )
-
-    def execute(self, context):
-        obj = context.object
-        if not obj:
-            self.report({'ERROR'}, "No active object selected.")
-            return {'CANCELLED'}
-        
-        with open(self.csv_file_path, 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(["Vertex Index", "Group Name", "Weight"])
-            for vert in obj.data.vertices:
-                for group in vert.groups:
-                    group_name = obj.vertex_groups[group.group].name
-                    weight = group.weight
-                    csvwriter.writerow([vert.index, group_name, weight])
-
-        return {'FINISHED'}
-
-class LoadVertexGroupsFromCSVOperator(bpy.types.Operator):
-    bl_idname = "object.load_vertex_groups_from_csv"
-    bl_label = "Load Vertex Groups from CSV"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    csv_file_path: bpy.props.StringProperty(
-        name="CSV File Path",
-        subtype='FILE_PATH'
-    )
-
-    def execute(self, context):
-        obj = context.object
-        if not obj:
-            self.report({'ERROR'}, "No active object selected.")
-            return {'CANCELLED'}
-        
-        obj.vertex_groups.clear()
-        with open(self.csv_file_path, 'r', newline='') as csvfile:
-            csvreader = csv.reader(csvfile)
-            next(csvreader)
-            for row in csvreader:
-                vert_index, group_name, weight = int(row[0]), row[1], float(row[2])
-                if group_name not in obj.vertex_groups:
-                    obj.vertex_groups.new(name=group_name)
-                obj.vertex_groups[group_name].add([vert_index], weight, 'REPLACE')
-
-        return {'FINISHED'}
 
 class WorldBackgroundControls(bpy.types.PropertyGroup):
     expanded: bpy.props.BoolProperty(
@@ -305,29 +181,6 @@ class ExportSettingsOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
-
-bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(name="Mesh Generation Controls", default=False)
-
-class OpenMeshFunctionFileBrowserOperator(bpy.types.Operator):
-    bl_idname = "object.open_mesh_function_file_browser"
-    bl_label = "Invoke File Browser"
-    
-    filepath: bpy.props.StringProperty(subtype="FILE_PATH")
-    
-    def execute(self, context):
-        context.scene.make_mesh_function_path = self.filepath
-        return {'FINISHED'}
-    
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
-
-class ExportControlsPropertyGroup(bpy.types.PropertyGroup):
-    export_controls: bpy.props.BoolProperty(
-        name="Show/Hide",
-        description="Show or hide the 3D Export options",
-        default=False
-    )
 
 class TraitBlenderPanel(bpy.types.Panel):
     bl_label = "TraitBlender"

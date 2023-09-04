@@ -101,3 +101,41 @@ class HideSunsOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
+class SunControlsPanel(bpy.types.Panel):
+    bl_label = "Lights"
+    bl_idname = "OBJECT_PT_sun_controls"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Tool'  # Change this to the category where you want the panel to appear
+    bl_context = "objectmode"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    def draw(self, context):
+        layout = self.layout
+
+        # Toggle Suns Button
+        row = layout.row()
+        row.operator("object.toggle_suns", text="Toggle Suns")
+
+        # Hide/Unhide Suns Button
+        row = layout.row()
+        row.operator("object.hide_suns", text="Hide/Unhide Suns")
+
+
+class UpdateSunStrengthOperator(bpy.types.Operator):
+    bl_idname = "object.update_sun_strength"
+    bl_label = "Update Sun Strength"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        sun_names = ["sun.top", "sun.bottom", "sun.right", "sun.left", "sun.front", "sun.back"]
+
+        for name in sun_names:
+            sun = bpy.data.objects.get(name)
+            if sun and sun.type == 'LIGHT':
+                sun.data.energy = context.scene.sun_strength
+
+        self.report({'INFO'}, "Sun strength updated successfully!")
+        return {'FINISHED'}
+
