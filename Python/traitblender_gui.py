@@ -183,20 +183,6 @@ class ImportCSVOperator(bpy.types.Operator):
             self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
 
-bpy.types.Scene.make_mesh_function_path = bpy.props.StringProperty(
-    name="Make Mesh Function Path",
-    description="Path to the Python file containing the mesh-making function",
-    default="",
-    subtype='DIR_PATH'
-)
-
-
-bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(
-    name="Mesh Generation Controls",
-    description="Expand/Collapse Mesh Generation Controls",
-    default=False
-)
-
 
 class ImportMakeMeshFunctionPathOperator(bpy.types.Operator):
     bl_idname = "object.import_make_mesh_function_path"
@@ -1675,6 +1661,21 @@ def register():
         maxlen=1024,
         subtype='DIR_PATH'
     )
+    
+    bpy.types.Scene.make_mesh_function_path = bpy.props.StringProperty(
+        name="Make Mesh Function Path",
+        description="Path to the Python file containing the mesh-making function",
+        default="",
+        subtype='DIR_PATH'
+    )
+
+
+    bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(
+        name="Mesh Generation Controls",
+        description="Expand/Collapse Mesh Generation Controls",
+        default=False
+    )
+
 
     
     bpy.app.handlers.depsgraph_update_post.append(delete_cameras_on_mesh_deletion)
