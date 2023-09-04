@@ -7,9 +7,8 @@
 </p>
 
 <p>
-  Major work on this project began at <a href="https://github.com/Imageomics/Image-Datapalooza-2023/">Image Datapalooza 2023</a>, a workshop hosted by the 
-  <a href="https://imageomics.osu.edu/">Imageomics Institute</a>. A major goal of the institute is to use Big Data and modern machine learning methods to better
-  understand traits, such as phenotypes. However, many machine learning methods, such as neural networks, operate as "Black Boxes", making it difficult to understand 
+  Major work on this project began at <a href="https://github.com/Imageomics/Image-Datapalooza-2023/" target="_blank">Image Datapalooza 2023</a>, a workshop hosted by the 
+  <a href="https://imageomics.osu.edu/" target="_blank">Imageomics Institute</a>. A major goal of the institute is to use Big Data and modern machine learning methods to better understand traits, such as phenotypes. However, many machine learning methods, such as neural networks, operate as "Black Boxes", making it difficult to understand 
   their results and interpret their decisions. This problem is compounded by the fact that phenotypes themselves are often quite complex, and are often constructed and used
   differently by different researchers.
 </p>
