@@ -24,11 +24,15 @@ from .ExportSettingsOperator import *
 from .TraitBlenderPanel import *
 
 
-
 bl_info = {
     "name": "TraitBlender",
-    "blender": (2, 80, 0),
-    # ... other metadata
+    "description": "Simulate raw image/mesh datasets under artificial models of biological evolution",
+    "version": (1, 0),
+    "blender": (3, 3, 0),
+    "location": "Viewport > TraitBlender Tab",
+    "warning": "",
+    "doc_url": "in progress",
+    "category": "User Interface"
 }
 
 def register():
