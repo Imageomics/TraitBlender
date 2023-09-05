@@ -1,4 +1,6 @@
 
+##IN PROGRESS
+
 ### Task 1
 Fix the erroneous button in the "Select Mesh Function" part of the menu.
 
@@ -29,3 +31,9 @@ Make a Docker image.
 ### Task 10
 Publish to Blender addons catalogue.
 - Publishing instructions can be found [here](https://wiki.blender.org/wiki/Process/Addons/Guidelines "Publishing Requirements").
+
+### Task 11
+Fix it so that backgrounds can be scaled on single axes, they currently only scale on all 3 at once
+
+##COMPLETE
+
