@@ -32,6 +32,7 @@ bl_info = {
     "location": "Viewport > TraitBlender Tab",
     "warning": "",
     "doc_url": "in progress",
+    "support": "TESTING",
     "category": "User Interface"
 }
 
