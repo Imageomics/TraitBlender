@@ -1,12 +1,49 @@
 import bpy
 from mathutils import Matrix, Vector
 
+
+###Functions
+
+###Property Groups
+
 class SunControls(bpy.types.PropertyGroup):
     strength: bpy.props.FloatProperty(name="Strength", default=1.0, min=0.0)
-    diffuse: bpy.props.FloatProperty(name="Diffuse", default=1.0, min=0.0, max=1.0)
-    specular: bpy.props.FloatProperty(name="Specular", default=1.0, min=0.0, max=1.0)
-    volume: bpy.props.FloatProperty(name="Volume", default=1.0, min=0.0, max=1.0)
-    angle: bpy.props.FloatProperty(name="Angle", default=0.0, min=0.0, max=180.0)
+
+###Operators
+
+class HideSunsOperator(bpy.types.Operator):
+    bl_idname = "object.hide_suns"
+    bl_label = "Hide Suns"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    sun_names: bpy.props.StringProperty(
+        name="Sun Names",
+        default="sun.top,sun.bottom,sun.right,sun.left,sun.front,sun.back"
+    )
+
+    def execute(self, context):
+        # Split the sun names by comma
+        sun_names_list = self.sun_names.split(',')
+
+        # Check if the suns already exist and are visible
+        suns_exist = all(bpy.data.objects.get(name) is not None for name in sun_names_list)
+        suns_visible = all(not bpy.data.objects[name].hide_viewport for name in sun_names_list if bpy.data.objects.get(name) is not None)
+
+        if suns_exist and suns_visible:
+            # Hide the suns
+            for name in sun_names_list:
+                sun = bpy.data.objects.get(name)
+                if sun is not None:
+                    sun.hide_viewport = True
+        elif suns_exist and not suns_visible:
+            # Unhide the suns
+            for name in sun_names_list:
+                sun = bpy.data.objects.get(name)
+                if sun is not None:
+                    sun.hide_viewport = False
+
+        return {'FINISHED'}
+
 
 class ToggleSunsOperator(bpy.types.Operator):
     bl_idname = "object.toggle_suns"
@@ -66,42 +103,23 @@ class ToggleSunsOperator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-
-
-class HideSunsOperator(bpy.types.Operator):
-    bl_idname = "object.hide_suns"
-    bl_label = "Hide Suns"
+class UpdateSunStrengthOperator(bpy.types.Operator):
+    bl_idname = "object.update_sun_strength"
+    bl_label = "Update Sun Strength"
     bl_options = {'REGISTER', 'UNDO'}
 
-    sun_names: bpy.props.StringProperty(
-        name="Sun Names",
-        default="sun.top,sun.bottom,sun.right,sun.left,sun.front,sun.back"
-    )
-
     def execute(self, context):
-        # Split the sun names by comma
-        sun_names_list = self.sun_names.split(',')
+        sun_names = ["sun.top", "sun.bottom", "sun.right", "sun.left", "sun.front", "sun.back"]
 
-        # Check if the suns already exist and are visible
-        suns_exist = all(bpy.data.objects.get(name) is not None for name in sun_names_list)
-        suns_visible = all(not bpy.data.objects[name].hide_viewport for name in sun_names_list if bpy.data.objects.get(name) is not None)
+        for name in sun_names:
+            sun = bpy.data.objects.get(name)
+            if sun and sun.type == 'LIGHT':
+                sun.data.energy = context.scene.sun_strength
 
-        if suns_exist and suns_visible:
-            # Hide the suns
-            for name in sun_names_list:
-                sun = bpy.data.objects.get(name)
-                if sun is not None:
-                    sun.hide_viewport = True
-        elif suns_exist and not suns_visible:
-            # Unhide the suns
-            for name in sun_names_list:
-                sun = bpy.data.objects.get(name)
-                if sun is not None:
-                    sun.hide_viewport = False
-
+        self.report({'INFO'}, "Sun strength updated successfully!")
         return {'FINISHED'}
 
-
+###Panels
 class SunControlsPanel(bpy.types.Panel):
     bl_label = "Lights"
     bl_idname = "OBJECT_PT_sun_controls"
@@ -122,20 +140,4 @@ class SunControlsPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("object.hide_suns", text="Hide/Unhide Suns")
 
-
-class UpdateSunStrengthOperator(bpy.types.Operator):
-    bl_idname = "object.update_sun_strength"
-    bl_label = "Update Sun Strength"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        sun_names = ["sun.top", "sun.bottom", "sun.right", "sun.left", "sun.front", "sun.back"]
-
-        for name in sun_names:
-            sun = bpy.data.objects.get(name)
-            if sun and sun.type == 'LIGHT':
-                sun.data.energy = context.scene.sun_strength
-
-        self.report({'INFO'}, "Sun strength updated successfully!")
-        return {'FINISHED'}
 

@@ -1,5 +1,12 @@
 import bpy
 
+###Functions
+
+###Property Groups
+
+###Operators
+
+###Panels
 class TraitBlenderPanel(bpy.types.Panel):
     bl_label = "TraitBlender"
     bl_idname = "VIEW3D_PT_traitblender"

@@ -4,20 +4,9 @@ import types
 
 bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(name="Mesh Generation Controls", default=False)
 
-class OpenMeshFunctionFileBrowserOperator(bpy.types.Operator):
-    bl_idname = "object.open_mesh_function_file_browser"
-    bl_label = "Invoke File Browser"
-    
-    filepath: bpy.props.StringProperty(subtype="FILE_PATH")
-    
-    def execute(self, context):
-        context.scene.make_mesh_function_path = self.filepath
-        return {'FINISHED'}
-    
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
+###Functions
 
+###Property Groups
 class ExportControlsPropertyGroup(bpy.types.PropertyGroup):
     export_controls: bpy.props.BoolProperty(
         name="Show/Hide",
@@ -25,17 +14,7 @@ class ExportControlsPropertyGroup(bpy.types.PropertyGroup):
         default=False
     )
 
-class ImportMakeMeshFunctionPathOperator(bpy.types.Operator):
-    bl_idname = "object.import_make_mesh_function_path"
-    bl_label = "Import Make Mesh Function Path"
-
-    make_mesh_function_path: bpy.props.StringProperty(name="Make Mesh Function Path")
-
-    def execute(self, context):
-        context.scene.make_mesh_function_path = self.make_mesh_function_path
-        return {'FINISHED'}
-
-
+###Operators
 class ExecuteStoredFunctionOperator(bpy.types.Operator):
     bl_idname = "object.execute_stored_function"
     bl_label = "Execute Stored Function"
@@ -77,3 +56,37 @@ class ExecuteStoredFunctionOperator(bpy.types.Operator):
         else:
             self.report({'WARNING'}, "No function found in the imported script.")
             return {'CANCELLED'}
+
+class ImportMakeMeshFunctionPathOperator(bpy.types.Operator):
+    bl_idname = "object.import_make_mesh_function_path"
+    bl_label = "Import Make Mesh Function Path"
+
+    make_mesh_function_path: bpy.props.StringProperty(name="Make Mesh Function Path")
+
+    def execute(self, context):
+        context.scene.make_mesh_function_path = self.make_mesh_function_path
+        return {'FINISHED'}
+    
+class OpenMeshFunctionFileBrowserOperator(bpy.types.Operator):
+    bl_idname = "object.open_mesh_function_file_browser"
+    bl_label = "Invoke File Browser"
+    
+    filepath: bpy.props.StringProperty(subtype="FILE_PATH")
+    
+    def execute(self, context):
+        context.scene.make_mesh_function_path = self.filepath
+        return {'FINISHED'}
+    
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+    
+###Panels
+
+
+
+
+
+
+
+

@@ -1,5 +1,7 @@
 import bpy
 
+###Functions
+###Property Groups
 class WorldBackgroundControls(bpy.types.PropertyGroup):
     expanded: bpy.props.BoolProperty(
         name="Background",
@@ -53,9 +55,8 @@ class WorldBackgroundControls(bpy.types.PropertyGroup):
         name="Background Scale Expanded",
         default=True
     )
-    
 
-
+###Operators
 class ChangeWorldBackgroundColor(bpy.types.Operator):
     bl_idname = "scene.change_background_color"
     bl_label = "Change World Background Color"
@@ -88,3 +89,10 @@ class ChangeWorldBackgroundColor(bpy.types.Operator):
         )
         
         return {'FINISHED'}
+
+###Panels
+
+
+    
+
+

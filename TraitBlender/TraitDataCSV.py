@@ -2,6 +2,7 @@ import bpy
 import json
 import csv
 
+###Functions
 def get_csv_labels(self, context):
     labels = context.scene.get('csv_data', [])
     column_name = context.scene.get('column_names', [])[0]
@@ -9,9 +10,8 @@ def get_csv_labels(self, context):
         return [(str(i), row.get(column_name, ""), row.get(column_name, "")) for i, row in enumerate(labels)]
     else:
         return []
-
-
-
+    
+###Property Groups
 class CSVLabelProperties(bpy.types.PropertyGroup):
     csv_label_enum: bpy.props.EnumProperty(
         items=get_csv_labels,
@@ -19,7 +19,16 @@ class CSVLabelProperties(bpy.types.PropertyGroup):
         description="Labels imported from CSV"
     )
 
+###Operators
+class ExecuteWithSelectedCSVRowOperator(bpy.types.Operator):
+    bl_idname = "object.execute_with_selected_csv_row"
+    bl_label = "Run Function with Selected CSV Row"
 
+    def execute(self, context):
+        selected_row = dict(context.scene['csv_data'][int(context.scene.csv_label_props.csv_label_enum)])
+        json_args = json.dumps(selected_row)
+        bpy.ops.object.execute_stored_function(json_args=json_args)
+        return {'FINISHED'}
 
 class ImportCSVOperator(bpy.types.Operator):
     bl_idname = "object.import_csv"
@@ -95,13 +104,10 @@ class ImportCSVOperator(bpy.types.Operator):
             self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
 
-class ExecuteWithSelectedCSVRowOperator(bpy.types.Operator):
-    bl_idname = "object.execute_with_selected_csv_row"
-    bl_label = "Run Function with Selected CSV Row"
+###Panels
 
-    def execute(self, context):
-        selected_row = dict(context.scene['csv_data'][int(context.scene.csv_label_props.csv_label_enum)])
-        json_args = json.dumps(selected_row)
-        bpy.ops.object.execute_stored_function(json_args=json_args)
-        return {'FINISHED'}
+
+
+
+
 
