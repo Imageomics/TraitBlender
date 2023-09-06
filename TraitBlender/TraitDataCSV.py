@@ -6,10 +6,13 @@ import csv
 def get_csv_labels(self, context):
     labels = context.scene.get('csv_data', [])
     column_name = context.scene.get('column_names', [])[0]
+
+
     if labels and column_name:
         return [(str(i), row.get(column_name, ""), row.get(column_name, "")) for i, row in enumerate(labels)]
     else:
         return []
+
     
 ###Property Groups
 class CSVLabelProperties(bpy.types.PropertyGroup):
@@ -89,20 +92,19 @@ class ImportCSVOperator(bpy.types.Operator):
         return csv_data, column_names
 
     def execute(self, context):
+        scene_name = context.scene.name
         try:
-            csv_data, column_names = self.import_csv(bpy.data.scenes["Scene"].csv_file_path)
+            csv_data, column_names = self.import_csv(bpy.data.scenes[scene_name].csv_file_path)
+        
             context.scene['csv_data'] = csv_data
             context.scene['column_names'] = column_names
-
-            # Update the csv_labels property
-            labels = [row.get(column_names[0]) for row in csv_data]
-            items = [(str(i), name, name) for i, name in enumerate(labels)]
-            context.scene.csv_label_props.csv_label_enum = items
 
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
+
+
 
 ###Panels
 

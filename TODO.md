@@ -1,9 +1,6 @@
 
 ##IN PROGRESS
 
-### Task 2
-Fix the weird warning when importing the mesh function CSV.
-
 ### Task 3
 Maybe add the ability to hide individual background planes?
 
@@ -36,3 +33,6 @@ Fix it so that backgrounds can be scaled on single axes, they currently only sca
 
 ### Task 1
 Fix the erroneous button in the "Select Mesh Function" part of the menu.
+
+### Task 2
+Fix the weird warning when importing the mesh function CSV.
