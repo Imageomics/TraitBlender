@@ -2,11 +2,29 @@ import bpy
 import os
 
 class ExportActiveObjectOperator(bpy.types.Operator):
+    """
+    This operator exports the active object in the Blender scene to a specified format.
+    It can export to .obj and .fbx formats.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+    """
     bl_idname = "object.export_active_object"
     bl_label = "Export Active Object"
 
     @staticmethod
     def export_active_object(filepath, format=".obj"):
+        """
+        Exports the active object in the scene to the specified file path and format.
+        
+        Parameters:
+            filepath (str): The directory where the exported file will be saved.
+            format (str): The format to export the object. Supported formats are ".obj" and ".fbx".
+
+        Returns:
+            None
+        """
         # Store the current selection
         original_selection = bpy.context.selected_objects
 
@@ -44,6 +62,15 @@ class ExportActiveObjectOperator(bpy.types.Operator):
         print(f"Exported {active_object.name} to {full_filepath}.")
 
     def execute(self, context):
+        """
+        Executes the operator, exporting the active object based on the scene's export directory and format.
+        
+        Parameters:
+            context: Blender's context object.
+        
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         export_dir = context.scene.export_directory
         export_format = context.scene.export_format
         if not export_dir:
