@@ -7,9 +7,6 @@ After you hide an individual sun, you can no longer use the "hide all suns" butt
 ### Task 6
 Sometimes textures aren't exported or look funny when viewed in other 3D viewports.
 
-### Task 7
-Need docstrings and other function/operator documentation.
-
 ### Task 8
 Need to clean up the generating loop with the new operators.
 
@@ -45,3 +42,6 @@ This seems to mostly happen when the background planes are present; they may be 
 	  another side, like when you have a flat square. This makes the background mush closer to one side of the object 
           then another side, which makes it easy to accidently hide the object. We can either fix this by having the distance 
 	  get added to the joint distance from both sides, or just telling people to be careful.
+
+### Task 7
+Need docstrings and other function/operator documentation.
