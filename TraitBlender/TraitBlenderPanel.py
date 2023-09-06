@@ -30,12 +30,14 @@ class TraitBlenderPanel(bpy.types.Panel):
                 
                 # File path selection
                 row = layout.row(align=True)
-                row.prop(context.scene, 'make_mesh_function_path', text="")
-                row.operator("object.open_mesh_function_file_browser", icon='FILEBROWSER', text="")
+                layout.prop(context.scene, 'make_mesh_function_path', text="Function Path")
+                #row.operator("object.open_mesh_function_file_browser", icon='FILEBROWSER', text="")
                 
                 # Button to execute the function
                 layout.operator("object.execute_stored_function", text="Run Function")
-                layout.prop(context.scene, "csv_file_path", text="CSV File Path")
+
+                #Button to import the csv
+                layout.prop(context.scene, "csv_file_path", text="CSV Path")
                 layout.operator("object.import_csv", text="Import CSV")
 
                 if 'csv_data' in context.scene:

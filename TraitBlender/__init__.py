@@ -138,10 +138,13 @@ def register():
     )
 
     bpy.types.Scene.make_mesh_function_path = bpy.props.StringProperty(
-        name="Make Mesh Function Path",
-        description="File path for the make_mesh function",
-        default="",
-    )
+	    name="Make Mesh Function Path",
+	    description="Path to the mesh function",
+	    default="",
+	    maxlen=1024,
+	    subtype='FILE_PATH'
+	)
+
 
     bpy.types.Scene.world_background_controls = bpy.props.PointerProperty(type=WorldBackgroundControls)
 
@@ -205,7 +208,7 @@ def register():
         name="Make Mesh Function Path",
         description="Path to the Python file containing the mesh-making function",
         default="",
-        subtype='DIR_PATH'
+        subtype='FILE_PATH'
     )
 
 

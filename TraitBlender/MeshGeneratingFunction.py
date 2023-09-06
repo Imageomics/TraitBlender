@@ -61,7 +61,7 @@ class ImportMakeMeshFunctionPathOperator(bpy.types.Operator):
     bl_idname = "object.import_make_mesh_function_path"
     bl_label = "Import Make Mesh Function Path"
 
-    make_mesh_function_path: bpy.props.StringProperty(name="Make Mesh Function Path")
+    make_mesh_function_path: bpy.props.StringProperty(name="Make Mesh Function Path", subtype="FILE_PATH")
 
     def execute(self, context):
         context.scene.make_mesh_function_path = self.make_mesh_function_path

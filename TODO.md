@@ -1,9 +1,6 @@
 
 ##IN PROGRESS
 
-### Task 1
-Fix the erroneous button in the "Select Mesh Function" part of the menu.
-
 ### Task 2
 Fix the weird warning when importing the mesh function CSV.
 
@@ -37,3 +34,5 @@ Fix it so that backgrounds can be scaled on single axes, they currently only sca
 
 ##COMPLETE
 
+### Task 1
+Fix the erroneous button in the "Select Mesh Function" part of the menu.
