@@ -4,9 +4,6 @@
 ### Task 4
 After you hide an individual sun, you can no longer use the "hide all suns" button properly; it will only hide/unhide the last hidden sun. Fix this.
 
-### Task 5
-Sometimes the object does not show up in the final render even though it is apparent in the camera view. This seems to mostly happen when the background planes are present; they may be in the way for the render but not the camera.
-
 ### Task 6
 Sometimes textures aren't exported or look funny when viewed in other 3D viewports.
 
@@ -40,3 +37,11 @@ Fix the weird warning when importing the mesh function CSV.
 
 ### Task 3
 Maybe add the ability to hide individual background planes? //I don't think it really matters
+
+### Task 5
+Sometimes the object does not show up in the final render even though it is apparent in the camera view. 
+This seems to mostly happen when the background planes are present; they may be in the way for the render but not the camera. 
+	- Solved, this happens when the distance from the background of the object from one side is different from
+	  another side, like when you have a flat square. This makes the background mush closer to one side of the object 
+          then another side, which makes it easy to accidently hide the object. We can either fix this by having the distance 
+	  get added to the joint distance from both sides, or just telling people to be careful.
