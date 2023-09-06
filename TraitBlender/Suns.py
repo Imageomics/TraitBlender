@@ -7,11 +7,26 @@ from mathutils import Matrix, Vector
 ###Property Groups
 
 class SunControls(bpy.types.PropertyGroup):
+    """
+    Property group for controlling sun related attributes in Blender.
+
+    Attributes:
+        strength (FloatProperty): The strength of the sun light.
+    """
     strength: bpy.props.FloatProperty(name="Strength", default=1.0, min=0.0)
 
-###Operators
+### Operators
 
 class HideSunsOperator(bpy.types.Operator):
+    """
+    This operator hides or unhides sun objects in the Blender scene.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Options for this operator.
+        sun_names (StringProperty): Comma-separated names of sun objects to be hidden or unhidden.
+    """
     bl_idname = "object.hide_suns"
     bl_label = "Hide Suns"
     bl_options = {'REGISTER', 'UNDO'}
@@ -22,6 +37,15 @@ class HideSunsOperator(bpy.types.Operator):
     )
 
     def execute(self, context):
+        """
+        Executes the operator, hiding or unhiding specified sun objects.
+
+        Parameters:
+            context: Blender's context object.
+
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         # Split the sun names by comma
         sun_names_list = self.sun_names.split(',')
 
@@ -45,7 +69,17 @@ class HideSunsOperator(bpy.types.Operator):
         return {'FINISHED'}
 
 
+
 class ToggleSunsOperator(bpy.types.Operator):
+    """
+    This operator toggles the presence of sun objects in the Blender scene.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Options for this operator.
+        distance (FloatProperty): Distance from the active object to place the suns.
+    """
     bl_idname = "object.toggle_suns"
     bl_label = "Toggle Suns"
     bl_options = {'REGISTER', 'UNDO'}
@@ -53,6 +87,15 @@ class ToggleSunsOperator(bpy.types.Operator):
     distance: bpy.props.FloatProperty(name="Distance", default=10.0)
 
     def execute(self, context):
+        """
+        Executes the operator, either adding or removing specified sun objects.
+
+        Parameters:
+            context: Blender's context object.
+
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         # Get and store the original active object
         original_active_obj = context.active_object
         if original_active_obj is None:
@@ -104,11 +147,28 @@ class ToggleSunsOperator(bpy.types.Operator):
 
 
 class UpdateSunStrengthOperator(bpy.types.Operator):
+    """
+    This operator updates the strength of sun objects in the Blender scene.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Options for this operator.
+    """
     bl_idname = "object.update_sun_strength"
     bl_label = "Update Sun Strength"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        """
+        Executes the operator, updating the strength of specified sun objects.
+
+        Parameters:
+            context: Blender's context object.
+
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         sun_names = ["sun.top", "sun.bottom", "sun.right", "sun.left", "sun.front", "sun.back"]
 
         for name in sun_names:
@@ -121,15 +181,33 @@ class UpdateSunStrengthOperator(bpy.types.Operator):
 
 ###Panels
 class SunControlsPanel(bpy.types.Panel):
+    """
+    This panel provides controls for managing sun objects in Blender's UI.
+
+    Attributes:
+        bl_label (str): The label for this panel.
+        bl_idname (str): Blender's internal name for this panel.
+        bl_space_type (str): The space where this panel appears.
+        bl_region_type (str): The region where this panel appears.
+        bl_category (str): The category where this panel appears.
+        bl_context (str): The context in which this panel appears.
+        bl_options (set): Options for this panel.
+    """
     bl_label = "Lights"
     bl_idname = "OBJECT_PT_sun_controls"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Tool'  # Change this to the category where you want the panel to appear
+    bl_category = 'Tool'  
     bl_context = "objectmode"
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
+        """
+        Draws the UI elements for this panel.
+
+        Parameters:
+            context: Blender's context object.
+        """
         layout = self.layout
 
         # Toggle Suns Button

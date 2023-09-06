@@ -8,6 +8,18 @@ import bpy
 
 ###Panels
 class TraitBlenderPanel(bpy.types.Panel):
+    """
+    This panel provides controls for various functionalities related to mesh generation,
+    background settings, lighting, camera settings, exporting, and segmentation.
+
+    Attributes:
+        bl_label (str): The label for this panel.
+        bl_idname (str): Blender's internal name for this panel.
+        bl_space_type (str): The space where this panel appears.
+        bl_region_type (str): The region where this panel appears.
+        bl_category (str): The category where this panel appears.
+    """
+
     bl_label = "TraitBlender"
     bl_idname = "VIEW3D_PT_traitblender"
     bl_space_type = 'VIEW_3D'
@@ -15,6 +27,12 @@ class TraitBlenderPanel(bpy.types.Panel):
     bl_category = "TraitBlender"
 
     def draw(self, context):
+        """
+        Draws the UI elements for this panel.
+
+        Parameters:
+            context: Blender's context object.
+        """
         layout = self.layout
         obj = context.object
         background_controls = context.scene.background_controls

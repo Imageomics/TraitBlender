@@ -3,13 +3,30 @@ import csv
 
 ###Functions
 
-###Property Groups
+### Property Groups
 class SegmentationControlsProperty(bpy.types.PropertyGroup):
-    expanded: bpy.props.BoolProperty(default=False)
-    segmentation_controls: bpy.props.BoolProperty(default=False)  
+    """
+    Property group for controlling segmentation options in Blender.
 
-###Operators
+    Attributes:
+        expanded (BoolProperty): Whether the property group is expanded in the UI.
+        segmentation_controls (BoolProperty): Placeholder for future segmentation controls.
+    """
+    expanded: bpy.props.BoolProperty(default=False)
+    segmentation_controls: bpy.props.BoolProperty(default=False)
+
+
+### Operators
 class LoadVertexGroupsFromCSVOperator(bpy.types.Operator):
+    """
+    This operator loads vertex groups from a CSV file.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Options for this operator.
+        csv_file_path (StringProperty): The path to the CSV file containing vertex group data.
+    """
     bl_idname = "object.load_vertex_groups_from_csv"
     bl_label = "Load Vertex Groups from CSV"
     bl_options = {'REGISTER', 'UNDO'}
@@ -20,6 +37,15 @@ class LoadVertexGroupsFromCSVOperator(bpy.types.Operator):
     )
 
     def execute(self, context):
+        """
+        Executes the operator, loading vertex groups from the specified CSV file.
+
+        Parameters:
+            context: Blender's context object.
+
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         obj = context.object
         if not obj:
             self.report({'ERROR'}, "No active object selected.")
@@ -37,7 +63,17 @@ class LoadVertexGroupsFromCSVOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
 class SaveVertexGroupsToCSVOperator(bpy.types.Operator):
+    """
+    This operator saves vertex groups to a CSV file.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Options for this operator.
+        csv_file_path (StringProperty): The path to the CSV file for saving vertex group data.
+    """
     bl_idname = "object.save_vertex_groups_to_csv"
     bl_label = "Save Vertex Groups to CSV"
     bl_options = {'REGISTER', 'UNDO'}
@@ -48,6 +84,15 @@ class SaveVertexGroupsToCSVOperator(bpy.types.Operator):
     )
 
     def execute(self, context):
+        """
+        Executes the operator, saving vertex groups to the specified CSV file.
+
+        Parameters:
+            context: Blender's context object.
+
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         obj = context.object
         if not obj:
             self.report({'ERROR'}, "No active object selected.")
@@ -64,8 +109,19 @@ class SaveVertexGroupsToCSVOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
-###Panels
+### Panels
 class SegmentationControls(bpy.types.Panel):
+    """
+    Panel for controlling segmentation options in Blender.
+
+    Attributes:
+        bl_label (str): The label for this panel.
+        bl_idname (str): Blender's internal name for this panel.
+        bl_space_type (str): The type of space where the panel appears.
+        bl_region_type (str): The type of region where the panel appears.
+        bl_context (str): The context in which the panel appears.
+        bl_category (str): The category of the panel.
+    """
     bl_label = "Segmentation Controls"
     bl_idname = "OBJECT_PT_segmentation"
     bl_space_type = 'PROPERTIES'
@@ -74,6 +130,12 @@ class SegmentationControls(bpy.types.Panel):
     bl_category = "TraitBlender"
 
     def draw(self, context):
+        """
+        Draws the panel UI.
+
+        Parameters:
+            context: Blender's context object.
+        """
         layout = self.layout
         obj = context.object
 
@@ -91,9 +153,4 @@ class SegmentationControls(bpy.types.Panel):
         # Add the new operators
         layout.operator("object.save_vertex_groups_to_csv", text="Save Vertex Groups to CSV").csv_file_path = "path/to/save.csv"
         layout.operator("object.load_vertex_groups_from_csv", text="Load Vertex Groups from CSV").csv_file_path = "path/to/load.csv"
-
-
-
-
-
 

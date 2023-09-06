@@ -3,6 +3,20 @@ import bpy
 ###Functions
 ###Property Groups
 class WorldBackgroundControls(bpy.types.PropertyGroup):
+    """
+    Property Group to hold controls for modifying the world background.
+    
+    Attributes:
+        expanded (BoolProperty): Controls whether the background section is expanded in the UI.
+        red (FloatProperty): The red component of the world background color.
+        green (FloatProperty): The green component of the world background color.
+        blue (FloatProperty): The blue component of the world background color.
+        alpha (FloatProperty): The alpha component of the world background color.
+        world_color_expanded (BoolProperty): Controls whether the world color section is expanded in the UI.
+        imported_backgrounds_expanded (BoolProperty): Controls whether the imported backgrounds section is expanded in the UI.
+        background_scale_expanded (BoolProperty): Controls whether the background scale section is expanded in the UI.
+    """
+    
     expanded: bpy.props.BoolProperty(
         name="Background",
         description="Expand the background controls",
@@ -56,12 +70,31 @@ class WorldBackgroundControls(bpy.types.PropertyGroup):
         default=True
     )
 
+
 ###Operators
 class ChangeWorldBackgroundColor(bpy.types.Operator):
+    """
+    Operator to change the world background color based on user input.
+    
+    Attributes:
+        bl_idname (str): Blender internal name for this operator.
+        bl_label (str): Human-readable label displayed in the UI.
+    """
+    
     bl_idname = "scene.change_background_color"
     bl_label = "Change World Background Color"
     
     def execute(self, context):
+        """
+        Execute the operator to change the world background color.
+        
+        Args:
+            context (bpy.context): Blender context.
+        
+        Returns:
+            set: A set with a string status {'FINISHED'}.
+        """
+        
         # Access the active scene
         scene = context.scene
 
@@ -89,6 +122,7 @@ class ChangeWorldBackgroundColor(bpy.types.Operator):
         )
         
         return {'FINISHED'}
+
 
 ###Panels
 
