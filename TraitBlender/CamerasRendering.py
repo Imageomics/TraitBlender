@@ -6,6 +6,20 @@ import os
 ###Functions
 @bpy.app.handlers.persistent
 def delete_cameras_on_mesh_deletion(dummy):
+    """
+    Persistent handler to delete cameras when the associated mesh is deleted.
+
+    This function is intended to be used as a Blender application handler.
+    It checks if the original mesh associated with each camera is deleted,
+    and if so, deletes the camera.
+
+    Parameters:
+        dummy: A dummy parameter required for Blender application handlers.
+
+    Note:
+        This function is marked as persistent so it will survive file reloads.
+    """
+    
     # Get the names of the cameras to delete
     camera_names = ["camera.top", "camera.bottom", "camera.right", "camera.left", "camera.front", "camera.back"]
 
@@ -16,7 +30,20 @@ def delete_cameras_on_mesh_deletion(dummy):
             bpy.data.objects.remove(camera)
 
 
+
 def update_camera_aspect_ratio(self, context):
+    """
+    Update the aspect ratio of cameras in the Blender scene based on user-defined settings.
+
+    This function adjusts the sensor size and fit method of each camera in the scene to match
+    the desired width and height set in the scene's camera_controls. It also updates the render
+    resolution and pixel aspect ratio to match the new camera settings.
+
+    Parameters:
+        self: The current instance of the Blender layout.
+        context: The current Blender context, containing references to the active object and scene.
+    """
+    
     # Get the scene
     scene = context.scene
 
@@ -47,7 +74,19 @@ def update_camera_aspect_ratio(self, context):
     scene.render.pixel_aspect_x = 1
     scene.render.pixel_aspect_y = 1
 
+
 def update_camera_distance(self, context):
+    """
+    Update the distance of cameras from the active object in the Blender scene.
+
+    This function adjusts the location of each camera in the scene to maintain a specified distance
+    from the active object. The cameras are also oriented to point towards the active object.
+
+    Parameters:
+        self: The current instance of the Blender layout.
+        context: The current Blender context, containing references to the active object and scene.
+    """
+    
     # Get the active object
     active_obj = context.active_object
     if active_obj is None:
@@ -69,7 +108,19 @@ def update_camera_distance(self, context):
             camera.rotation_mode = 'QUATERNION'
             camera.rotation_quaternion = direction_to_active_obj.to_track_quat('-Z', 'Y')
 
+
 def update_camera_focal_length(self, context):
+    """
+    Update the focal length of cameras in the Blender scene based on user-defined settings.
+
+    This function adjusts the lens (focal length) of each camera in the scene to match
+    the desired focal length set in the scene's camera_controls.
+
+    Parameters:
+        self: The current instance of the Blender layout.
+        context: The current Blender context, containing references to the active object and scene.
+    """
+    
     # Get the scene
     scene = context.scene
 
@@ -81,17 +132,39 @@ def update_camera_focal_length(self, context):
         camera_obj = bpy.data.objects.get(name)
         if camera_obj and camera_obj.type == 'CAMERA':
             camera = camera_obj.data
-            camera.lens = scene.camera_controls.focal_length 
+            camera.lens = scene.camera_controls.focal_length
+
 
 ###Property Groups
 class CameraControls(bpy.types.PropertyGroup):
+    """
+    Define the properties and methods for controlling camera settings in the Blender scene.
+
+    This class contains various properties to control camera settings like dimensions,
+    focal length, and which cameras to render. It also has methods to update these settings.
+    """
+    
     expanded: bpy.props.BoolProperty(
         name="Camera",
         description="Expand or collapse the camera controls",
         default=False
     )
-    camera_width: bpy.props.IntProperty(name="Camera Width", default=1920, min=1, max=4096, update=update_camera_aspect_ratio)
-    camera_height: bpy.props.IntProperty(name="Camera Height", default=1080, min=1, max=2160, update=update_camera_aspect_ratio)
+    camera_width: bpy.props.IntProperty(
+        name="Camera Width",
+        default=1920,
+        min=1,
+        max=4096,
+        update=update_camera_aspect_ratio,
+        description="Width of the camera in pixels"
+    )
+    camera_height: bpy.props.IntProperty(
+        name="Camera Height",
+        default=1080,
+        min=1,
+        max=2160,
+        update=update_camera_aspect_ratio,
+        description="Height of the camera in pixels"
+    )
     focal_length: bpy.props.FloatProperty(
         name="Focal Length",
         default=50.0,
@@ -101,23 +174,42 @@ class CameraControls(bpy.types.PropertyGroup):
         soft_max=10000.0,
         step=1,
         precision=2,
-        update=update_camera_focal_length
+        update=update_camera_focal_length,
+        description="Focal length of the camera lens"
     )
-    # New properties for selecting cameras to render
-    render_camera_top: bpy.props.BoolProperty(name="Top", default=True)
-    render_camera_bottom: bpy.props.BoolProperty(name="Bottom", default=True)
-    render_camera_right: bpy.props.BoolProperty(name="Right", default=True)
-    render_camera_left: bpy.props.BoolProperty(name="Left", default=True)
-    render_camera_front: bpy.props.BoolProperty(name="Front", default=True)
-    render_camera_back: bpy.props.BoolProperty(name="Back", default=True)
+    render_camera_top: bpy.props.BoolProperty(name="Top", default=True, description="Render the top camera view")
+    render_camera_bottom: bpy.props.BoolProperty(name="Bottom", default=True, description="Render the bottom camera view")
+    render_camera_right: bpy.props.BoolProperty(name="Right", default=True, description="Render the right camera view")
+    render_camera_left: bpy.props.BoolProperty(name="Left", default=True, description="Render the left camera view")
+    render_camera_front: bpy.props.BoolProperty(name="Front", default=True, description="Render the front camera view")
+    render_camera_back: bpy.props.BoolProperty(name="Back", default=True, description="Render the back camera view")
 
 ###Operators
 class HideCamerasOperator(bpy.types.Operator):
+    """
+    Define the operator to hide or unhide cameras in the Blender scene.
+
+    This class contains the execute method that toggles the visibility of predefined cameras.
+    """
+    
     bl_idname = "object.hide_cameras"
     bl_label = "Hide Cameras"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        """
+        Toggle the visibility of cameras in the Blender scene.
+
+        This function checks the existing cameras in the scene and either hides or shows them
+        based on their current visibility status.
+
+        Parameters:
+            context: The current Blender context, containing references to the active object and scene.
+
+        Returns:
+            {'FINISHED'} if successful, otherwise raises an error.
+        """
+        
         # Get the names of the cameras to hide/unhide
         camera_names = ["camera.top", "camera.bottom", "camera.right", "camera.left", "camera.front", "camera.back"]
 
@@ -143,6 +235,13 @@ class HideCamerasOperator(bpy.types.Operator):
         return {'FINISHED'}
 
 class RenderAllCamerasOperator(bpy.types.Operator):
+    """
+    Define the operator for rendering scenes from multiple camera angles.
+
+    This class contains the execute method to render the scene from the perspective of 
+    different cameras specified by their names and save the rendered images.
+    """
+    
     bl_idname = "object.render_all_cameras"
     bl_label = "Render All Cameras"
     bl_options = {'REGISTER', 'UNDO'}
@@ -154,6 +253,19 @@ class RenderAllCamerasOperator(bpy.types.Operator):
     )
 
     def execute(self, context):
+        """
+        Render the scene from the perspective of different cameras and save the images.
+
+        This function loops through the specified camera names, sets each one as the active
+        camera, and renders the scene, saving the resulting image to the specified directory.
+
+        Parameters:
+            context: The current Blender context, containing references to the active object and scene.
+
+        Returns:
+            {'FINISHED'} if successful, otherwise raises an error.
+        """
+        
         # Ensure the render directory is set
         if not context.scene.render_output_directory:
             self.report({'ERROR'}, "Please select a render directory first.")
@@ -178,8 +290,10 @@ class RenderAllCamerasOperator(bpy.types.Operator):
                 active_object_name = bpy.context.active_object.name if bpy.context.active_object else "NoActiveObject"
                 bpy.context.scene.render.filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}.png")
 
-
+                # Set the camera as the active one for rendering
                 bpy.context.scene.camera = camera
+                
+                # Perform the rendering
                 bpy.ops.render.render(write_still=True)
 
         # Restore the original active camera
@@ -190,7 +304,13 @@ class RenderAllCamerasOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
 class SelectRenderDirectoryOperator(bpy.types.Operator):
+    """
+    Operator for selecting the directory where rendered images will be saved.
+
+    Allows the user to select a directory for storing rendered images through a file selector.
+    """
     bl_idname = "object.select_render_directory"
     bl_label = "Select Render Directory"
     bl_options = {'REGISTER', 'INTERNAL'}
@@ -204,15 +324,24 @@ class SelectRenderDirectoryOperator(bpy.types.Operator):
     )
 
     def execute(self, context):
+        """Sets the selected directory as the output directory for rendered images."""
         context.scene.render_output_directory = self.directory
         return {'FINISHED'}
 
     def invoke(self, context, event):
+        """Invoke the file selector."""
         wm = context.window_manager
         wm.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
+
 class SetCameraViewOperator(bpy.types.Operator):
+    """
+    Operator for setting the camera view based on a specified angle.
+
+    Allows the user to set the active camera and view perspective to a specified angle,
+    and also hides all other background planes and sun objects that do not correspond to the new camera angle.
+    """
     bl_idname = "object.set_camera_view"
     bl_label = "Set Camera View"
     bl_options = {'REGISTER', 'UNDO'}
@@ -220,6 +349,7 @@ class SetCameraViewOperator(bpy.types.Operator):
     angle: bpy.props.StringProperty(name="Angle")
 
     def execute(self, context):
+        """Set the camera view and hide unrelated background planes and sun objects."""
         camera_name = f"camera.{self.angle.lower()}"
         camera_obj = bpy.data.objects.get(camera_name)
         if camera_obj and camera_obj.type == 'CAMERA':
@@ -248,6 +378,12 @@ class SetCameraViewOperator(bpy.types.Operator):
         return {'FINISHED'}
 
     def get_opposite_angle(self):
+        """
+        Get the opposite viewing angle of the current viewing angle.
+
+        Returns:
+            str: The opposite angle.
+        """
         opposites = {
             "Front": "Back",
             "Back": "Front",
@@ -258,7 +394,19 @@ class SetCameraViewOperator(bpy.types.Operator):
         }
         return opposites.get(self.angle, "")
 
+
 class ToggleCamerasOperator(bpy.types.Operator):
+    """
+    This operator toggles the visibility and existence of cameras in the Blender scene.
+    The cameras are positioned at a specified distance from an active object and are
+    oriented to face towards the active object. If the cameras already exist, they are removed.
+
+    Attributes:
+        bl_idname (str): Blender's internal name for this operator.
+        bl_label (str): The label for this operator.
+        bl_options (set): Operator options.
+        distance (FloatProperty): The distance from the active object at which the cameras are placed.
+    """
     bl_idname = "object.toggle_cameras"
     bl_label = "Toggle Cameras"
     bl_options = {'REGISTER', 'UNDO'}
@@ -266,6 +414,15 @@ class ToggleCamerasOperator(bpy.types.Operator):
     distance: bpy.props.FloatProperty(name="Distance", default=10.0)
 
     def execute(self, context):
+        """
+        Executes the operator, either creating or removing cameras based on their existence.
+        
+        Parameters:
+            context: Blender's context object
+        
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         # Get the active object
         active_obj = context.active_object
         if active_obj is None:
@@ -336,9 +493,19 @@ class ToggleCamerasOperator(bpy.types.Operator):
         return {'FINISHED'}
 
     def invoke(self, context, event):
+        """
+        Invokes the operator and sets the distance attribute from the scene.
+        
+        Parameters:
+            context: Blender's context object
+            event: Blender's event object
+        
+        Returns:
+            dict: A dictionary indicating the execution status.
+        """
         self.distance = context.scene.place_cameras_distance
         return self.execute(context)
-    
+
 ###Panels
 
 
