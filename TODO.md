@@ -14,11 +14,8 @@ Make a Docker image.
 Publish to Blender addons catalogue.
 - Publishing instructions can be found [here](https://wiki.blender.org/wiki/Process/Addons/Guidelines "Publishing Requirements").
 
-### Task 11
-Fix it so that backgrounds can be scaled on single axes, they currently only scale on all 3 at once
-
-
-
+### Task 12
+Fix the export function for the generating loop to export all the parameters correctly
 
 
 ##COMPLETE
@@ -45,3 +42,7 @@ Need docstrings and other function/operator documentation.
 
 ### Task 4
 After you hide an individual sun, you can no longer use the "hide all suns" button properly; it will only hide/unhide the last hidden sun. Fix this.
+
+### Task 11
+Fix it so that backgrounds can be scaled on single axes, they currently only scale on all 3 at once
+## --> This seems to be a non-issue, it might have been the way I loaded the addon messing up the one time
