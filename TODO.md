@@ -1,9 +1,6 @@
 
 ##IN PROGRESS
 
-### Task 4
-After you hide an individual sun, you can no longer use the "hide all suns" button properly; it will only hide/unhide the last hidden sun. Fix this.
-
 ### Task 6
 Sometimes textures aren't exported or look funny when viewed in other 3D viewports.
 
@@ -45,3 +42,6 @@ This seems to mostly happen when the background planes are present; they may be 
 
 ### Task 7
 Need docstrings and other function/operator documentation.
+
+### Task 4
+After you hide an individual sun, you can no longer use the "hide all suns" button properly; it will only hide/unhide the last hidden sun. Fix this.

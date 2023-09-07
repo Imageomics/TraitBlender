@@ -66,7 +66,11 @@ class HideSunsOperator(bpy.types.Operator):
                 if sun is not None:
                     sun.hide_viewport = False
 
+        # Reset the sun_names to the default value
+        self.sun_names = "sun.top,sun.bottom,sun.right,sun.left,sun.front,sun.back"
+
         return {'FINISHED'}
+
 
 
 
