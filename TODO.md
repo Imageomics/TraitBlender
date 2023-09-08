@@ -10,16 +10,13 @@ Need to clean up the generating loop with the new operators.
 ### Task 9
 Make a Docker image.
 
-### Task 10
-Publish to Blender addons catalogue.
-- Publishing instructions can be found [here](https://wiki.blender.org/wiki/Process/Addons/Guidelines "Publishing Requirements").
-
 ### Task 12
 Fix the export function for the generating loop to export all the parameters correctly
 
 
-##COMPLETE
 
+
+##COMPLETE
 ### Task 1
 Fix the erroneous button in the "Select Mesh Function" part of the menu.
 
@@ -46,3 +43,8 @@ After you hide an individual sun, you can no longer use the "hide all suns" butt
 ### Task 11
 Fix it so that backgrounds can be scaled on single axes, they currently only scale on all 3 at once
 ## --> This seems to be a non-issue, it might have been the way I loaded the addon messing up the one time
+
+
+### Task 10
+Publish to Blender addons catalogue.
+- Publishing instructions can be found [here](https://wiki.blender.org/wiki/Process/Addons/Guidelines "Publishing Requirements").
