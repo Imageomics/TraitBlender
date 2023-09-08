@@ -2,8 +2,6 @@ import bpy
 import json
 import types
 
-bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(name="Mesh Generation Controls", default=False)
-
 ###Functions
 
 ###Property Groups

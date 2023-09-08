@@ -137,6 +137,8 @@ def register():
         )
     )
 
+    bpy.types.Scene.mesh_generation_controls = bpy.props.BoolProperty(name="Mesh Generation Controls", default=False)
+
     bpy.types.Scene.make_mesh_function_path = bpy.props.StringProperty(
 	    name="Make Mesh Function Path",
 	    description="Path to the mesh function",
