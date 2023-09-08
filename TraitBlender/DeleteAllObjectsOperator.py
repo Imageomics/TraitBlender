@@ -24,6 +24,9 @@ class DeleteAllObjectsOperator(bpy.types.Operator):
         Returns:
             dict: A dictionary indicating the execution status.
         """
+        # Switch to object mode
+        bpy.ops.object.mode_set(mode='OBJECT')
+        
         # Make all objects visible and select them
         for obj in bpy.data.objects:
             obj.hide_viewport = False  # Make object visible
