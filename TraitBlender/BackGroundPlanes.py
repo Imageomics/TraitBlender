@@ -1,6 +1,7 @@
 import bpy
 import os
 import math
+from math import radians
 from mathutils import Matrix, Vector
 
 ###Functions
@@ -414,64 +415,39 @@ class ToggleBackgroundPlanesOperator(bpy.types.Operator):
     distance: bpy.props.FloatProperty(name="Distance", default=10.0)
 
     def execute(self, context):
-        """
-        Execute the operator.
-        
-        This method is called when the operator is run. It either creates or 
-        removes background planes based on their current existence in the scene.
-        
-        Parameters:
-            context: The current Blender context, containing references to the active object and scene.
-        
-        Returns:
-            dict: A dictionary indicating the operator's status. Returns {'FINISHED'} if successful, or {'CANCELLED'} if a background image is not set.
-        """
-        
-        # Store the original active object and its selection state
         image_name = context.scene.background_image_reference
         if not bpy.data.images.get(image_name):
             self.report({'WARNING'}, "Background image not set. Aborting operation.")
             return {'CANCELLED'}
         
         original_active_obj = context.active_object
-        original_active_obj_selected = original_active_obj.select_get()
 
-        # Calculate the plane locations and names
         locations_and_names = [
-            ((0, 0, self.distance), "background_plane.top"),  # Top
-            ((0, 0, -self.distance), "background_plane.bottom"),  # Bottom
-            ((self.distance, 0, 0), "background_plane.right"),  # Right
-            ((-self.distance, 0, 0), "background_plane.left"),  # Left
-            ((0, self.distance, 0), "background_plane.back"),  # Front
-            ((0, -self.distance, 0), "background_plane.front"),  # Back
+            ((0, 0, self.distance), "background_plane.top"),
+            ((0, 0, -self.distance), "background_plane.bottom"),
+            ((self.distance, 0, 0), "background_plane.right"),
+            ((-self.distance, 0, 0), "background_plane.left"),
+            ((0, self.distance, 0), "background_plane.back"),
+            ((0, -self.distance, 0), "background_plane.front"),
         ]
 
-        # Check if the planes already exist
         planes_exist = all(bpy.data.objects.get(name) is not None for _, name in locations_and_names)
 
         if planes_exist:
-            # Remove the planes
             for _, name in locations_and_names:
                 plane = bpy.data.objects.get(name)
                 if plane is not None:
                     bpy.data.objects.remove(plane)
         else:
-            # Create the planes
             for location, name in locations_and_names:
-                # Add the location of the active object to the location of the plane
                 location = original_active_obj.location + Vector(location)
                 bpy.ops.mesh.primitive_plane_add(size=1, location=location)
                 plane = context.active_object
-
-                # Set the plane name
                 plane.name = name
-
-                # Point the plane towards the active object
                 direction = original_active_obj.location - plane.location
                 plane.rotation_mode = 'QUATERNION'
                 plane.rotation_quaternion = direction.to_track_quat('Z', 'Y')
 
-                # Assign the background image material to the plane
                 image_name = context.scene.background_image_reference
                 if image_name:
                     image = bpy.data.images.get(image_name)
@@ -483,15 +459,29 @@ class ToggleBackgroundPlanesOperator(bpy.types.Operator):
                         tex_image.image = image
                         mat.node_tree.links.new(bsdf.inputs['Base Color'], tex_image.outputs['Color'])
                         plane.data.materials.append(mat)
-
-                # Deselect the new plane
                 plane.select_set(False)
 
-        # Restore the original active object and its selection state
+            # Store the current active object and its mode
+            original_active_object = bpy.context.view_layer.objects.active
+            original_mode = bpy.context.object.mode if bpy.context.object else 'OBJECT'
+
+            # Set the target object as active and change mode to 'OBJECT'
+            bpy.context.view_layer.objects.active = bpy.data.objects['background_plane.bottom']
+            bpy.ops.object.mode_set(mode='OBJECT')
+            bpy.context.view_layer.objects.active.select_set(True)
+
+            # Perform the rotation
+            bpy.ops.transform.rotate(value=radians(180), orient_axis='Z')
+
+            # Restore original active object and its mode
+            bpy.context.view_layer.objects.active = original_active_object
+            if original_active_object:
+                bpy.ops.object.mode_set(mode=original_mode)
+
+
         context.view_layer.objects.active = original_active_obj
         original_active_obj.select_set(True)
-
-        # Deselect all other objects
+        
         for obj in context.selected_objects:
             if obj != original_active_obj:
                 obj.select_set(False)
