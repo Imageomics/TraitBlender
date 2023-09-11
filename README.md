@@ -1,6 +1,6 @@
 # TraitBlender
 
-<img src="imgs/snailtree.jpeg" width="400" height="400">
+<img src="imgs/logo.png" width="400" height="400">
 
 <p>
   This is the repo for TraitBlender, a Blender addon and workflow for simulating raw datasets. 
