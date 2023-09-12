@@ -1,5 +1,6 @@
-import bpy 
-       
+import bpy
+import json
+
 class ExportSettingsOperator(bpy.types.Operator):
     bl_idname = "object.export_settings"
     bl_label = "Export Settings"
@@ -17,24 +18,24 @@ class ExportSettingsOperator(bpy.types.Operator):
         image_name = scene.background_image_reference
         image_filepath = bpy.data.images.get(image_name).filepath if bpy.data.images.get(image_name) else "None"
 
-        # Format these settings into a string
-        settings_str = f"World Background Controls:\n"
-        settings_str += f"    Red: {world_background_controls.red:.5f}\n"
-        settings_str += f"    Green: {world_background_controls.green:.5f}\n"
-        settings_str += f"    Blue: {world_background_controls.blue:.5f}\n"
-        settings_str += f"    Alpha: {world_background_controls.alpha:.5f}\n"
+        # Create a dictionary to store the settings
+        settings_dict = {}
 
-        settings_str += f'\nBackground Controls:\n'
-        settings_str += f'    Background Image Path: "{image_filepath}"\n'
-        settings_str += f'    Background Plane Distance: {scene.background_plane_distance:.5f}\n'
-        settings_str += f'    Background Plane Scale X: {background_controls.plane_scale_x:.5f}\n'
-        settings_str += f'    Background Plane Scale Y: {background_controls.plane_scale_y:.5f}\n'
-        settings_str += f'    Background Plane Scale Z: {background_controls.plane_scale_z:.5f}\n'
+        # World Background Controls
+        wc_colors = [world_background_controls.red, world_background_controls.green, world_background_controls.blue, world_background_controls.alpha]
+        settings_dict["World Background Controls"] = {"wc_colors": wc_colors}
 
-        settings_str += f"\nLights:\n"
-        settings_str += f"    Sun Strength: {scene.sun_strength:.5f}\n"
+        # Background Controls
+        settings_dict["Background Controls"] = {
+            "background_plane_image_path": image_filepath,
+            "background_plane_distance": scene.background_plane_distance,
+            "bg_scales": [background_controls.plane_scale_x, background_controls.plane_scale_y, background_controls.plane_scale_z]
+        }
 
-        # Construct the string argument for the RenderAllCamerasOperator
+        # Lights
+        settings_dict["Lights"] = {"sun_strength": scene.sun_strength}
+
+        # Camera Controls
         camera_names_list = []
         if camera_controls.render_camera_top:
             camera_names_list.append('camera.top')
@@ -48,17 +49,17 @@ class ExportSettingsOperator(bpy.types.Operator):
             camera_names_list.append('camera.front')
         if camera_controls.render_camera_back:
             camera_names_list.append('camera.back')
-        camera_names_str = ','.join(camera_names_list)
 
-        settings_str += f'\nCamera Controls:\n'
-        settings_str += f'    Cameras to Render: "{camera_names_str}"\n'
-        settings_str += f'    Place Cameras Distance: {scene.place_cameras_distance:.5f}\n'
-        settings_str += f'    Camera Width: {camera_controls.camera_width:.5f}\n'
-        settings_str += f'    Camera Height: {camera_controls.camera_height:.5f}\n'
-        settings_str += f'    Focal Length: {camera_controls.focal_length:.5f}\n'
-        settings_str += f'    Render Output Directory: "{scene.render_output_directory}"\n'
+        settings_dict["Camera Controls"] = {
+            "Cameras to Render": ",".join(camera_names_list),
+            "place_cameras_distance": scene.place_cameras_distance,
+            "camera_width_height": [camera_controls.camera_width, camera_controls.camera_height],
+            "focal_length": camera_controls.focal_length,
+            "render_output_directory": scene.render_output_directory
+        }
 
-        # Print the settings string to the console for verification
-        print(settings_str)
+        # Convert the dictionary to a JSON-formatted string and print it
+        settings_json = json.dumps(settings_dict, indent=4)
+        print(settings_json)
 
         return {'FINISHED'}
