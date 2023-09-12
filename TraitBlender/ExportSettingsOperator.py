@@ -1,5 +1,6 @@
 import bpy
 import json
+import os
 
 class ExportSettingsOperator(bpy.types.Operator):
     bl_idname = "object.export_settings"
@@ -62,8 +63,15 @@ class ExportSettingsOperator(bpy.types.Operator):
         settings_dict["obj_export_directory"] = scene.export_directory
         settings_dict["export_format"] = scene.export_format
 
-        # Convert the dictionary to a JSON-formatted string and print it
+        # Convert the dictionary to a JSON-formatted string
         settings_json = json.dumps(settings_dict, indent=4)
+
+        # Print the JSON-formatted string to the console
         print(settings_json)
+
+        # Save the settings to a JSON file in the selected directory
+        export_path = os.path.join(scene.export_directory, "traitblender_settings.json")
+        with open(export_path, 'w') as json_file:
+            json_file.write(settings_json)
 
         return {'FINISHED'}

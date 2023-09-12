@@ -288,5 +288,6 @@ class TraitBlenderPanel(bpy.types.Panel):
 
             layout = self.layout
             
+        layout.prop(context.scene, "export_directory", text="Export Directory")    
         layout.operator("object.export_settings")
         layout.operator("object.delete_all_objects", text="Delete All Objects")

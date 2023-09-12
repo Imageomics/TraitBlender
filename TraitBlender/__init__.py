@@ -99,6 +99,15 @@ def register():
     
     
     #Register Properties
+
+    bpy.types.Scene.export_directory = bpy.props.StringProperty(
+        name="Export Directory",
+        description="Directory where the settings will be exported",
+        default="",
+        maxlen=1024,
+        subtype='DIR_PATH'
+    )
+
     bpy.types.Scene.export_controls_property = bpy.props.PointerProperty(type=ExportControlsPropertyGroup)
     
     bpy.types.Scene.export_directory = bpy.props.StringProperty(
@@ -252,6 +261,8 @@ def unregister():
      
     ###ExportSettingsOperator 
     bpy.utils.unregister_class(ExportSettingsOperator)
+    del bpy.types.Scene.export_directory
+
     
     ###MeshGeneratingFunction
     bpy.utils.unregister_class(OpenMeshFunctionFileBrowserOperator)
