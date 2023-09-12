@@ -8,12 +8,12 @@ csv_file_path = ""
 wc_red, wc_green, wc_blue, wc_alpha = [1.0, 1.0, 1.0, 1.0]
 background_plane_image_path = ""
 background_plane_distance = 10.00
-bg_scale_x, bg_scale_y, bg_scale_z = [1.0, 1.0, 1.0]
+bg_scale_x, bg_scale_y, bg_scale_z = [.5, 1.0, 1.0]
 sun_strength = 1.0
 place_cameras_distance = 10.00
 camera_width, camera_height = [1080, 1080]
 focal_length = 50.00
-render_cameras = {"camera.top" : 1, "camera.bottom": 1 ,"camera.right": 1,"camera.left": 1,"camera.front": 1,"camera.back": 1}
+render_cameras = "camera.top,camera.bottom,camera.right,camera.left,camera.front,camera.back"
 render_output_directory = ""
 
 obj_export_format = ".obj"
@@ -51,13 +51,6 @@ scene.camera_controls.camera_width = camera_width
 scene.camera_controls.camera_height = camera_height
 scene.camera_controls.focal_length = focal_length
 scene.render_output_directory = render_output_directory
-
-scene.camera_controls.render_camera_top = render_cameras["camera.top"]
-scene.camera_controls.render_camera_bottom = render_cameras["camera.bottom"]
-scene.camera_controls.render_camera_right = render_cameras["camera.right"]
-scene.camera_controls.render_camera_left = render_cameras["camera.left"]
-scene.camera_controls.render_camera_front = render_cameras["camera.front"]
-scene.camera_controls.render_camera_back = render_cameras["camera.back"]
 
 ## set 3D object export properties
 scene.export_format = obj_export_format

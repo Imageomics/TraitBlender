@@ -58,6 +58,10 @@ class ExportSettingsOperator(bpy.types.Operator):
             "render_output_directory": scene.render_output_directory
         }
 
+        # New variables
+        settings_dict["obj_export_directory"] = scene.export_directory
+        settings_dict["export_format"] = scene.export_format
+
         # Convert the dictionary to a JSON-formatted string and print it
         settings_json = json.dumps(settings_dict, indent=4)
         print(settings_json)
