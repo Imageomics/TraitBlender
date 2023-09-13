@@ -1,11 +1,21 @@
 
 import bpy
 import json
+import sys
 
-## read in mesh function and trait csv
-make_mesh_function_path = "D://TraitBlender/TraitBlender/Examples/Functions/make_snail.py"
-csv_file_path = "D://TraitBlender/TraitBlender/Examples/Data/snails.csv"
-json_file_path = "C://Users/caleb/Downloads/snails/traitblender_settings.json"
+# Function to get command-line arguments passed to Blender (skip the first two arguments which are blender related)
+def get_args():
+    args = sys.argv
+    for i, arg in enumerate(args):
+        if "--" == arg:
+            return args[i + 1:]
+    return []
+
+# Retrieve the paths from command line arguments
+argv = get_args()
+make_mesh_function_path = argv[0] if len(argv) > 0 else None
+csv_file_path = argv[1] if len(argv) > 1 else None
+json_file_path = argv[2] if len(argv) > 2 else None
 
 
 def load_settings_from_json(json_path):
