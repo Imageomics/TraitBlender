@@ -76,5 +76,10 @@ class ExportActiveObjectOperator(bpy.types.Operator):
         if not export_dir:
             self.report({'ERROR'}, "Please select an export directory first.")
             return {'CANCELLED'}
+        
+        # Create the directory if it doesn't exist
+        os.makedirs(export_dir, exist_ok=True)
+        
         self.export_active_object(export_dir, export_format)
         return {'FINISHED'}
+
