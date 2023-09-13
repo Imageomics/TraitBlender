@@ -63,6 +63,13 @@ class ExportSettingsOperator(bpy.types.Operator):
         settings_dict["obj_export_directory"] = scene.export_directory
         settings_dict["export_format"] = scene.export_format
 
+        # Adding new properties
+        settings_dict["Dataset Options"] = {
+            "use_suns": scene.use_suns,
+            "use_cameras": scene.use_cameras,
+            "use_3d_export": scene.use_3d_export
+        }
+
         # Convert the dictionary to a JSON-formatted string
         settings_json = json.dumps(settings_dict, indent=4)
 
