@@ -132,12 +132,33 @@ class ImportCSVOperator(bpy.types.Operator):
         scene_name = context.scene.name
         try:
             csv_data, column_names = self.import_csv(bpy.data.scenes[scene_name].csv_file_path)
+
+            # Initialize an empty list to store the tip labels
+            tip_labels = []
+
+            # Find the column name (case insensitive) that matches "label", "tip", or "species"
+            label_column_name = None
+            for name in column_names:
+                if name.lower() in ["label", "tip", "species"]:
+                    label_column_name = name
+                    break
+
+            # If the label column is found, extract the labels
+            if label_column_name:
+                for row in csv_data:
+                    tip_labels.append(row[label_column_name])
+
+            # Store the data in custom properties
             context.scene['csv_data'] = csv_data
             context.scene['column_names'] = column_names
+            context.scene['tip_labels'] = tip_labels  # New custom property
+
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
+
+
 
 
 
