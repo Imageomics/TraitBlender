@@ -70,7 +70,7 @@ class ExportSettingsOperator(bpy.types.Operator):
         print(settings_json)
 
         # Save the settings to a JSON file in the selected directory
-        export_path = os.path.join(scene.export_directory, "traitblender_settings.json")
+        export_path = os.path.join(scene.export_settings_directory, "traitblender_settings.json")
         with open(export_path, 'w') as json_file:
             json_file.write(settings_json)
 

@@ -100,7 +100,7 @@ def register():
     
     #Register Properties
 
-    bpy.types.Scene.export_directory = bpy.props.StringProperty(
+    bpy.types.Scene.export_settings_directory = bpy.props.StringProperty(
         name="Export Directory",
         description="Directory where the settings will be exported",
         default="",
@@ -318,6 +318,7 @@ def unregister():
     del bpy.types.Scene.render_output_directory
     del bpy.types.Scene.csv_file_path
     del bpy.types.Scene.csv_labels
+    del bpy.types.Scene.export_settings_directory
     if hasattr(bpy.types.Scene, 'csv_label_enum'):
         del bpy.types.Scene.csv_label_enum
 
