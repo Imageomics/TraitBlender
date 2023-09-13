@@ -5,11 +5,8 @@ import json
 ## read in mesh function and trait csv
 make_mesh_function_path = "D://TraitBlender/TraitBlender/Examples/Functions/make_snail.py"
 csv_file_path = "D://TraitBlender/TraitBlender/Examples/Data/snails.csv"
-json_file_path = "C://Users/caleb/Downloads/traitblender_settings.json"
-use_suns = True
-use_cameras = True
-#use_model_export = True
-use_3d_export = True
+json_file_path = "C://Users/caleb/Downloads/snails/traitblender_settings.json"
+
 
 def load_settings_from_json(json_path):
     with open(json_path, 'r') as f:
@@ -19,6 +16,11 @@ def load_settings_from_json(json_path):
 
 # Path to the JSON file containing the settings
 settings = load_settings_from_json(json_file_path)
+
+# Reading dataset options from JSON
+use_suns = settings["Dataset Options"]["use_suns"]
+use_cameras = settings["Dataset Options"]["use_cameras"]
+use_3d_export = settings["Dataset Options"]["use_3d_export"]
 
 # Extracting variables from the loaded settings
 wc_red, wc_green, wc_blue, wc_alpha = settings["World Background Controls"]["wc_colors"]
