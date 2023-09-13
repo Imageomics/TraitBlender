@@ -9,6 +9,8 @@ Make a Docker image.
 
 ### Maybe make background panels an dataset option?
 
+### Address the issue with camera distances appearing different from different angles
+
 
 
 
