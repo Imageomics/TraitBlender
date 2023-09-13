@@ -285,8 +285,6 @@ def unregister():
      
     ###ExportSettingsOperator 
     bpy.utils.unregister_class(ExportSettingsOperator)
-    del bpy.types.Scene.export_directory
-
     
     ###MeshGeneratingFunction
     bpy.utils.unregister_class(OpenMeshFunctionFileBrowserOperator)
@@ -342,7 +340,7 @@ def unregister():
     del bpy.types.Scene.background_controls
     del bpy.types.Scene.sun_strength
     del bpy.types.Scene.background_image_reference
-    del bpy.types.Scene.traitblender_settings
+    #del bpy.types.Scene.traitblender_settings
     del bpy.types.Scene.place_cameras_distance
     del bpy.types.Scene.camera_controls
     del bpy.types.Scene.render_output_directory
