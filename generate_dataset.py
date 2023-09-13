@@ -8,7 +8,7 @@ csv_file_path = "D://TraitBlender/TraitBlender/Examples/Data/snails.csv"
 json_file_path = "C://Users/caleb/Downloads/traitblender_settings.json"
 use_suns = True
 use_cameras = True
-use_model_export = True
+#use_model_export = True
 use_3d_export = True
 
 def load_settings_from_json(json_path):

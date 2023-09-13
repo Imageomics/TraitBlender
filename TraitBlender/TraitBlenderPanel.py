@@ -287,6 +287,18 @@ class TraitBlenderPanel(bpy.types.Panel):
             row.prop(context.scene, "csv_file_path_load", text="")
 
             layout = self.layout
+
+        layout.prop(context.scene, "dataset_options", icon="TRIA_DOWN" if context.scene.dataset_options else "TRIA_RIGHT", emboss=False, text="Dataset Options")
+        if context.scene.dataset_options:
+            box = layout.box()
+            col = box.column(align=True)
+            col.scale_y = 1.5  # Adjust the vertical scaling as needed
+            
+            col.prop(context.scene, "use_suns", text="Use Suns")
+            col.prop(context.scene, "use_cameras", text="Use Cameras")
+            col.prop(context.scene, "use_3d_export", text="Use 3D Export")
+
+
             
         layout.prop(context.scene, "export_settings_directory", text="Export Directory")    
         layout.operator("object.export_settings")

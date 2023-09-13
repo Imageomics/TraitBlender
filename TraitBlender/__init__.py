@@ -229,6 +229,30 @@ def register():
         default=False
     )
 
+    bpy.types.Scene.use_suns = bpy.props.BoolProperty(
+        name="Use Suns",
+        description="Enable or disable the use of suns in the dataset",
+        default=True
+    )
+
+    bpy.types.Scene.use_cameras = bpy.props.BoolProperty(
+        name="Use Cameras",
+        description="Enable or disable the use of cameras in the dataset",
+        default=True
+    )
+
+    bpy.types.Scene.use_3d_export = bpy.props.BoolProperty(
+        name="Use 3D Export",
+        description="Enable or disable the use of 3D export in the dataset",
+        default=True
+    )
+
+    bpy.types.Scene.dataset_options = bpy.props.BoolProperty(
+        name="Dataset Options",
+        description="Toggle to show or hide additional dataset options",
+        default=False
+    )
+
 
     
     bpy.app.handlers.depsgraph_update_post.append(delete_cameras_on_mesh_deletion)
@@ -296,6 +320,12 @@ def unregister():
     bpy.utils.unregister_class(ChangeWorldBackgroundColor)
     bpy.utils.unregister_class(ExportControlsPropertyGroup)
     
+    ###Dataset Options
+    del bpy.types.Scene.use_suns
+    del bpy.types.Scene.use_cameras
+    del bpy.types.Scene.use_3d_export
+    del bpy.types.Scene.dataset_options
+
     
     
     #unregister properties
