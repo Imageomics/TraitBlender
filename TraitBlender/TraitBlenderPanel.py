@@ -156,11 +156,6 @@ class TraitBlenderPanel(bpy.types.Panel):
             row.alignment = 'CENTER'
             row.label(text="View & Render Settings", icon='NONE')
 
-            # Camera distance control
-            row = layout.row()
-            row.label(text="Distance:")
-            row.prop(context.scene, "place_cameras_distance", text="")
-
             # Camera width and height controls
             row = layout.row()
             row.label(text="Width:")
@@ -168,6 +163,11 @@ class TraitBlenderPanel(bpy.types.Panel):
             row = layout.row()
             row.label(text="Height:")
             row.prop(camera_controls, "camera_height", text="")
+
+            # Camera distance control
+            row = layout.row()
+            row.label(text="Distance:")
+            row.prop(context.scene, "place_cameras_distance", text="")
 
             # Focal length control
             row = layout.row()
