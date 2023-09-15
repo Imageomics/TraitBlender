@@ -24,3 +24,20 @@
 
 ####Rest in progress
 
+
+### Docker
+The following commands need to be run from the base directory of this repo.
+
+#### Build
+```
+docker build -t traitblender .
+```
+
+#### Run
+On Linux or Mac
+```
+mkdir results
+docker run -v $(pwd)/results:/src/TraitBlender/results -it traitblender
+```
+On Windows you will need to replace `$(pwd)` with your current directory.
+When the above command completes check the `results` directory for images created.

@@ -2,6 +2,7 @@
 import bpy
 import json
 import sys
+bpy.ops.preferences.addon_enable(module="TraitBlender")
 
 # Function to get command-line arguments passed to Blender (skip the first two arguments which are blender related)
 def get_args():
