@@ -52,24 +52,22 @@ cameras_to_render = settings["Camera Controls"]["Cameras to Render"]
 ## Defining the scene
 scene = bpy.data.scenes["Scene"]
 
-## Import the function
-scene.make_mesh_function_path = make_mesh_function_path
-
 ## setting mesh function and trait data related properties
 scene.csv_file_path = csv_file_path
 scene.make_mesh_function_path = make_mesh_function_path
-
-
-
 
 bpy.ops.object.import_csv()
 tips = bpy.data.scenes['Scene']['tip_labels']
 traits = bpy.data.scenes['Scene']['csv_data']
 mesh_function = bpy.ops.object.execute_with_selected_csv_row
 
+scene.render_output_directory = render_output_directory
+scene.export_directory = obj_export_directory
 
 for index, label in enumerate(tips):
-    
+
+    scene = bpy.data.scenes["Scene"]
+
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -80,7 +78,10 @@ for index, label in enumerate(tips):
     index = str(index)
     scene.csv_label_props.csv_label_enum = index
     mesh_function()
-    
+    active_obj = bpy.context.active_object
+    bpy.ops.object.select_all(action='DESELECT')
+    active_obj.select_set(True)
+
     ## set world color properties
     scene.world_background_controls.red = wc_red
     scene.world_background_controls.green = wc_green
@@ -105,19 +106,22 @@ for index, label in enumerate(tips):
         bpy.ops.object.update_sun_strength()
         
     if use_cameras:
+        if render_output_directory == "":
+            raise ValueError("You opted to export images, but didn't include a directory to export to!")
         bpy.ops.object.toggle_cameras()
         ## set the camera related properties
         scene.camera_controls.camera_width = camera_width
         scene.camera_controls.camera_height = camera_height
         scene.place_cameras_distance = place_cameras_distance
         scene.camera_controls.focal_length = focal_length
-        scene.render_output_directory = render_output_directory
         bpy.ops.object.render_all_cameras(camera_names=cameras_to_render)
         
     if use_3d_export:
+        if obj_export_directory == "":
+            raise ValueError("You opted to export the 3D object mesh, but didn't include a directory to export to!")
+
         ## set 3D object export properties
         scene.export_format = export_format
-        scene.export_directory = obj_export_directory
         bpy.ops.object.export_active_object()
     
 print("Done!")

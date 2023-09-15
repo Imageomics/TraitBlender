@@ -20,17 +20,17 @@
         "sun_strength": 1.0
     },
     "Camera Controls": {
-        "Cameras to Render": "camera.front,camera.back,camera.top,camera.bottom,camera.left,camera.right",
+        "Cameras to Render": "camera.top,camera.bottom,camera.right,camera.left,camera.front,camera.back",
         "place_cameras_distance": 10.0,
         "camera_width_height": [
-            280,
-            280
+            1080,
+            1080
         ],
-        "focal_length": 300.0,
-        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\snails\\images"
+        "focal_length": 1000.0,
+        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\snails\\image"
     },
     "obj_export_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\snails\\3D",
-    "export_format": ".fbx",
+    "export_format": ".obj",
     "Dataset Options": {
         "use_suns": true,
         "use_cameras": true,
