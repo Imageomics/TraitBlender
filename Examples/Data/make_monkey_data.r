@@ -34,9 +34,9 @@ trait <- rTraitDisc(tree, Q=Q, states=as.character(0:3))
 
 
 # Generate data for continuous traits evolving under Brownian motion
-jowl_size <- rTraitCont(tree, model="BM", sigma=0.005, root.value=1.1)
-dome_size <- rTraitCont(tree, model="BM", sigma=0.1, root.value=1.1)
-overall_size <- rTraitCont(tree, model="BM", sigma=0.2, root.value=1.1)
+jowl_size <- abs(rTraitCont(tree, model="BM", sigma=0.05, root.value=1.1))
+dome_size <- rTraitCont(tree, model="BM", sigma=0.07, root.value=.5)
+overall_size <- abs(rTraitCont(tree, model="BM", sigma=0.02, root.value=2))
 
 # Generate data for the discrete trait (ear color)
 # Make it equally easy to switch between any two states.
@@ -58,6 +58,10 @@ dataset <- data.frame(
   vertex_group_csv="D://TraitBlender/TraitBlender/Examples/Data/suzanne.csv",
   ear_color=ear_color
 )
+
+# Sort the dataset by the numbers in the label column
+dataset <- dataset[order(as.numeric(gsub("t", "", dataset$label))),]
+
 
 # Save the dataset to a CSV file
 write.csv(dataset, file="Examples/Data/monkey_data.csv", row.names=FALSE)

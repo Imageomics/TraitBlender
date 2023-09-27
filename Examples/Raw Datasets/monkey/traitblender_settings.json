@@ -1,0 +1,39 @@
+{
+    "World Background Controls": {
+        "wc_colors": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "Background Controls": {
+        "background_plane_image_path": "None",
+        "background_plane_distance": 10.0,
+        "bg_scales": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    "Lights": {
+        "sun_strength": 0.8834474682807922
+    },
+    "Camera Controls": {
+        "Cameras to Render": "camera.top,camera.bottom,camera.right,camera.left,camera.front,camera.back",
+        "place_cameras_distance": 80.0,
+        "camera_width_height": [
+            1080,
+            1080
+        ],
+        "focal_length": 4500.0,
+        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\monkey\\images\\"
+    },
+    "obj_export_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\monkey\\3D\\",
+    "export_format": ".fbx",
+    "Dataset Options": {
+        "use_suns": true,
+        "use_cameras": true,
+        "use_3d_export": true
+    }
+}
