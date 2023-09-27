@@ -47,7 +47,7 @@ Q <- matrix(c(
 ), nrow=3, ncol=3)
 rownames(Q) <- colnames(Q) <- as.character(0:2)
 
-ear_color <- rTraitDisc(tree, Q=Q, states=as.character(0:2))
+ear_color <- rTraitDisc(tree, k=3, Q=Q, states=as.character(0:2))
 
 # Create the dataset
 dataset <- data.frame(
@@ -64,7 +64,7 @@ write.csv(dataset, file="Examples/Data/monkey_data.csv", row.names=FALSE)
 write.tree(tree, file="Examples/Data/monkey_tree.nwk")
 
 # Add the simulated trait to the tree tip labels for visualization
-tree$tip.label <- paste0(tree$tip.label, "_", trait)
+tree$tip.label <- paste0(tree$tip.label, "_", ear_color)
 
 # Plot the tree with trait states
 plot(tree)
