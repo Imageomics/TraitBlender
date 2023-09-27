@@ -2,12 +2,14 @@ import bpy
 import mathutils
 
 def make_monkey(label="Suzanne", Jowl_Size=0, Dome_Size=0, Overall_Size=1, vertex_group_csv=None, ear_color=0):
-    # Make sure you're in 'OBJECT' mode
-    bpy.ops.object.mode_set(mode='OBJECT')
+    # Check if any object is selected; if not, set to 'OBJECT' mode
+    if bpy.context.selected_objects:
+        bpy.ops.object.mode_set(mode='OBJECT')
     
     # Delete all objects in the scene
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete()
+
 
     # Add Suzanne monkey
     bpy.ops.mesh.primitive_monkey_add()
@@ -55,4 +57,4 @@ def make_monkey(label="Suzanne", Jowl_Size=0, Dome_Size=0, Overall_Size=1, verte
             monkey.active_material_index = 2
 
         bpy.ops.object.material_slot_assign()
-        bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.mode_set(mode='OBJECT')
