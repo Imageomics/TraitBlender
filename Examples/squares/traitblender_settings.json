@@ -27,9 +27,9 @@
             700
         ],
         "focal_length": 300.0,
-        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\squares\\images"
+        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\squares\\images"
     },
-    "obj_export_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\squares\\3D",
+    "obj_export_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\squares\\3D",
     "export_format": ".fbx",
     "Dataset Options": {
         "use_suns": true,
