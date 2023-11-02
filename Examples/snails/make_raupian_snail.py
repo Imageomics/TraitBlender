@@ -1,10 +1,13 @@
 import numpy as np
 import bpy
 
-def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, r_c=0.006, y_0=0, radius=0.0025, 
+def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, radius=0.0025, 
                             n_points=500, n_circles=1000, n_rotations=8*np.pi, color1="#FFFFFF", 
                             color2="#000000", Fac=0.720):
     
+    
+    r_c = -((radius*(D + 1))/(D - 1))
+    y_0 = 0
 
     def translate_point(theta, r_0, r_c, y_0, W, T, n_points):
         r_theta = r_0 * (W ** (theta / (2 * np.pi)))
@@ -151,6 +154,14 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, r_c=0.006, y_0=0, ra
     bpy.context.view_layer.update()
 
 
-generate_and_mesh_snail(label='snail', W=1.5, T=2, S = 1, r_c=.2, y_0=0, radius=0.05, 
-                            n_points=100, n_circles=800, n_rotations=12.75*np.pi, color1="#000000",
-                            color2="#000000", Fac=1)
+generate_and_mesh_snail(label='snail', 
+                        W=1.65, 
+                        T=0, 
+                        S = .75, 
+                        D=0.3, 
+                        radius=0.025, 
+                        n_points=100, 
+                        n_circles=800, 
+                        n_rotations=8*np.pi, 
+                        color1="#000000",
+                        color2="#000000", Fac=1)
