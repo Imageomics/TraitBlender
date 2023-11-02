@@ -1,27 +1,36 @@
 import numpy as np
 import bpy
 
-def generate_and_mesh_snail(label='snail', W=7, T=1.5, r_c=0.006, y_0=0, radius=0.0025, 
+def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, r_c=0.006, y_0=0, radius=0.0025, 
                             n_points=500, n_circles=1000, n_rotations=8*np.pi, color1="#FFFFFF", 
                             color2="#000000", Fac=0.720):
     
-    def translate_point(theta, r_0, y_0, W, T, n_points):
+
+    def translate_point(theta, r_0, r_c, y_0, W, T, n_points):
         r_theta = r_0 * (W ** (theta / (2 * np.pi)))
         y_theta = y_0 * (W ** (theta / (2 * np.pi))) + r_c * (T * (W ** (theta / (2 * np.pi)) - 1))
         theta = np.full(n_points, theta)
         return (theta, r_theta, y_theta)
 
-    def generate_circle_points(r_c, radius, n):
+    def generate_circle_points(r_c, radius, n, S):
+        # Calculate the angle increment
         angle_increment = 2 * np.pi / n
+        
+        # Initialize coordinate arrays
         x_coords = np.zeros(n)
         y_coords = np.zeros(n)
         
+        # Calculate new radius for y to maintain the same area after stretching
+        y_radius = radius * np.sqrt(S)
+        
+        # Generate points
         for i in range(n):
             theta = i * angle_increment
             x_coords[i] = r_c + radius * np.cos(theta)
-            y_coords[i] = radius * np.sin(theta)
+            y_coords[i] = y_radius * np.sin(theta)
         
         return x_coords, y_coords
+
 
     def cylindrical_to_cartesian(cylindrical_matrices):
         cartesian_matrices = []
@@ -35,9 +44,9 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, r_c=0.006, y_0=0, radius=
         
         return np.array(cartesian_matrices)
 
-    r_0s, y_0s = generate_circle_points(r_c, radius, n_points)
+    r_0s, y_0s = generate_circle_points(r_c, radius, n_points, S)
 
-    points = np.array([translate_point(angle, r_0s, y_0s, W, T, n_points) 
+    points = np.array([translate_point(angle, r_0s, r_c,  y_0s, W, T, n_points) 
                        for angle in np.linspace(0, n_rotations, num=n_circles)])
 
     cartesian_matrices = cylindrical_to_cartesian(points)
@@ -142,6 +151,6 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, r_c=0.006, y_0=0, radius=
     bpy.context.view_layer.update()
 
 
-generate_and_mesh_snail(label='snail', W=2.5, T=0, r_c=0.06, y_0=0, radius=0.06, 
-                            n_points=50, n_circles=1000, n_rotations=8*np.pi, color1="#000000",
+generate_and_mesh_snail(label='snail', W=1.5, T=2, S = 1, r_c=.2, y_0=0, radius=0.05, 
+                            n_points=100, n_circles=800, n_rotations=12.75*np.pi, color1="#000000",
                             color2="#000000", Fac=1)
