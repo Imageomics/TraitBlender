@@ -1,13 +1,17 @@
 import numpy as np
 import bpy
 
-def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, radius=0.0025, 
+def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, diameter=3, 
                             n_points=500, n_circles=1000, n_rotations=8*np.pi, color1="#FFFFFF", 
                             color2="#000000", Fac=0.720):
     
     
+    rotations = n_rotations / (2*np.pi)
+    radius = 1#((diameter)/((W**rotations) + (W**(rotations - .5))))/(1 - ((D + 1)/(D - 1)))
+
     r_c = -((radius*(D + 1))/(D - 1))
     y_0 = 0
+        
 
     def translate_point(theta, r_0, r_c, y_0, W, T, n_points):
         r_theta = r_0 * (W ** (theta / (2 * np.pi)))
@@ -148,20 +152,25 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, radius=0.0025
     bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='BOUNDS')
 
     # Rotate the object 180 degrees about its local X-axis
-    obj.rotation_euler[0] = np.pi  # np.pi is 180 degrees in radians
+    obj.rotation_euler[0] = np.pi  
 
     # Update the scene
     bpy.context.view_layer.update()
 
+    obj = bpy.context.active_object
+    scale_factor = diameter / obj.dimensions.x
+    obj.scale *= scale_factor
+    obj.location = (0, 0, 0)
+
 
 generate_and_mesh_snail(label='snail', 
-                        W=1.65, 
+                        W=1000, 
                         T=0, 
-                        S = .75, 
-                        D=.5, 
-                        radius=0.0000025, 
+                        S = 1, 
+                        D=0, 
+                        diameter=100, 
                         n_points=100, 
-                        n_circles=800, 
-                        n_rotations=32*np.pi, 
+                        n_circles=4000, 
+                        n_rotations=2*np.pi, 
                         color1="#000000",
                         color2="#000000", Fac=1)
