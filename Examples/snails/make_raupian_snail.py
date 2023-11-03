@@ -149,7 +149,7 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, diameter=3,
     obj.select_set(True)
 
     # Set the origin to the center of mass
-    bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='BOUNDS')
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
 
     # Rotate the object 180 degrees about its local X-axis
     obj.rotation_euler[0] = np.pi  
@@ -164,13 +164,13 @@ def generate_and_mesh_snail(label='snail', W=7, T=1.5, S=1, D=0.1, diameter=3,
 
 
 generate_and_mesh_snail(label='snail', 
-                        W=1000, 
+                        W=10**4, 
                         T=0, 
                         S = 1, 
-                        D=0, 
-                        diameter=100, 
-                        n_points=100, 
-                        n_circles=4000, 
-                        n_rotations=2*np.pi, 
+                        D=.3, 
+                        diameter=.1, 
+                        n_points=500, 
+                        n_circles=2000, 
+                        n_rotations=8*np.pi, 
                         color1="#000000",
                         color2="#000000", Fac=1)
