@@ -60,8 +60,27 @@ def make_contreras_snail(label="snail",
     def lambda_(t, theta, b, d, z, a, phi, psi, c_n, c_depth, n, n_depth):
         return gamma(t, b, d, z) + C(t, theta, b, a, d, z, phi, psi, c_n, c_depth, n, n_depth)
 
+    # the constant helps keep the float from overflowing when converting to blender
     points = np.array([[lambda_(t, theta, b, d, z, a, phi, psi, c_n, c_depth, n=n, n_depth=n_depth) for theta in theta_values] for t in t_values])
-    print(points)
+
+    # rescale the values to between 0 and 1 so it doesn't cause float overflow when converting to blender
+    current_max = np.amax(points)
+    current_min = np.amin(points)
+    desired_max = 100
+    desired_min = -100
+    scale_factor = (desired_max - desired_min) / (current_max - current_min) if current_max != current_min else 1
+    scaled_points = points * scale_factor
+    translation = desired_min - np.amin(scaled_points)
+    scaled_points += translation
+    points = scaled_points
+    new_max = np.amax(scaled_points)
+    new_min = np.amin(scaled_points)
+
+
+
+    print("Largest Value:", (current_max, new_max))
+    print("Smallest Value:",(current_min, new_min))
+
 
     
     mesh = bpy.data.meshes.new(name="ShellMesh")
@@ -144,7 +163,7 @@ def make_contreras_snail(label="snail",
     bpy.context.view_layer.update()
 
 make_contreras_snail(label="snail", 
-                         b = .1, d = 3, z = 2, a = 1, phi = 0, psi = 0, 
+                         b = 5, d = 3, z = 2, a = 1, phi = 0, psi = 0, 
                          c_depth=0.3, c_n = 30, n_depth = 0.5, n = 0, 
-                         t = 50, time_step = .25/20, 
+                         t = 50, time_step = .25/5, 
                          points_in_circle=15, length = 1, smooth=True)
