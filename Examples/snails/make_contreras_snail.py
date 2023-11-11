@@ -5,7 +5,8 @@ def make_contreras_snail(label="snail",
                          b = .1, d = 5, z = 0, a = 1, phi = 0, psi = 0, 
                          c_depth=0.3, c_n = 12, n_depth = 0.5, n = 4, 
                          t = 20, time_step = .25/6, 
-                         points_in_circle=20, length = 1, smooth=False):
+                         points_in_circle=20, length = 1, smooth=False,
+                         color="#000000"):
     
     
     for obj in bpy.data.objects:
@@ -106,11 +107,10 @@ def make_contreras_snail(label="snail",
     obj.scale.z *= scale_factor
 
     bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
+    bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_VOLUME')
 
     # Move the object to the global origin
-    obj.location = (0, 0, 0)
-
+    obj.rotation_euler[1] = np.pi
     if smooth:
         # Set the object to be the active object
         bpy.context.view_layer.objects.active = obj
@@ -120,8 +120,31 @@ def make_contreras_snail(label="snail",
 
         # Apply smooth shading
         bpy.ops.object.shade_smooth()
+        
+    
+    bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_VOLUME', center="BOUNDS")
+    obj.location = (0, 0, 0)
+        
+    color_hex = color.lstrip('#')
+    color_rgb = tuple(int(color_hex[i:i+2], 16)/255 for i in (0, 2, 4))
+
+    # Create a new material
+    mat = bpy.data.materials.new(name="ShellMaterial")
+    mat.diffuse_color = color_rgb + (1,)  # RGBA, A is the alpha (transparency)
+
+    # Assign material to the object
+    if obj.data.materials:
+        # Object has materials, overwrite the first
+        obj.data.materials[0] = mat
+    else:
+        # No materials on the object, append new
+        obj.data.materials.append(mat)
 
     # Update the scene
     bpy.context.view_layer.update()
 
-make_contreras_snail(smooth=True)
+make_contreras_snail(label="snail", 
+                         b = .1, d = 3, z = 2, a = 1, phi = 0, psi = 0, 
+                         c_depth=0.3, c_n = 30, n_depth = 0.5, n = 0, 
+                         t = 50, time_step = .25/20, 
+                         points_in_circle=15, length = 1, smooth=True)
