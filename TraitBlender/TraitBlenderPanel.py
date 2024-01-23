@@ -235,26 +235,57 @@ class TraitBlenderPanel(bpy.types.Panel):
 
 
         randomization_controls = scene.randomization_controls
-        layout.prop(randomization_controls, "expanded", icon="TRIA_DOWN" if randomization_controls.expanded else "TRIA_RIGHT", emboss=False)
+        layout.prop(randomization_controls, "expanded", icon="TRIA_DOWN" if randomization_controls.expanded else "TRIA_RIGHT", text="Randomize Images", emboss=False)
         if randomization_controls.expanded:
-            # Red Mean and Std Dev
-            layout.prop(scene, "red_mu", text="Red Mean")
-            layout.prop(scene, "red_sd", text="Red Std Dev")
-            
-            # Green Mean and Std Dev
-            layout.prop(scene, "green_mu", text="Green Mean")
-            layout.prop(scene, "green_sd", text="Green Std Dev")
-            
-            # Blue Mean and Std Dev
-            layout.prop(scene, "blue_mu", text="Blue Mean")
-            layout.prop(scene, "blue_sd", text="Blue Std Dev")
-            
-            # Alpha Mean and Std Dev
-            layout.prop(scene, "alpha_mu", text="Alpha Mean")
-            layout.prop(scene, "alpha_sd", text="Alpha Std Dev")
+            # Centered header text
+            row = layout.row()
+            row.alignment = 'CENTER'
+            row.label(text="World Background Color")
+
+            # Headers for Mu and SD
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.alignment = 'EXPAND'
+            row.label(text="")  # Empty label for spacing
+            split = row.split(factor=0.5)
+            split.label(text="Mu")
+            split.label(text="SD")
+
+            # Red
+            row = col.row(align=True)
+            row.label(text="Red")
+            split = row.split(factor=0.5)
+            split.prop(scene, "red_mu", text="")
+            split.prop(scene, "red_sd", text="")
+
+            # Green
+            row = col.row(align=True)
+            row.label(text="Green")
+            split = row.split(factor=0.5)
+            split.prop(scene, "green_mu", text="")
+            split.prop(scene, "green_sd", text="")
+
+            # Blue
+            row = col.row(align=True)
+            row.label(text="Blue")
+            split = row.split(factor=0.5)
+            split.prop(scene, "blue_mu", text="")
+            split.prop(scene, "blue_sd", text="")
+
+            # Alpha
+            row = col.row(align=True)
+            row.label(text="Alpha")
+            split = row.split(factor=0.5)
+            split.prop(scene, "alpha_mu", text="")
+            split.prop(scene, "alpha_sd", text="")
 
             # Button to execute randomization
             layout.operator("object.randomize_world_background_color", text="Randomize World Background")
+
+
+
+
+
 
         
         export_controls_property = context.scene.export_controls_property  # Replace with the correct attribute name if needed
