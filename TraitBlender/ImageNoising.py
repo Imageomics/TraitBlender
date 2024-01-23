@@ -69,3 +69,11 @@ class RandomWorldBackgroundColor(bpy.types.Operator):
         bpy.ops.scene.change_background_color()
         
         return {'FINISHED'}
+    
+
+class RandomizationControls(bpy.types.PropertyGroup):
+    expanded: bpy.props.BoolProperty(
+        name="Expand Randomization Controls",
+        description="Toggle the display of randomization controls",
+        default=False
+    )

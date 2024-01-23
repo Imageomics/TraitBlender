@@ -35,6 +35,7 @@ class TraitBlenderPanel(bpy.types.Panel):
         """
         layout = self.layout
         obj = context.object
+        scene = context.scene
         background_controls = context.scene.background_controls
         camera_controls = context.scene.camera_controls
         segmentation_controls_property = context.scene.segmentation_controls_property  # Get the property group from the scene
@@ -231,6 +232,29 @@ class TraitBlenderPanel(bpy.types.Panel):
             layout.prop(context.scene, "render_output_directory", text="")
 
             layout.operator("object.render_all_cameras", text="Render Selected Cameras").camera_names = camera_names_str
+
+
+        randomization_controls = scene.randomization_controls
+        layout.prop(randomization_controls, "expanded", icon="TRIA_DOWN" if randomization_controls.expanded else "TRIA_RIGHT", emboss=False)
+        if randomization_controls.expanded:
+            # Red Mean and Std Dev
+            layout.prop(scene, "red_mu", text="Red Mean")
+            layout.prop(scene, "red_sd", text="Red Std Dev")
+            
+            # Green Mean and Std Dev
+            layout.prop(scene, "green_mu", text="Green Mean")
+            layout.prop(scene, "green_sd", text="Green Std Dev")
+            
+            # Blue Mean and Std Dev
+            layout.prop(scene, "blue_mu", text="Blue Mean")
+            layout.prop(scene, "blue_sd", text="Blue Std Dev")
+            
+            # Alpha Mean and Std Dev
+            layout.prop(scene, "alpha_mu", text="Alpha Mean")
+            layout.prop(scene, "alpha_sd", text="Alpha Std Dev")
+
+            # Button to execute randomization
+            layout.operator("object.randomize_world_background_color", text="Randomize World Background")
 
         
         export_controls_property = context.scene.export_controls_property  # Replace with the correct attribute name if needed

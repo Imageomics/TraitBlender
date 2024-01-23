@@ -102,14 +102,23 @@ def register():
     bpy.utils.register_class(RandomWorldBackgroundColor)
     bpy.types.Scene.camera_distance_mu = bpy.props.FloatProperty(name="Mean Distance", default=10.0)
     bpy.types.Scene.camera_distance_sd = bpy.props.FloatProperty(name="Std Dev Distance", default=0.0)
-    bpy.types.Scene.red_mu = bpy.props.FloatProperty(name="Red Mean", default=1.0)
-    bpy.types.Scene.red_sd = bpy.props.FloatProperty(name="Red Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.green_mu = bpy.props.FloatProperty(name="Green Mean", default=1.0)
-    bpy.types.Scene.green_sd = bpy.props.FloatProperty(name="Green Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.blue_mu = bpy.props.FloatProperty(name="Blue Mean", default=1.0)
-    bpy.types.Scene.blue_sd = bpy.props.FloatProperty(name="Blue Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.alpha_mu = bpy.props.FloatProperty(name="Alpha Mean", default=1.0)
-    bpy.types.Scene.alpha_sd = bpy.props.FloatProperty(name="Alpha Std Dev", default=0.0, min=0.0)
+    bpy.types.Scene.red_mu = bpy.props.FloatProperty(name="Red Mean", default=1.0, soft_min=0, soft_max=1)
+    bpy.types.Scene.red_sd = bpy.props.FloatProperty(name="Red Std Dev", default=0.0, min=0.0, max=1)
+    bpy.types.Scene.green_mu = bpy.props.FloatProperty(name="Green Mean", default=1.0, min=0, max=1)
+    bpy.types.Scene.green_sd = bpy.props.FloatProperty(name="Green Std Dev", default=0.0, min=0.0, max=1)
+    bpy.types.Scene.blue_mu = bpy.props.FloatProperty(name="Blue Mean", default=1.0, min=0, max=1)
+    bpy.types.Scene.blue_sd = bpy.props.FloatProperty(name="Blue Std Dev", default=0.0, min=0.0, max=1)
+    bpy.types.Scene.alpha_mu = bpy.props.FloatProperty(name="Alpha Mean", default=1.0, min=0, max=1)
+    bpy.types.Scene.alpha_sd = bpy.props.FloatProperty(name="Alpha Std Dev", default=0.0, min=0.0, max=1)
+    bpy.types.Scene.x_mu = bpy.props.FloatProperty(name="X Mean", default=0)
+    bpy.types.Scene.x_sd = bpy.props.FloatProperty(name="X Std Dev", default=0)
+    bpy.types.Scene.y_mu = bpy.props.FloatProperty(name="Y Mean", default=0)
+    bpy.types.Scene.y_sd = bpy.props.FloatProperty(name="Y Std Dev", default=0)
+    bpy.types.Scene.z_mu = bpy.props.FloatProperty(name="Z Mean", default=0)
+    bpy.types.Scene.z_sd = bpy.props.FloatProperty(name="Z Std Dev", default=0)
+    bpy.utils.register_class(RandomizationControls)
+    bpy.types.Scene.randomization_controls = bpy.props.PointerProperty(type=RandomizationControls)
+
 
     
     #Register Properties
@@ -271,26 +280,8 @@ def register():
         default=False
     )
 
-    bpy.types.Scene.x_mu = bpy.props.FloatProperty(name="X Mean", default=0)
-    bpy.types.Scene.x_sd = bpy.props.FloatProperty(name="X Std Dev", default=0)
-    bpy.types.Scene.y_mu = bpy.props.FloatProperty(name="Y Mean", default=0)
-    bpy.types.Scene.y_sd = bpy.props.FloatProperty(name="Y Std Dev", default=0)
-    bpy.types.Scene.z_mu = bpy.props.FloatProperty(name="Z Mean", default=0)
-    bpy.types.Scene.z_sd = bpy.props.FloatProperty(name="Z Std Dev", default=0)
 
-    bpy.types.Scene.camera_distance_mu = bpy.props.FloatProperty(name="Mean Distance", default=10.0)
-    bpy.types.Scene.camera_distance_sd = bpy.props.FloatProperty(name="Std Dev Distance", default=0.0)
 
-    bpy.types.Scene.red_mu = bpy.props.FloatProperty(name="Red Mean", default=1.0)
-    bpy.types.Scene.red_sd = bpy.props.FloatProperty(name="Red Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.green_mu = bpy.props.FloatProperty(name="Green Mean", default=1.0)
-    bpy.types.Scene.green_sd = bpy.props.FloatProperty(name="Green Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.blue_mu = bpy.props.FloatProperty(name="Blue Mean", default=1.0)
-    bpy.types.Scene.blue_sd = bpy.props.FloatProperty(name="Blue Std Dev", default=0.0, min=0.0)
-    bpy.types.Scene.alpha_mu = bpy.props.FloatProperty(name="Alpha Mean", default=1.0)
-    bpy.types.Scene.alpha_sd = bpy.props.FloatProperty(name="Alpha Std Dev", default=0.0, min=0.0)
-
-    
     bpy.app.handlers.depsgraph_update_post.append(delete_cameras_on_mesh_deletion)
     
 def unregister():
@@ -366,7 +357,9 @@ def unregister():
     del bpy.types.Scene.blue_mu
     del bpy.types.Scene.blue_sd
     del bpy.types.Scene.alpha_mu
-    del bpy.types.Scene.alpha_sdb[y]
+    del bpy.types.Scene.alpha_sd
+    del bpy.types.Scene.randomization_controls
+    bpy.utils.unregister_class(RandomizationControls)
     
     ###Dataset Options
     del bpy.types.Scene.use_suns
@@ -406,18 +399,9 @@ def unregister():
     del bpy.types.Scene.z_mu
     del bpy.types.Scene.z_sd
 
-    del bpy.types.Scene.camera_distance_mu
-    del bpy.types.Scene.camera_distance_sd
 
-    del bpy.types.Scene.red_mu
-    del bpy.types.Scene.red_sd
-    del bpy.types.Scene.green_mu
-    del bpy.types.Scene.green_sd
-    del bpy.types.Scene.blue_mu
-    del bpy.types.Scene.blue_sd
-    del bpy.types.Scene.alpha_mu
-    del bpy.types.Scene.alpha_sd
-    
+
+
     
     bpy.app.handlers.depsgraph_update_post.remove(delete_cameras_on_mesh_deletion)
 
