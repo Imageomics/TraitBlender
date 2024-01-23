@@ -104,9 +104,9 @@ def update_camera_distance(self, context):
             camera.location = new_location
 
             # Point the camera towards the active object
-            direction_to_active_obj = active_obj.location - new_location
-            camera.rotation_mode = 'QUATERNION'
-            camera.rotation_quaternion = direction_to_active_obj.to_track_quat('-Z', 'Y')
+            #direction_to_active_obj = active_obj.location - new_location
+            #camera.rotation_mode = 'QUATERNION'
+            #camera.rotation_quaternion = direction_to_active_obj.to_track_quat('-Z', 'Y')
 
 
 def update_camera_focal_length(self, context):

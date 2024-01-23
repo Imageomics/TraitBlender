@@ -4,7 +4,7 @@ import bpy
 
 class RandomCamerasRotationOperator(bpy.types.Operator):
     """Randomly rotate cameras within specified normal distribution"""
-    bl_idname = "object.random_cameras_rotation"
+    bl_idname = "object.randomize_camera_rotation"
     bl_label = "Random Cameras Rotation"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -41,4 +41,38 @@ class RandomCamerasRotationOperator(bpy.types.Operator):
         context.view_layer.update()
 
         self.report({'INFO'}, "Random rotations applied to cameras.")
+        return {'FINISHED'}
+
+
+class RandomCamerasDistanceOperator(bpy.types.Operator):
+    """Randomize Camera Distance"""
+    bl_idname = "object.randomize_camera_distance"
+    bl_label = "Randomize Camera Distance"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    camera_distance_mu: bpy.props.FloatProperty(
+        name="Mean Distance",
+        description="Mean distance for the cameras",
+        default=10.0
+    )
+    
+    camera_distance_sd: bpy.props.FloatProperty(
+        name="Std Dev Distance",
+        description="Standard deviation of the distance for the cameras",
+        default=0.0
+    )
+
+    def execute(self, context):
+        # Calculate a random distance using a normal distribution
+        random_distance = np.random.normal(self.camera_distance_mu, self.camera_distance_sd)
+        
+        # Set the calculated distance to the 'place_cameras_distance' property
+        context.scene.place_cameras_distance = random_distance
+        
+        # Call the function that updates the camera distances
+        # Assuming 'update_camera_distance' is a function you have previously defined
+        # and it's accessible in this context, e.g., imported or in the same file.
+        #update_camera_distance(context)  # Pass any other required arguments if necessary
+
+        self.report({'INFO'}, f"Camera distance randomized to: {random_distance:.2f}")
         return {'FINISHED'}

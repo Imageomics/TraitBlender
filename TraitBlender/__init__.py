@@ -98,7 +98,7 @@ def register():
 
     ###Random Camera Effects
     bpy.utils.register_class(RandomCamerasRotationOperator)
-    
+    bpy.utils.register_class(RandomCamerasDistanceOperator)
     
     #Register Properties
 
@@ -199,6 +199,7 @@ def register():
     bpy.types.Scene.place_cameras_distance = bpy.props.FloatProperty(
         name="Place Cameras Distance",
         default=10.0,
+        min=0.001,
         update=update_camera_distance  # Add the update function here
     )
 
@@ -206,6 +207,7 @@ def register():
     bpy.types.Scene.background_plane_distance = bpy.props.FloatProperty(
         name="Background Plane Distance",
         default=10.0,
+        min=0.001,
         description="Distance of the background planes from the active object",
         update=update_background_plane_distance  # This will call the function whenever the property changes
     )
@@ -324,6 +326,7 @@ def unregister():
 
     ###Random Camera Effects
     bpy.utils.unregister_class(RandomCamerasRotationOperator)
+    bpy.utils.unregister_class(RandomCamerasDistanceOperator)
     
     ###Dataset Options
     del bpy.types.Scene.use_suns
