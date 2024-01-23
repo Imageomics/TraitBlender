@@ -282,6 +282,62 @@ class TraitBlenderPanel(bpy.types.Panel):
             # Button to execute randomization
             layout.operator("object.randomize_world_background_color", text="Randomize World Background")
 
+            # Centered header text for camera angle
+            row = layout.row()
+            row.alignment = 'CENTER'
+            row.label(text="Camera Angle (Radians)")
+
+            # Headers for Mu and SD
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.alignment = 'EXPAND'
+            row.label(text="")  # Empty label for spacing
+            split = row.split(factor=0.5)
+            split.label(text="Mu")
+            split.label(text="SD")
+
+            # X row
+            row = col.row(align=True)
+            row.label(text="X")
+            split = row.split(factor=0.5)
+            split.prop(scene, "x_mu", text="")
+            split.prop(scene, "x_sd", text="")
+
+            # Y row
+            row = col.row(align=True)
+            row.label(text="Y")
+            split = row.split(factor=0.5)
+            split.prop(scene, "y_mu", text="")
+            split.prop(scene, "y_sd", text="")
+
+            # Z row
+            row = col.row(align=True)
+            row.label(text="Z")
+            split = row.split(factor=0.5)
+            split.prop(scene, "z_mu", text="")
+            split.prop(scene, "z_sd", text="")
+    
+            # Button to execute camera angle randomization
+            layout.operator("object.randomize_camera_rotation", text="Randomize Camera Rotation")
+
+            # Centered header text for camera distance
+            row = layout.row()
+            row.alignment = 'CENTER'
+            row.label(text="Camera Distance")
+
+            # Camera distance Mu and SD
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.label(text="Distance")
+            split = row.split(factor=0.5, align=True)
+            split.prop(scene, "camera_distance_mu", text="Mu")
+            split.prop(scene, "camera_distance_sd", text="SD")
+
+            # Button to execute camera distance randomization
+            layout.operator("object.randomize_camera_distance", text="Randomize Camera Distance")
+
+
+
 
 
 
