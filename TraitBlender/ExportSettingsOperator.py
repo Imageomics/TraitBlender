@@ -59,6 +59,35 @@ class ExportSettingsOperator(bpy.types.Operator):
             "render_output_directory": scene.render_output_directory
         }
 
+        # Image Randomization Controls
+        image_randomization_controls = {
+            "RandomCamerasRotation": {
+                "x_mu": scene.x_mu,
+                "x_sd": scene.x_sd,
+                "y_mu": scene.y_mu,
+                "y_sd": scene.y_sd,
+                "z_mu": scene.z_mu,
+                "z_sd": scene.z_sd,
+            },
+            "RandomCamerasDistance": {
+                "camera_distance_mu": scene.camera_distance_mu,
+                "camera_distance_sd": scene.camera_distance_sd,
+            },
+            "RandomWorldBackgroundColor": {
+                "red_mu": scene.red_mu,
+                "red_sd": scene.red_sd,
+                "green_mu": scene.green_mu,
+                "green_sd": scene.green_sd,
+                "blue_mu": scene.blue_mu,
+                "blue_sd": scene.blue_sd,
+                "alpha_mu": scene.alpha_mu,
+                "alpha_sd": scene.alpha_sd,
+            }
+        }
+
+        settings_dict["Image Randomization Controls"] = image_randomization_controls
+
+
         # New variables
         settings_dict["obj_export_directory"] = scene.export_directory
         settings_dict["export_format"] = scene.export_format
