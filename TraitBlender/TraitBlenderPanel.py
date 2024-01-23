@@ -232,7 +232,7 @@ class TraitBlenderPanel(bpy.types.Panel):
 
             layout.operator("object.render_all_cameras", text="Render Selected Cameras").camera_names = camera_names_str
 
-
+        
         export_controls_property = context.scene.export_controls_property  # Replace with the correct attribute name if needed
         layout.prop(export_controls_property, "export_controls", icon="TRIA_DOWN" if export_controls_property.export_controls else "TRIA_RIGHT", emboss=False, text="3D Export")
         if export_controls_property.export_controls:  # Use the property from the property group

@@ -22,7 +22,7 @@ from .Segmentation import *
 from .WorldBackground import *
 from .ExportSettingsOperator import *
 from .TraitBlenderPanel import *
-
+from .ImageNoising import *
 
 bl_info = {
     "name": "TraitBlender",
@@ -96,6 +96,8 @@ def register():
     bpy.utils.register_class(ChangeWorldBackgroundColor)
     bpy.utils.register_class(ExportControlsPropertyGroup)   
 
+    ###Random Camera Effects
+    bpy.utils.register_class(RandomCamerasRotationOperator)
     
     
     #Register Properties
@@ -110,6 +112,8 @@ def register():
 
     bpy.types.Scene.export_controls_property = bpy.props.PointerProperty(type=ExportControlsPropertyGroup)
     
+    bpy.types.Scene.random_noising_property = bpy.props.PointerProperty(type=ExportControlsPropertyGroup)
+
     bpy.types.Scene.export_directory = bpy.props.StringProperty(
         name="Export Directory",
         description="Directory to export the 3D object",
@@ -317,13 +321,15 @@ def unregister():
     bpy.utils.unregister_class(WorldBackgroundControls)
     bpy.utils.unregister_class(ChangeWorldBackgroundColor)
     bpy.utils.unregister_class(ExportControlsPropertyGroup)
+
+    ###Random Camera Effects
+    bpy.utils.unregister_class(RandomCamerasRotationOperator)
     
     ###Dataset Options
     del bpy.types.Scene.use_suns
     del bpy.types.Scene.use_cameras
     del bpy.types.Scene.use_3d_export
     del bpy.types.Scene.dataset_options
-
     
     
     #unregister properties
@@ -357,6 +363,3 @@ def unregister():
 if __name__ == "__main__":
     register()
     
-    # bpy.ops.object.select_all(action='SELECT')
-    # bpy.ops.object.delete()
-

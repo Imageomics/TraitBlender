@@ -108,8 +108,10 @@ def make_monkey(label="Suzanne", Jowl_Size=1, Dome_Size=0, Overall_Size=1, verte
         bpy.ops.object.vertex_group_set_active(group="Ears")
         bpy.ops.object.vertex_group_select()
 
+        #red
         if ear_color == 1:
             monkey.active_material_index = 1
+        #blue
         elif ear_color == 2:
             monkey.active_material_index = 2
 

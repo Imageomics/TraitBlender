@@ -2,10 +2,10 @@ import numpy as np
 import bpy
 
 def make_contreras_snail(label="snail", 
-                         b = .1, d = 5, z = 0, a = 1, phi = 0, psi = 0, 
-                         c_depth=0.3, c_n = 12, n_depth = 0.5, n = 4, 
-                         t = 20, time_step = .25/6, 
-                         points_in_circle=20, length = 1, smooth=False,
+                         b = .1, d = 4, z = 0, a = 1, phi = 0, psi = 0, 
+                         c_depth=0.1, c_n = 70, n_depth = 0, n = 0, 
+                         t = 20, time_step = .25/30, 
+                         points_in_circle=40, length = 1, smooth=True,
                          color="#000000"):
     
     
@@ -63,7 +63,7 @@ def make_contreras_snail(label="snail",
     # the constant helps keep the float from overflowing when converting to blender
     points = np.array([[lambda_(t, theta, b, d, z, a, phi, psi, c_n, c_depth, n=n, n_depth=n_depth) for theta in theta_values] for t in t_values])
 
-    # rescale the values to between 0 and 1 so it doesn't cause float overflow when converting to blender
+    ''' # rescale the values to between 0 and 1 so it doesn't cause float overflow when converting to blender
     current_max = np.amax(points)
     current_min = np.amin(points)
     desired_max = 100
@@ -74,12 +74,12 @@ def make_contreras_snail(label="snail",
     scaled_points += translation
     points = scaled_points
     new_max = np.amax(scaled_points)
-    new_min = np.amin(scaled_points)
+    new_min = np.amin(scaled_points) '''
 
 
 
-    print("Largest Value:", (current_max, new_max))
-    print("Smallest Value:",(current_min, new_min))
+    #print("Largest Value:", (current_max, new_max))
+    #print("Smallest Value:",(current_min, new_min))
 
 
     
@@ -162,8 +162,3 @@ def make_contreras_snail(label="snail",
     # Update the scene
     bpy.context.view_layer.update()
 
-make_contreras_snail(label="snail", 
-                         b = 5, d = 3, z = 2, a = 1, phi = 0, psi = 0, 
-                         c_depth=0.3, c_n = 30, n_depth = 0.5, n = 0, 
-                         t = 50, time_step = .25/5, 
-                         points_in_circle=15, length = 1, smooth=True)
