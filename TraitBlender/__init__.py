@@ -99,6 +99,7 @@ def register():
     ###Random Camera Effects
     bpy.utils.register_class(RandomCamerasRotationOperator)
     bpy.utils.register_class(RandomCamerasDistanceOperator)
+    bpy.utils.register_class(RandomWorldBackgroundColor)
     
     #Register Properties
 
@@ -327,6 +328,7 @@ def unregister():
     ###Random Camera Effects
     bpy.utils.unregister_class(RandomCamerasRotationOperator)
     bpy.utils.unregister_class(RandomCamerasDistanceOperator)
+    bpy.utils.unregister_class(RandomWorldBackgroundColor)
     
     ###Dataset Options
     del bpy.types.Scene.use_suns

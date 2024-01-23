@@ -69,10 +69,36 @@ class RandomCamerasDistanceOperator(bpy.types.Operator):
         # Set the calculated distance to the 'place_cameras_distance' property
         context.scene.place_cameras_distance = random_distance
         
-        # Call the function that updates the camera distances
-        # Assuming 'update_camera_distance' is a function you have previously defined
-        # and it's accessible in this context, e.g., imported or in the same file.
-        #update_camera_distance(context)  # Pass any other required arguments if necessary
-
         self.report({'INFO'}, f"Camera distance randomized to: {random_distance:.2f}")
+        return {'FINISHED'}
+    
+
+
+class RandomWorldBackgroundColor(bpy.types.Operator):
+    """Randomize World Background Color"""
+    bl_idname = "object.randomize_world_background_color"
+    bl_label = "Randomize World Background Color"
+    
+    red_mu: bpy.props.FloatProperty(name="Red Mean", default=1.0)
+    red_sd: bpy.props.FloatProperty(name="Red Std Dev", default=0.0, min=0.0)
+    green_mu: bpy.props.FloatProperty(name="Green Mean", default=1.0)
+    green_sd: bpy.props.FloatProperty(name="Green Std Dev", default=0.0, min=0.0)
+    blue_mu: bpy.props.FloatProperty(name="Blue Mean", default=1.0)
+    blue_sd: bpy.props.FloatProperty(name="Blue Std Dev", default=0.0, min=0.0)
+    alpha_mu: bpy.props.FloatProperty(name="Alpha Mean", default=1.0)
+    alpha_sd: bpy.props.FloatProperty(name="Alpha Std Dev", default=0.0, min=0.0)
+
+    def execute(self, context):
+        # Access the background_controls property group
+        world_background_controls = context.scene.world_background_controls
+        
+        # Generate random values from a normal distribution for each color component
+        world_background_controls.red = np.clip(np.random.normal(self.red_mu, self.red_sd), 0, 1)
+        world_background_controls.green = np.clip(np.random.normal(self.green_mu, self.green_sd), 0, 1)
+        world_background_controls.blue = np.clip(np.random.normal(self.blue_mu, self.blue_sd), 0, 1)
+        world_background_controls.alpha = np.clip(np.random.normal(self.alpha_mu, self.alpha_sd), 0, 1)
+        
+        # Call the function that updates the world background color
+        bpy.ops.scene.change_background_color()
+        
         return {'FINISHED'}
