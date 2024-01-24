@@ -285,6 +285,32 @@ class TraitBlenderPanel(bpy.types.Panel):
             # Centered header text for camera angle
             row = layout.row()
             row.alignment = 'CENTER'
+            row.label(text="Suns Brightness / Presence")
+
+            # Headers for Mu and SD
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.alignment = 'EXPAND'
+            row.label(text="")  # Empty label for spacing
+            split = row.split(factor=0.5)
+            split.label(text="Mu")
+            split.label(text="SD")
+
+            # Sun row
+            row = col.row(align=True)
+            row.label(text="Suns")
+            split = row.split(factor=0.5)
+            split.prop(scene, "sun_mu", text="")
+            split.prop(scene, "sun_sd", text="")
+    
+            # Button to execute camera angle randomization
+            layout.operator("object.randomize_suns_strength", text="Randomize Suns Strength")
+            # Button to execute camera angle randomization
+            layout.operator("object.randomize_suns_hide", text="Hide Random Suns")
+
+            # Centered header text for camera angle
+            row = layout.row()
+            row.alignment = 'CENTER'
             row.label(text="Camera Angle (Radians)")
 
             # Headers for Mu and SD
