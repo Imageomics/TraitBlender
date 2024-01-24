@@ -288,7 +288,15 @@ class RenderAllCamerasOperator(bpy.types.Operator):
 
                 # Set the render path with the camera name
                 active_object_name = bpy.context.active_object.name if bpy.context.active_object else "NoActiveObject"
-                bpy.context.scene.render.filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}.png")
+                index = 0
+                while True:
+                    filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}_{index}.png")
+                    if not os.path.exists(filepath):
+                        break
+                    index += 1
+
+                # Set the render path with the unique file name
+                bpy.context.scene.render.filepath = filepath
 
                 # Set the camera as the active one for rendering
                 bpy.context.scene.camera = camera

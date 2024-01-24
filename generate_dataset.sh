@@ -7,9 +7,10 @@ blender_executable="C:/Program Files/Blender Foundation/Blender 3.3/blender.exe"
 script_path="D:/TraitBlender/TraitBlender/generate_dataset.py"  # Replace with the actual path to your updated script
 
 # Paths to the make_mesh_function, csv_file, and json_file
-make_mesh_function_path="D://TraitBlender/TraitBlender/Examples/monkey/make_monkey.py"
-csv_file_path="C://Users/caleb/Downloads/suzanne_monkey_data/suzanne_monkey_data.csv"
-json_file_path="C://Users/caleb/Downloads/suzanne_monkey_data/traitblender_settings.json"
+make_mesh_function_path="D://TraitBlender/TraitBlender/Examples/snails/make_contreras_snail.py"
+csv_file_path="C://Users/caleb/Downloads/contreras_examples/contreras_sample.csv"
+json_file_path="C://Users/caleb/Downloads/contreras_examples/traitblender_settings.json"
+images_per_individual=3
 
 # Run Blender with the bpy script and the paths as arguments
-"$blender_executable" --background --python "$script_path" -- "$make_mesh_function_path" "$csv_file_path" "$json_file_path"
+"$blender_executable" --background --python "$script_path" -- "$make_mesh_function_path" "$csv_file_path" "$json_file_path" "$images_per_individual"
