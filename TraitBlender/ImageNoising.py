@@ -1,6 +1,7 @@
 
 import numpy as np
 import bpy
+import random
 
 class RandomCamerasRotationOperator(bpy.types.Operator):
     """Randomly rotate cameras within specified normal distribution"""
@@ -70,6 +71,34 @@ class RandomWorldBackgroundColor(bpy.types.Operator):
         
         return {'FINISHED'}
     
+
+class RandomSunsHideOperator(bpy.types.Operator):
+    """Hide a Random Number and Selection of Suns"""
+    bl_idname = "object.randomize_suns_hide"
+    bl_label = "Random Suns Hide"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        scene = context.scene
+        old_object = context.view_layer.objects.active
+
+        all_objects = set(obj.name for obj in bpy.data.objects)
+        RandomSunsToggleOperator_names = ("sun.front", "sun.back", "sun.top",
+                        "sun.bottom", "sun.left", "sun.right")
+        
+        present_suns = all_objects.intersection(RandomSunsToggleOperator_names)
+
+        random_suns = random.sample(present_suns, np.random.randint(1, len(present_suns) + 1))
+        random_suns_string = ",".join(random_suns)
+
+        bpy.ops.object.hide_suns(sun_names=random_suns_string)
+
+        context.view_layer.objects.active = old_object
+        context.view_layer.update()
+
+        self.report({'INFO'}, "Random hiding applied to suns.")
+        return {'FINISHED'}
+
 
 class RandomizationControls(bpy.types.PropertyGroup):
     expanded: bpy.props.BoolProperty(

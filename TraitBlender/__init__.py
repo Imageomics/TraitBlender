@@ -100,6 +100,7 @@ def register():
     bpy.utils.register_class(RandomCamerasRotationOperator)
     bpy.utils.register_class(RandomCamerasDistanceOperator)
     bpy.utils.register_class(RandomWorldBackgroundColor)
+    bpy.utils.register_class(RandomSunsHideOperator)
     bpy.types.Scene.camera_distance_mu = bpy.props.FloatProperty(name="Mean Distance", default=10.0)
     bpy.types.Scene.camera_distance_sd = bpy.props.FloatProperty(name="Std Dev Distance", default=0.0)
     bpy.types.Scene.red_mu = bpy.props.FloatProperty(name="Red Mean", default=1.0, soft_min=0, soft_max=1)
@@ -348,6 +349,7 @@ def unregister():
     bpy.utils.unregister_class(RandomCamerasRotationOperator)
     bpy.utils.unregister_class(RandomCamerasDistanceOperator)
     bpy.utils.unregister_class(RandomWorldBackgroundColor)
+    bpy.utils.unregister_class(RandomSunsHideOperator)
     del bpy.types.Scene.camera_distance_mu
     del bpy.types.Scene.camera_distance_sd
     del bpy.types.Scene.red_mu
