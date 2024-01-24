@@ -71,6 +71,58 @@ random_cameras_distance_toggle = rand_toggles["random_cameras_distance"]
 x_mu, x_sd = random_cam_rot["x_mu"], random_cam_rot["x_sd"]
 y_mu, y_sd = random_cam_rot["y_mu"], random_cam_rot["y_sd"]
 
+
+print(f"Dataset Options:")
+print(f"  use_suns: {use_suns}")
+print(f"  use_cameras: {use_cameras}")
+print(f"  use_3d_export: {use_3d_export}\n")
+
+print(f"World Background Controls:")
+print(f"  wc_red: {wc_red}")
+print(f"  wc_green: {wc_green}")
+print(f"  wc_blue: {wc_blue}")
+print(f"  wc_alpha: {wc_alpha}\n")
+
+print(f"Background Controls:")
+print(f"  background_plane_distance: {background_plane_distance}")
+print(f"  bg_scale_x: {bg_scale_x}")
+print(f"  bg_scale_y: {bg_scale_y}")
+print(f"  bg_scale_z: {bg_scale_z}\n")
+
+print(f"Lights:")
+print(f"  sun_strength: {sun_strength}\n")
+
+print(f"Camera Controls:")
+print(f"  place_cameras_distance: {place_cameras_distance}")
+print(f"  camera_width: {camera_width}")
+print(f"  camera_height: {camera_height}")
+print(f"  focal_length: {focal_length}")
+print(f"  render_output_directory: {render_output_directory}")
+print(f"  obj_export_directory: {obj_export_directory}")
+print(f"  export_format: {export_format}")
+print(f"  cameras_to_render: {cameras_to_render}\n")
+
+print(f"Image Randomization Controls:")
+print(f"  random_cam_rot: {random_cam_rot}")
+print(f"  random_cam_dist: {random_cam_dist}")
+print(f"  random_world_bg_color: {random_world_bg_color}")
+print(f"  random_sun_intensity: {random_sun_intensity}\n")
+
+print(f"Randomization Toggles:")
+print(f"  random_world_bg_color_toggle: {random_world_bg_color_toggle}")
+print(f"  random_suns_hide_toggle: {random_suns_hide_toggle}")
+print(f"  random_suns_brightness_toggle: {random_suns_brightness_toggle}")
+print(f"  random_cameras_rotation_toggle: {random_cameras_rotation_toggle}")
+print(f"  random_cameras_distance_toggle: {random_cameras_distance_toggle}\n")
+
+print(f"Randomization Controls - Camera Rotation:")
+print(f"  x_mu: {x_mu}")
+print(f"  x_sd: {x_sd}")
+print(f"  y_mu: {y_mu}")
+print(f"  y_sd: {y_sd}")
+
+
+
 ## Defining the scene
 scene = bpy.data.scenes["Scene"]
 
@@ -88,9 +140,12 @@ scene.export_directory = obj_export_directory
 
 for index, label in enumerate(tips):
 
+    print("Starting New Individual!")
+
     scene = bpy.data.scenes["Scene"]
 
     for individual in range(images_per_individual):
+        print("Starting New Image of Individual!")
         # Deselect all objects
         bpy.ops.object.select_all(action='DESELECT')
 
@@ -153,22 +208,6 @@ for index, label in enumerate(tips):
             scene.sun_sd = random_sun_intensity["sun_sd"]
             bpy.ops.object.randomize_suns_strength()
 
-        # Random Cameras Rotation
-        if random_cameras_rotation_toggle:
-            scene.x_mu = random_cam_rot["x_mu"]
-            scene.x_sd = random_cam_rot["x_sd"]
-            scene.y_mu = random_cam_rot["y_mu"]
-            scene.y_sd = random_cam_rot["y_sd"]
-            scene.z_mu = random_cam_rot["z_mu"]
-            scene.z_sd = random_cam_rot["z_sd"]
-            bpy.ops.object.randomize_camera_rotation()
-
-        # Random Cameras Distance
-        if random_cameras_distance_toggle:
-            scene.camera_distance_mu = random_cam_dist["camera_distance_mu"]
-            scene.camera_distance_sd = random_cam_dist["camera_distance_sd"]
-            bpy.ops.object.randomize_camera_distance()
-
 
         if use_cameras:
             if render_output_directory == "":
@@ -179,6 +218,23 @@ for index, label in enumerate(tips):
             scene.camera_controls.camera_height = camera_height
             scene.place_cameras_distance = place_cameras_distance
             scene.camera_controls.focal_length = focal_length
+
+                    # Random Cameras Rotation
+            if random_cameras_rotation_toggle:
+                scene.x_mu = random_cam_rot["x_mu"]
+                scene.x_sd = random_cam_rot["x_sd"]
+                scene.y_mu = random_cam_rot["y_mu"]
+                scene.y_sd = random_cam_rot["y_sd"]
+                scene.z_mu = random_cam_rot["z_mu"]
+                scene.z_sd = random_cam_rot["z_sd"]
+                bpy.ops.object.randomize_camera_rotation()
+
+                    # Random Cameras Distance
+            if random_cameras_distance_toggle:
+                scene.camera_distance_mu = random_cam_dist["camera_distance_mu"]
+                scene.camera_distance_sd = random_cam_dist["camera_distance_sd"]
+                bpy.ops.object.randomize_camera_distance()
+
             bpy.ops.object.render_all_cameras(camera_names=cameras_to_render)
         
     if use_3d_export:
