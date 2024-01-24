@@ -447,6 +447,14 @@ class TraitBlenderPanel(bpy.types.Panel):
             col.prop(context.scene, "use_cameras", text="Use Cameras")
             col.prop(context.scene, "use_3d_export", text="Use 3D Export")
 
+            # Add new properties to the layout
+            col.prop(context.scene, "random_world_bg_color", text="Randomize World Background Color")
+            col.prop(context.scene, "random_suns_hide", text="Randomize Suns Hiding")
+            col.prop(context.scene, "random_suns_brightness", text="Randomize Suns Brightness")
+            col.prop(context.scene, "random_cameras_rotation", text="Randomize Cameras Rotation")
+            col.prop(context.scene, "random_cameras_distance", text="Randomize Cameras Distance")
+
+
 
             
         layout.prop(context.scene, "export_settings_directory", text="Export Directory")    

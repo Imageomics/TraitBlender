@@ -131,6 +131,36 @@ def register():
     bpy.utils.register_class(RandomizationControls)
     bpy.types.Scene.randomization_controls = bpy.props.PointerProperty(type=RandomizationControls)
 
+    bpy.types.Scene.random_world_bg_color = bpy.props.BoolProperty(
+        name="Random World Background Color", 
+        description="Toggle randomization of world background color", 
+        default=True
+    )
+
+    bpy.types.Scene.random_suns_hide = bpy.props.BoolProperty(
+        name="Random Suns Hide", 
+        description="Toggle randomization of suns hiding", 
+        default=True
+    )
+
+    bpy.types.Scene.random_suns_brightness = bpy.props.BoolProperty(
+        name="Random Suns Brightness", 
+        description="Toggle randomization of suns brightness", 
+        default=True
+    )
+
+    bpy.types.Scene.random_cameras_rotation = bpy.props.BoolProperty(
+        name="Random Cameras Rotation", 
+        description="Toggle randomization of cameras rotation", 
+        default=True
+    )
+
+    bpy.types.Scene.random_cameras_distance = bpy.props.BoolProperty(
+        name="Random Cameras Distance", 
+        description="Toggle randomization of cameras distance", 
+        default=True
+    )
+
 
     
     #Register Properties
@@ -378,6 +408,12 @@ def unregister():
     del bpy.types.Scene.sun_sd
     del bpy.types.Scene.randomization_controls
     bpy.utils.unregister_class(RandomizationControls)
+    del bpy.types.Scene.random_world_bg_color
+    del bpy.types.Scene.random_suns_hide
+    del bpy.types.Scene.random_suns_brightness
+    del bpy.types.Scene.random_cameras_rotation
+    del bpy.types.Scene.random_cameras_distance
+
     
     ###Dataset Options
     del bpy.types.Scene.use_suns

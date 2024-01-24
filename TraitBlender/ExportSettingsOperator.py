@@ -82,10 +82,27 @@ class ExportSettingsOperator(bpy.types.Operator):
                 "blue_sd": scene.blue_sd,
                 "alpha_mu": scene.alpha_mu,
                 "alpha_sd": scene.alpha_sd,
+            },
+            # Add new Sun properties
+            "RandomSunIntensity": {
+                "sun_mu": scene.sun_mu,
+                "sun_sd": scene.sun_sd,
             }
         }
 
+
         settings_dict["Image Randomization Controls"] = image_randomization_controls
+
+        # Randomization Toggles
+        randomization_toggles = {
+            "random_world_bg_color": scene.random_world_bg_color,
+            "random_suns_hide": scene.random_suns_hide,
+            "random_suns_brightness": scene.random_suns_brightness,
+            "random_cameras_rotation": scene.random_cameras_rotation,
+            "random_cameras_distance": scene.random_cameras_distance,
+        }
+
+        settings_dict["Randomization Toggles"] = randomization_toggles
 
 
         # New variables
