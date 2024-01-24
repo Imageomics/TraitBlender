@@ -223,6 +223,9 @@ class TraitBlenderPanel(bpy.types.Panel):
                 camera_names_list.append('camera.back')
             camera_names_str = ','.join(camera_names_list)
 
+            row = layout.row()
+            row.prop(scene, "render_hidden_objects", text="Render Hidden Objects")
+
             # Centered "Render Directory" text
             row = layout.row()
             row.alignment = 'CENTER'

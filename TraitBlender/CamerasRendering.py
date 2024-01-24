@@ -367,10 +367,10 @@ class SetCameraViewOperator(bpy.types.Operator):
                     obj.hide_viewport = obj.name != opposite_background_name
 
             # Hide all suns except the one corresponding to the camera
-            corresponding_sun_name = f"sun.{self.angle.lower()}"
-            for obj in bpy.data.objects:
-                if "sun." in obj.name:
-                    obj.hide_viewport = obj.name != corresponding_sun_name
+            #corresponding_sun_name = f"sun.{self.angle.lower()}"
+            #for obj in bpy.data.objects:
+            #    if "sun." in obj.name:
+            #        obj.hide_viewport = obj.name != corresponding_sun_name
         else:
             self.report({'ERROR'}, f"No camera found with name {camera_name}")
             return {'CANCELLED'}
@@ -506,9 +506,35 @@ class ToggleCamerasOperator(bpy.types.Operator):
         self.distance = context.scene.place_cameras_distance
         return self.execute(context)
 
-###Panels
+class RenderHiddenObjectsOperator(bpy.types.Operator):
+    """Allows enabling/disabling of hidden objects appearing in the render (including light sources)"""
+    bl_idname = "object.render_hidden_objects"
+    bl_label = "Render Hidden Objects"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        scene = context.scene
+        old_object = context.view_layer.objects.active
+
+        # Check the custom property and update hide_render accordingly
+        if not scene.render_hidden_objects:
+            for obj in bpy.data.objects:
+                if obj.hide_viewport:
+                    obj.hide_render = True
+        else:
+            for obj in bpy.data.objects:
+                obj.hide_render = False
+
+        context.view_layer.objects.active = old_object
+        context.view_layer.update()
+
+        self.report({'INFO'}, "Render visibility updated")
+        return {'FINISHED'}
 
 
+def update_render_hidden_objects(self, context):
+    # Trigger the operator when the checkbox value changes
+    bpy.ops.object.render_hidden_objects()
 
 
 

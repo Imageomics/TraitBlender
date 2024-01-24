@@ -55,6 +55,14 @@ def register():
     bpy.utils.register_class(RenderAllCamerasOperator)
     bpy.utils.register_class(SetCameraViewOperator)
     bpy.utils.register_class(SelectRenderDirectoryOperator)
+    bpy.types.Scene.render_hidden_objects = bpy.props.BoolProperty(
+        name="Render Hidden Objects",
+        description="Whether to render objects that are hidden in the viewport",
+        default=False,
+        update=update_render_hidden_objects
+    )
+    bpy.utils.register_class(RenderHiddenObjectsOperator)  
+
 
     ###DeleteAllObjecctsOperator
     bpy.utils.register_class(DeleteAllObjectsOperator)
@@ -306,7 +314,9 @@ def unregister():
     bpy.utils.unregister_class(CameraControls)
     bpy.utils.unregister_class(RenderAllCamerasOperator)
     bpy.utils.unregister_class(SetCameraViewOperator)
-    bpy.utils.unregister_class(SelectRenderDirectoryOperator)    
+    bpy.utils.unregister_class(SelectRenderDirectoryOperator)
+    del bpy.types.Scene.render_hidden_objects
+    bpy.utils.unregister_class(RenderHiddenObjectsOperator)    
     
     ###DeleteAllObjectsOperator
     bpy.utils.unregister_class(DeleteAllObjectsOperator)
