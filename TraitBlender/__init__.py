@@ -22,7 +22,7 @@ from .Segmentation import *
 from .WorldBackground import *
 from .ExportSettingsOperator import *
 from .TraitBlenderPanel import *
-from .ImageNoising import *
+from .RandomizeImages import *
 
 bl_info = {
     "name": "TraitBlender",
@@ -101,6 +101,7 @@ def register():
     bpy.utils.register_class(RandomCamerasDistanceOperator)
     bpy.utils.register_class(RandomWorldBackgroundColor)
     bpy.utils.register_class(RandomSunsHideOperator)
+    bpy.utils.register_class(RandomSunStrengthOperator)
     bpy.types.Scene.camera_distance_mu = bpy.props.FloatProperty(name="Mean Distance", default=10.0)
     bpy.types.Scene.camera_distance_sd = bpy.props.FloatProperty(name="Std Dev Distance", default=0.0)
     bpy.types.Scene.red_mu = bpy.props.FloatProperty(name="Red Mean", default=1.0, soft_min=0, soft_max=1)
@@ -117,6 +118,8 @@ def register():
     bpy.types.Scene.y_sd = bpy.props.FloatProperty(name="Y Std Dev", default=0)
     bpy.types.Scene.z_mu = bpy.props.FloatProperty(name="Z Mean", default=0)
     bpy.types.Scene.z_sd = bpy.props.FloatProperty(name="Z Std Dev", default=0)
+    bpy.types.Scene.sun_mu = bpy.props.FloatProperty(name="Sun Mean", default=1)
+    bpy.types.Scene.sun_sd = bpy.props.FloatProperty(name="Sun SD", default=0)
     bpy.utils.register_class(RandomizationControls)
     bpy.types.Scene.randomization_controls = bpy.props.PointerProperty(type=RandomizationControls)
 
@@ -350,6 +353,7 @@ def unregister():
     bpy.utils.unregister_class(RandomCamerasDistanceOperator)
     bpy.utils.unregister_class(RandomWorldBackgroundColor)
     bpy.utils.unregister_class(RandomSunsHideOperator)
+    bpy.utils.unregister_class(RandomSunStrengthOperator)
     del bpy.types.Scene.camera_distance_mu
     del bpy.types.Scene.camera_distance_sd
     del bpy.types.Scene.red_mu
@@ -360,6 +364,8 @@ def unregister():
     del bpy.types.Scene.blue_sd
     del bpy.types.Scene.alpha_mu
     del bpy.types.Scene.alpha_sd
+    del bpy.types.Scene.sun_mu
+    del bpy.types.Scene.sun_sd
     del bpy.types.Scene.randomization_controls
     bpy.utils.unregister_class(RandomizationControls)
     

@@ -325,6 +325,15 @@ class TraitBlenderPanel(bpy.types.Panel):
             row.alignment = 'CENTER'
             row.label(text="Camera Distance")
 
+            # Headers for Mu and SD
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.alignment = 'EXPAND'
+            row.label(text="")  # Empty label for spacing
+            split = row.split(factor=0.5)
+            split.label(text="Mu")
+            split.label(text="SD")
+
             # Camera distance Mu and SD
             col = layout.column(align=True)
             row = col.row(align=True)

@@ -98,6 +98,27 @@ class RandomSunsHideOperator(bpy.types.Operator):
 
         self.report({'INFO'}, "Random hiding applied to suns.")
         return {'FINISHED'}
+    
+
+class RandomSunStrengthOperator(bpy.types.Operator):
+    """Randomize the Sun Strength from a Normal Distribution"""
+    bl_idname = "object.randomize_suns_strength"
+    bl_label = "Random Suns Strength"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        scene = context.scene
+        old_object = context.view_layer.objects.active
+
+        scene.sun_strength = np.clip(np.random.normal(scene.sun_mu, scene.sun_sd), 0, 10)
+        bpy.ops.object.update_sun_strength()
+
+        context.view_layer.objects.active = old_object
+        context.view_layer.update()
+
+        self.report({'INFO'}, "Random hiding applied to suns.")
+        return {'FINISHED'}
+
 
 
 class RandomizationControls(bpy.types.PropertyGroup):
