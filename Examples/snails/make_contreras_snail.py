@@ -14,54 +14,52 @@ def make_contreras_snail(label="snail",
     
     t_values = np.arange(0, t, time_step)
     theta_values = np.arange(0, 2 * np.pi, np.pi / points_in_circle)
-    
-    
-    # Define the gamma function
-    def gamma(t, b, d, z):
-        return np.array([d * np.sin(t), d * np.cos(t), z]) * np.exp(b * t)
 
-    # Define the T function
-    def T(t, b, d, z):
-        numerator = np.array([d * (b * np.sin(t) + np.cos(t)), d * (b * np.cos(t) - np.sin(t)), -b * z])
-        denominator = np.sqrt(((b**2) + 1) * (d**2) + (b**2) * (z**2))
+    sin_t_values = np.sin(t_values)
+    cos_t_values = np.cos(t_values)
+    sin_theta_values = np.sin(theta_values)
+    cos_theta_values = np.cos(theta_values)
+
+    def gamma(t, sin_t, cos_t, b, d, z):
+        return np.array([d * sin_t, d * cos_t, z]) * np.exp(b * t)
+
+    def T(t, sin_t, cos_t, b, d, z):
+        numerator = np.array([d * (b * sin_t + cos_t), d * (b * cos_t - sin_t), -b * z])
+        denominator = np.sqrt((b**2 + 1) * d**2 + b**2 * z**2)
         return numerator / denominator
 
-    # Define the N function
-    def N(t, b):
-        numerator = np.array([b * np.cos(t) - np.sin(t), -b * np.sin(t) - np.cos(t), 0])
-        denominator = np.sqrt((b**2) + 1)
+    def N(t, sin_t, cos_t, b):
+        numerator = np.array([b * cos_t - sin_t, -b * sin_t - cos_t, 0])
+        denominator = np.sqrt(b**2 + 1)
         return numerator / denominator
 
-    # Define the B function
-    def B(t, b, d, z):
-        numerator = np.array([b * z * (b * np.sin(t) + np.cos(t)), b * z * (b * np.cos(t) - np.sin(t)), d * ((b**2) + 1)])
-        denominator = np.sqrt(((b**2) + 1) * (((b**2) + 1) * (d**2) + (b**2) * (z**2)))
+    def B(t, sin_t, cos_t, b, d, z):
+        numerator = np.array([b * z * (b * sin_t + cos_t), b * z * (b * cos_t - sin_t), d * (b**2 + 1)])
+        denominator = np.sqrt((b**2 + 1) * (d**2 * (b**2 + 1) + b**2 * z**2))
         return numerator / denominator
 
-    # Define the R_b function
     def R_b(psi):
         return np.array([[np.cos(psi), -np.sin(psi), 0],
                          [np.sin(psi), np.cos(psi), 0],
                          [0, 0, 1]])
 
-    # Define the C function with the updated formula
-    def C(t, theta, b, a, d, z, phi, psi, c_n, c_depth, n, n_depth):
+    def C(t, theta, sin_t, cos_t, sin_theta, cos_theta, b, a, d, z, phi, psi, c_n, c_depth, n, n_depth):
         e_term = np.exp(b * t) - (1 / (t + 1))
-        long_ribs = (1 + c_depth*np.sin(c_n * t))
+        long_ribs = (1 + c_depth * np.sin(c_n * t))
         rotation_matrix = R_b(psi)
-        modulation_n = (1 + (n_depth * np.sin(n * theta)))
+        modulation_n = (1 + (n_depth * sin_theta))
 
-        vector_N = ((a * np.sin(theta) * np.cos(phi)) + (np.cos(theta) * np.sin(phi))) * modulation_n * N(t, b)
-        vector_B = ((a * np.sin(theta) * np.sin(phi)) - (np.cos(theta) * np.cos(phi))) * modulation_n * B(t, b, d, z)
+        vector_N = ((a * sin_theta * np.cos(phi)) + (cos_theta * np.sin(phi))) * modulation_n * N(t, sin_t, cos_t, b)
+        vector_B = ((a * sin_theta * np.sin(phi)) - (cos_theta * np.cos(phi))) * modulation_n * B(t, sin_t, cos_t, b, d, z)
 
         return long_ribs * e_term * np.dot(rotation_matrix, vector_N + vector_B)
 
-    # Define the lambda function with the updated C function
-    def lambda_(t, theta, b, d, z, a, phi, psi, c_n, c_depth, n, n_depth):
-        return gamma(t, b, d, z) + C(t, theta, b, a, d, z, phi, psi, c_n, c_depth, n, n_depth)
+    def lambda_(t, theta, sin_t, cos_t, sin_theta, cos_theta, b, d, z, a, phi, psi, c_n, c_depth, n, n_depth):
+        return gamma(t, sin_t, cos_t, b, d, z) + C(t, theta, sin_t, cos_t, sin_theta, cos_theta, b, a, d, z, phi, psi, c_n, c_depth, n, n_depth)
 
-    # the constant helps keep the float from overflowing when converting to blender
-    points = np.array([[lambda_(t, theta, b, d, z, a, phi, psi, c_n, c_depth, n=n, n_depth=n_depth) for theta in theta_values] for t in t_values])
+    points = np.array([[lambda_(t, theta, sin_t, cos_t, sin_theta, cos_theta, b, d, z, a, phi, psi, c_n, c_depth, n=n, n_depth=n_depth) 
+                        for theta, sin_theta, cos_theta in zip(theta_values, sin_theta_values, cos_theta_values)] 
+                       for t, sin_t, cos_t in zip(t_values, sin_t_values, cos_t_values)])
 
     ''' # rescale the values to between 0 and 1 so it doesn't cause float overflow when converting to blender
     current_max = np.amax(points)
