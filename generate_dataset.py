@@ -12,12 +12,55 @@ def get_args():
             return custom_args
     return []
 
+def parse_indices(range_str):
+    # Split the string by commas
+    ranges = range_str.split(',')
+
+    result = []
+    for r in ranges:
+        # Check for range format
+        if ':' in r:
+            parts = r.split(':')
+            if len(parts) != 2:
+                raise ValueError(f"Invalid range format: '{r}'")
+
+            start, end = map(int, parts)
+            if start < 0 or end < 0:
+                raise ValueError("Negative numbers are not allowed")
+
+            result.extend(range(start, end + 1))
+        else:
+            # Check for single non-negative integer
+            number = int(r)
+            if number < 0:
+                raise ValueError("Negative numbers are not allowed")
+
+            result.append(number)
+            
+    return result
+
+
+
 # Retrieve the paths and images_per_individual from command line arguments
 argv = get_args()
 make_mesh_function_path = argv[0] if len(argv) > 0 else None
 csv_file_path = argv[1] if len(argv) > 1 else None
 json_file_path = argv[2] if len(argv) > 2 else None
 images_per_individual = int(argv[3]) if len(argv) > 3 else 1
+
+## Defining the scene
+scene = bpy.data.scenes["Scene"]
+
+## setting mesh function and trait data related properties
+scene.csv_file_path = csv_file_path
+scene.make_mesh_function_path = make_mesh_function_path
+
+bpy.ops.object.import_csv()
+tips = list(enumerate(bpy.data.scenes['Scene']['tip_labels']))
+traits = bpy.data.scenes['Scene']['csv_data']
+
+
+tips = [tips[i] for i in parse_indices(argv[4])] if len(argv) > 4 else tips
 
 
 
@@ -122,23 +165,12 @@ print(f"  y_mu: {y_mu}")
 print(f"  y_sd: {y_sd}")
 
 
-
-## Defining the scene
-scene = bpy.data.scenes["Scene"]
-
-## setting mesh function and trait data related properties
-scene.csv_file_path = csv_file_path
-scene.make_mesh_function_path = make_mesh_function_path
-
-bpy.ops.object.import_csv()
-tips = bpy.data.scenes['Scene']['tip_labels']
-traits = bpy.data.scenes['Scene']['csv_data']
 mesh_function = bpy.ops.object.execute_with_selected_csv_row
 
 scene.render_output_directory = render_output_directory
 scene.export_directory = obj_export_directory
 
-for index, label in enumerate(tips):
+for index, label in tips:
 
     print("Starting New Individual!")
 
