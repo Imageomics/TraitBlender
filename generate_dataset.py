@@ -46,7 +46,7 @@ argv = get_args()
 make_mesh_function_path = argv[0] if len(argv) > 0 else None
 csv_file_path = argv[1] if len(argv) > 1 else None
 json_file_path = argv[2] if len(argv) > 2 else None
-images_per_individual = int(argv[3]) if len(argv) > 3 else 1
+images_per_individual = [f"{i}" for i in parse_indices(argv[3])] if len(argv) > 3 else "1"
 
 ## Defining the scene
 scene = bpy.data.scenes["Scene"]
@@ -176,7 +176,7 @@ for index, label in tips:
 
     scene = bpy.data.scenes["Scene"]
 
-    for individual in range(images_per_individual):
+    for individual in images_per_individual:
         print("Starting New Image of Individual!")
         # Deselect all objects
         bpy.ops.object.select_all(action='DESELECT')
@@ -267,7 +267,7 @@ for index, label in tips:
                 scene.camera_distance_sd = random_cam_dist["camera_distance_sd"]
                 bpy.ops.object.randomize_camera_distance()
 
-            bpy.ops.object.render_all_cameras(camera_names=cameras_to_render)
+            bpy.ops.object.render_all_cameras(camera_names=cameras_to_render, postfix=individual)
         
     if use_3d_export:
         if obj_export_directory == "":

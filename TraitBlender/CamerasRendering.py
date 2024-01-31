@@ -234,6 +234,8 @@ class HideCamerasOperator(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
+
 class RenderAllCamerasOperator(bpy.types.Operator):
     """
     Define the operator for rendering scenes from multiple camera angles.
@@ -250,6 +252,12 @@ class RenderAllCamerasOperator(bpy.types.Operator):
         name="Camera Names",
         description="Comma-separated names of the cameras to render",
         default="camera.top,camera.bottom,camera.right,camera.left,camera.front,camera.back"
+    )
+
+    postfix: bpy.props.StringProperty(
+        name="Postfix",
+        description="Postfix to add to rendered image filenames",
+        default="--NA--"
     )
 
     def execute(self, context):
@@ -288,12 +296,17 @@ class RenderAllCamerasOperator(bpy.types.Operator):
 
                 # Set the render path with the camera name
                 active_object_name = bpy.context.active_object.name if bpy.context.active_object else "NoActiveObject"
-                index = 0
-                while True:
-                    filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}_{index}.png")
-                    if not os.path.exists(filepath):
-                        break
-                    index += 1
+                
+                if self.postfix != "--NA--":
+                    filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}_{self.postfix}.png")
+
+                else:
+                    index = 0
+                    while True:
+                        filepath = os.path.join(context.scene.render_output_directory, f"{active_object_name}_{angle}_{index}.png")
+                        if not os.path.exists(filepath):
+                            break
+                        index += 1
 
                 # Set the render path with the unique file name
                 bpy.context.scene.render.filepath = filepath
@@ -311,6 +324,7 @@ class RenderAllCamerasOperator(bpy.types.Operator):
         self.report({'INFO'}, "All images have been rendered and saved!")
 
         return {'FINISHED'}
+
 
 
 class SelectRenderDirectoryOperator(bpy.types.Operator):
