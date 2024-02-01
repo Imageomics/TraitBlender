@@ -21,6 +21,7 @@ WORKDIR /src/TraitBlender
 # Install the blender TraitBlender addon
 RUN blender --background -E CYCLES --python dockersetup.py
 
+
 # Setup default command to run a simple example
-CMD blender --background -E CYCLES --python generate_dataset.py -- Examples/Functions/make_snail.py Examples/Data/tiny_snails.csv 'Examples/Raw Datasets/docker_squares/traitblender_settings.json'
+CMD blender --background -E CYCLES --python /src/TraitBlender/generate_dataset.py -- /src/TraitBlender/Examples/snails/make_snail.py /src/TraitBlender/Examples/snails/tiny_snails.csv '/src/TraitBlender/Examples/snails/traitblender_settings.json'
 
