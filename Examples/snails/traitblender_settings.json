@@ -1,9 +1,9 @@
 {
     "World Background Controls": {
         "wc_colors": [
-            0.0,
-            0.0,
-            0.0,
+            1.0,
+            0.9350090026855469,
+            0.8022002577781677,
             1.0
         ]
     },
@@ -17,23 +17,58 @@
         ]
     },
     "Lights": {
-        "sun_strength": 1.0
+        "sun_strength": 1.1370233297348022
     },
     "Camera Controls": {
-        "Cameras to Render": "camera.top,camera.bottom,camera.right,camera.left,camera.front,camera.back",
+        "Cameras to Render": "camera.top",
         "place_cameras_distance": 10.0,
         "camera_width_height": [
-            1080,
-            1080
+            400,
+            400
         ],
-        "focal_length": 1000.0,
-        "render_output_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\snails\\image"
+        "focal_length": 2500.0,
+        "render_output_directory": "/src/TraitBlender/"
     },
-    "obj_export_directory": "D:\\TraitBlender\\TraitBlender\\Examples\\Raw Datasets\\snails\\3D",
+    "Image Randomization Controls": {
+        "RandomCamerasRotation": {
+            "x_mu": 0.0,
+            "x_sd": 0.005399999279528856,
+            "y_mu": 0.0,
+            "y_sd": 0.005399999279528856,
+            "z_mu": 0.0,
+            "z_sd": 0.005399999279528856
+        },
+        "RandomCamerasDistance": {
+            "camera_distance_mu": 10.0,
+            "camera_distance_sd": 0.3
+        },
+        "RandomWorldBackgroundColor": {
+            "red_mu": 0.699999988079071,
+            "red_sd": 0.03000000596046448,
+            "green_mu": 0.8500000238418579,
+            "green_sd": 0.03000000596046448,
+            "blue_mu": 0.699999988079071,
+            "blue_sd": 0.03000000596046448,
+            "alpha_mu": 1.0,
+            "alpha_sd": 0.0
+        },
+        "RandomSunIntensity": {
+            "sun_mu": 0.75,
+            "sun_sd": 0.15000000596046448
+        }
+    },
+    "Randomization Toggles": {
+        "random_world_bg_color": true,
+        "random_suns_hide": true,
+        "random_suns_brightness": true,
+        "random_cameras_rotation": true,
+        "random_cameras_distance": true
+    },
+    "obj_export_directory": "",
     "export_format": ".obj",
     "Dataset Options": {
         "use_suns": true,
         "use_cameras": true,
-        "use_3d_export": true
+        "use_3d_export": false
     }
 }

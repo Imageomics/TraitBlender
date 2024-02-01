@@ -6,7 +6,7 @@ ENV BLENDER_VERSION=3.6.2
 # Install and setup blender
 RUN apt-get update && \
     apt-get install -y \
-       libxrender1 libxkbcommon-x11-0 xvfb libxi6 \
+       libxrender1 libxkbcommon-x11-0 libegl-dev xvfb libxi6 \
        wget unzip python3-numpy xz-utils && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /src/blender
