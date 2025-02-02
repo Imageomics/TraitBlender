@@ -1,4 +1,8 @@
-abstract: "TraitBlender is an addon to the open-source 3D modelling tool Blender and allows users to simulate museum-specimen style datasets of organisms from implementations of theoretical morphospaces."
+cff-version: 1.2.0
+title: "TraitBlender"
+version: 1.0.1
+type: software
+abstract: "TraitBlender is an addon to the open-source 3D modelling tool Blender that allows users to simulate museum-specimen style datasets of organisms from implementations of theoretical morphospaces."
 authors:
   - family-names: Charpentier
     given-names: Caleb
@@ -12,53 +16,23 @@ authors:
     given-names: Elizabeth
   - family-names: Uyeda
     given-names: Josef
-cff-version: 1.2.0
 date-released: "2024-02-01"
 identifiers:
-  - description: "The GitHub release URL of tag 1.0.1."
-    type: url
+  - type: url
+    description: "The GitHub release URL for version 1.0.1."
     value: "https://github.com/Imageomics/TraitBlender/releases/tag/v1.0.1"
-  - description: "The GitHub URL of the commit tagged with v1.0.1."
-    type: url
+  - type: url
+    description: "The GitHub URL of the commit tagged with v1.0.1."
     value: "https://github.com/Imageomics/TraitBlender/tree/d0be230"
+  - type: doi
+    description: "DOI for this software version on Zenodo."
+    value: "<DOI from Zenodo>"
 keywords:
   - Imageomics
   - Phenomics
   - Blender
-  - morphospaces
-  - dataset simulation
-license: MIT
-message: "If you find this software helpful in your research, please cite both the software and our paper."
+  - Morphospaces
+  - Dataset Simulation
+license: "MIT"
 repository-code: "https://github.com/Imageomics/TraitBlender"
-title: "TraitBlender"
-version: 1.0.1
-doi: <DOI from Zenodo>
-type: software
-preferred-citation:
-  type: article
-  authors:
-    - family-names: Charpentier
-      given-names: Caleb
-    - family-names: Linscott
-      given-names: Mason
-    - family-names: Bradley
-      given-names: John
-    - family-names: Thompson
-      given-names: Matthew
-    - family-names: Campolongo
-      given-names: Elizabeth
-    - family-names: Uyeda
-      given-names: Josef
-  title: "<Paper Title>"
-  year: <Publication Year>
-  journal: <Journal Name>
-  doi: <DOI>
-references:
-  - authors:
-      - family-names: Uyeda
-        given-names: Josef
-    title: ""
-    version: 1.0
-    type: article
-    doi: <DOI>
-    date-released: <Publication Date>
+message: "If you find this software helpful in your research, please cite this repository."
