@@ -64,9 +64,9 @@ preferred-citation:
     given-names: Matthew
   - family-names: Uyeda
     given-names: Josef
-  title: TraitBlender 1.0.1
+  title: TraitBlender
   year: 2024
-  doi: https://doi.org/10.5281/zenodo.14804368
+  doi: https://doi.org/10.5281/zenodo.14804133
 contact:
   - family-names: Charpentier
     given-names: Caleb
