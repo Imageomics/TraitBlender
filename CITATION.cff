@@ -1,7 +1,3 @@
-cff-version: 1.2.0
-title: "TraitBlender"
-version: 1.0.1
-type: software
 abstract: "TraitBlender is an addon to the open-source 3D modelling tool Blender that allows users to simulate museum-specimen style datasets of organisms from implementations of theoretical morphospaces."
 authors:
   - family-names: Charpentier
@@ -23,11 +19,8 @@ authors:
   - family-names: Uyeda
     given-names: Josef
     orcid: "https://orcid.org/0000-0003-4624-9680"
+cff-version: 1.2.0
 date-released: "2024-02-01"
-contact:
-  - family-names: Charpentier
-    given-names: Caleb
-    email: calebcharpentier00@gmail.com
 identifiers:
   - type: url
     description: "The GitHub release URL for version 1.0.1."
@@ -50,5 +43,35 @@ keywords:
   - Simulations
   - Evolutionary Biology
 license: "MIT"
-repository-code: "https://github.com/Imageomics/TraitBlender"
 message: "If you find this software helpful in your research, please cite this repository."
+repository-code: "https://github.com/Imageomics/TraitBlender"
+title: "TraitBlender"
+version: 1.0.1
+doi: https://doi.org/10.5281/zenodo.14804368
+type: software
+preferred-citation:
+  type: software
+  authors:
+  - family-names: Charpentier
+    given-names: Caleb
+  - family-names: Linscott
+    given-names: Mason
+    given-names: John
+  - family-names: Campolongo
+    given-names: Elizabeth
+  - family-names: Thompson
+    given-names: Matthew
+  - family-names: Uyeda
+    given-names: Josef
+  title: TraitBlender
+  year: 2024
+  doi: https://doi.org/10.5281/zenodo.14804368
+contact:
+  - family-names: Charpentier
+    given-names: Caleb
+    email: calebcharpentier00@gmail.com
+
+
+
+
+
