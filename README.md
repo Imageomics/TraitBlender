@@ -2,6 +2,8 @@
 
 <img src="imgs/logo.png" width="400" height="400">
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14804368.svg)](https://doi.org/10.5281/zenodo.14804368)
+
 <p>
   This is the repo for TraitBlender, a Blender addon and workflow for simulating raw datasets. 
 </p>
@@ -42,5 +44,3 @@ docker run -v $(pwd)/results:/src/TraitBlender/results -it traitblender
 On Windows you will need to replace `$(pwd)` with your current directory.
 When the above command completes check the `results` directory for images created.
 
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14804368.svg)](https://doi.org/10.5281/zenodo.14804368)
