@@ -28,12 +28,6 @@ identifiers:
   - type: url
     description: "The GitHub URL of the commit tagged with v1.0.1."
     value: "https://github.com/Imageomics/TraitBlender/tree/d0be230"
-  - type: doi
-    description: "DOI for this software version on Zenodo."
-    value: "https://doi.org/10.5281/zenodo.14804368"
-  - type: doi
-    description: "Concept DOI for all versions of this software on Zenodo."
-    value: "https://doi.org/10.5281/zenodo.14804133" 
 keywords:
   - Imageomics
   - Blender
