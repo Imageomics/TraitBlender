@@ -26,6 +26,11 @@
       "affiliation": "Imageomics Institute"
     },
     {
+      "name": "Porto, Arthur",
+      "orcid": "https://orcid.org/0000-0002-9210-8750",
+      "affiliation": "Florida Museum of Natural History"
+    },
+    {
       "name": "Uyeda, Josef",
       "orcid": "https://orcid.org/0000-0003-4624-9680",
       "affiliation": "Imageomics Institute"
@@ -40,9 +45,9 @@
     "computer vision"
   ],
   "title": "TraitBlender",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "license": "MIT",
-  "publication_date": "2026-05-22",
+  "publication_date": "2026-06-11",
   "grants": [
     {
       "id": "021nxhr62::2118240"

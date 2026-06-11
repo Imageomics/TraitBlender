@@ -15,6 +15,7 @@ from . import (
     config_ops,
     import_dataset_op,
     export_dataset_op,
+    clear_dataset_op,
     export_mesh_op,
     transforms_ops,
     confirm_switch_morphospace_op,
@@ -36,12 +37,14 @@ if is_dearpygui_available():
 
 classes = [
     setup_scene_op.TRAITBLENDER_OT_setup_scene,
+    setup_scene_op.TRAITBLENDER_OT_add_ruler,
     clear_scene_op.TRAITBLENDER_OT_clear_scene,
     config_ops.TRAITBLENDER_OT_configure_scene,
     config_ops.TRAITBLENDER_OT_show_configuration,
     config_ops.TRAITBLENDER_OT_export_config,
     import_dataset_op.TRAITBLENDER_OT_import_dataset,
     export_dataset_op.TRAITBLENDER_OT_export_dataset,
+    clear_dataset_op.TRAITBLENDER_OT_clear_dataset,
     export_mesh_op.TRAITBLENDER_OT_export_mesh,
     transforms_ops.TRAITBLENDER_OT_run_pipeline,
     transforms_ops.TRAITBLENDER_OT_undo_pipeline,

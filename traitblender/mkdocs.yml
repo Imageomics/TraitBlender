@@ -52,6 +52,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
   - tables
   - toc:
       permalink: true
@@ -78,6 +80,7 @@ nav:
     - Shell (Default): morphospaces/shell.md
     - Circle Grid: morphospaces/circle-grid.md
     - ATLAS: morphospaces/atlas.md
+  - Tutorials: tutorials.md
 
 extra:
   social:
@@ -86,4 +89,7 @@ extra:
     - icon: fontawesome/solid/envelope
       link: mailto:calebcharpentier00@gmail.com
 
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js
 copyright: Copyright &copy; 2025 Caleb Charpentier 

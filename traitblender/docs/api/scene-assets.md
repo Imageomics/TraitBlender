@@ -13,6 +13,11 @@ This reference focuses on the user-facing operators and properties you will use 
 <p><code>bpy.ops.traitblender.clear_scene()</code></p>
 <p>Remove the current scene contents so you can start from a clean state.</p>
 
+<hr>
+
+<p><code>bpy.ops.traitblender.add_ruler()</code></p>
+<p>Append a ruler object from the museum scene and apply ruler configuration (location, rotation, visibility). Each invocation adds another ruler; Blender handles duplicate naming.</p>
+
 </details>
 
 <details>
@@ -61,6 +66,11 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <p><code>bpy.context.scene.traitblender_dataset.filepath</code></p>
 <p>Path to the dataset file on disk.</p>
+
+<hr>
+
+<p><code>bpy.context.scene.traitblender_dataset.sync_sample_with_active_object</code></p>
+<p>When <code>True</code> (default), automatically set <code>sample</code> to match the active object name when that name is a row in the dataset.</p>
 
 <hr>
 

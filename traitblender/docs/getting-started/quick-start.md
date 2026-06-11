@@ -6,7 +6,7 @@ Get up and running with TraitBlender's graphical interface in just a few minutes
 
 Before starting, ensure you have:
 
-- ✅ **Blender 5.1+** and **TraitBlender v2.2.0** ([supported versions](./installation.md#supported-versions))
+- ✅ **Blender 5.1+** and **TraitBlender v2.3.0** ([supported versions](./installation.md#supported-versions))
 - ✅ TraitBlender add-on installed ([Installation Guide](./installation.md))
 
 ??? note "Step 0: Enable TraitBlender"
@@ -24,6 +24,10 @@ Before starting, ensure you have:
     3. After a moment, the scene will load with a museum table, lighting, and camera setup
     4. Press `0` on your numpad (or `0` with Emulate Numpad enabled) to switch to Camera View
     5. You should now be looking through the camera at the empty mat lying on the table
+
+    ### Add a Ruler
+
+    If the ruler object is missing or you need another copy, click **Add Ruler** in the **Museum Setup** panel. Each click appends a ruler from the museum scene and applies the ruler settings from your configuration (location, rotation, visibility). Blender assigns duplicate names automatically (e.g. `Ruler.001`).
 
     !!! tip "Emulate Numpad"
         If you don't have a numpad, go to **Edit → Preferences → Input** and check **Emulate Numpad**. This allows you to use the number keys at the top of your keyboard as a numpad.
@@ -93,7 +97,7 @@ Before starting, ensure you have:
     - **First column**: Species/specimen names (automatically detected)
     - **Remaining columns**: Morphological traits that map to morphospace parameters
 
-    For Shell (Default), the parameters include: `b`, `d`, `z`, `a`, `phi`, `psi`, `c_depth`, `c_n`, `n_depth`, `n`, `t`, `time_step`, `n_vertices_aperture`, `eps`, `h_0`, `length`
+    For Shell (Default), dataset trait columns include: `b`, `d`, `z`, `a`, `phi`, `psi`, `k`, `c_depth`, `c_n`, `n_depth`, `n`, `t`, `eps`, `h_0`, `S`. Mesh resolution and inner-surface options (`n_vertices_aperture`, `time_step`, `use_inner_surface`) are hyperparameters in the config file, not dataset columns—see the [Shell morphospace reference](../morphospaces/shell.md).
 
     ### Generate a Specimen
 
@@ -101,6 +105,10 @@ Before starting, ensure you have:
     2. Click **Generate Sample**
     3. A 3D shell will be generated and placed at the center of the table
     4. Use the **Sample Controls** section to adjust the specimen's position and rotation
+
+    ### Sync Sample to Active
+
+    Enable **Sync Sample to Active** (on by default) to keep the **Sample** dropdown aligned with your scene selection. When you select an object whose name exactly matches a specimen row in the dataset, TraitBlender updates **Sample** to that row automatically.
 
     ### Edit Dataset
 
@@ -168,7 +176,7 @@ Congratulations! You've completed the basic workflow. Now you can:
 For more detailed information, see:
 - [API Reference](../api/scene-assets.md) - Complete API documentation
 - [Configuration Files](../configuration/config-files.md) - Understanding YAML configs
-- [Tutorials](../tutorials/) - Advanced techniques and workflows
+- [Tutorials](../tutorials.md) - Step-by-step guides (in progress)
 
 
 

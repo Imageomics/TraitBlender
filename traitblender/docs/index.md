@@ -1,15 +1,9 @@
 <div align="center">
 <h1 style="color: #ffffff; font-weight: 300;">Welcome to TraitBlender!</h1>
+<img src="./images/logo.svg" alt="TraitBlender logo" width="440"/>
     <p>
         Synthetic Museum-Image Datasets for Computer Vision and Evolutionary Morphology
     </p>
-</div>
-
-<div align="center">
-<img src="./images/shell-specimen.png" alt="Museum-style shell specimen imaging with TraitBlender" width="540"/>
-</div>
-
-<div align="center">
 
 <p>
 <a href="https://github.com/Imageomics/TraitBlender">
@@ -25,7 +19,11 @@
 
 TraitBlender is a powerful Blender add-on designed for researchers and institutions working with morphological datasets. It enables the generation of high-quality, standardized images for scientific analysis and museum documentation.
 
-**TraitBlender v2.2.0** · **Blender 5.1+**. See the [installation guide](getting-started/installation.md#supported-versions).
+<div align="center">
+<img src="./images/shell-specimen.png" alt="Museum-style shell specimen imaging with TraitBlender" width="540"/>
+<p><em>An example shell generated with TraitBlender, with added materials for styling.</em></p>
+<p><strong>TraitBlender v2.3.0</strong> · <strong>Blender 5.1+</strong>. See the <a href="getting-started/installation.md#supported-versions">installation guide</a>.</p>
+</div>
 
 ---
 
@@ -37,7 +35,7 @@ TraitBlender is a powerful Blender add-on designed for researchers and instituti
 <h3>Maintainer</h3>
 
 <div align="center">
-<img src="./images/caleb-profile.jpeg" alt="Caleb Charpentier" width="240" style="margin: 1rem 0;"/>
+<img src="./images/caleb-profile.jpeg" alt="Caleb Charpentier" width="360" style="margin: 1rem 0;"/>
 </div>
 
 <p><strong>Caleb Charpentier</strong></p>
@@ -66,12 +64,13 @@ If you use TraitBlender in your research, please cite my work:
                           Bradley, John and
                           Campolongo, Elizabeth and
                           Thompson, Matthew and
+                          Porto, Arthur and
                           Uyeda, Josef C},
           title        = {TraitBlender},
-          month        = may,
+          month        = jun,
           year         = 2026,
           publisher    = {Zenodo},
-          version      = {v2.2.0},
+          version      = {v2.3.0},
           doi          = {10.5281/zenodo.14804133},
           url          = {https://github.com/Imageomics/TraitBlender},
         }

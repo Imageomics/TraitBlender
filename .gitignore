@@ -5,8 +5,8 @@ PLAN.md
 traitblender/site/
 
 # =============================================================================
-# RELEASE CHECKLIST — TraitBlender version (currently 2.2.0)
-# Search/replace 2.2.0 → X.Y.Z and v2.2.0 → vX.Y.Z unless noted below.
+# RELEASE CHECKLIST — TraitBlender version (currently 2.3.0)
+# Search/replace 2.3.0 → X.Y.Z and v2.3.0 → vX.Y.Z unless noted below.
 # =============================================================================
 
 # --- Addon package (extension build version; keep both in sync) ---
@@ -42,11 +42,6 @@ traitblender/site/
 #   BibTeX block: version = {vX.Y.Z}
 #   BibTeX block: doi = {...}  (if Zenodo DOI changed)
 #
-# traitblender/docs/README.md
-#   **Latest release: vX.Y.Z**
-#   Release zip example: traitblender-vX.Y.Z-<platform>.zip
-#   Supported stack bullet: **TraitBlender vX.Y.Z**
-#
 # traitblender/docs/getting-started/installation.md
 #   Supported versions table: **vX.Y.Z**
 #   CLI install example: traitblender-vX.Y.Z-linux.zip
@@ -54,9 +49,6 @@ traitblender/site/
 #   Troubleshooting: **TraitBlender vX.Y.Z**
 #
 # traitblender/docs/getting-started/quick-start.md
-#   Prerequisites: **TraitBlender vX.Y.Z**
-#
-# traitblender/docs/getting-started/quick-start-api.md
 #   Prerequisites: **TraitBlender vX.Y.Z**
 
 # --- GitHub release (not edited in repo; do on publish) ---

@@ -3,7 +3,7 @@
 schema_version = "1.0.0"
 
 id = "traitblender"
-version = "2.2.0"
+version = "2.3.0"
 name = "TraitBlender"
 tagline = "Generate museum-style images for morphological datasets"
 maintainer = "Caleb Charpentier <calebcharpentier00@gmail.com>"

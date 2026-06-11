@@ -62,11 +62,7 @@ class TRAITBLENDER_OT_morphospace_switch_yes(Operator):
             setup.suppress_morphospace_update = False
 
         # Clear dataset so it regenerates defaults for the new morphospace.
-        dataset = context.scene.traitblender_dataset
-        dataset.filepath = ""
-        dataset.csv = ""
-        # Regenerate defaults for the newly selected morphospace.
-        dataset.csv = dataset.get_csv_for_editing()
+        context.scene.traitblender_dataset.reset_to_morphospace_default()
 
         return {'FINISHED'}
 

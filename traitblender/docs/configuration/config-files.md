@@ -102,7 +102,7 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <p><strong>meshes</strong></p>
 <ul>
   <li><code>save_meshes</code>: boolean</li>
-  <li><code>file_export_type</code>: currently <code>obj</code></li>
+  <li><code>file_export_type</code>: <code>obj</code> or <code>ply</code></li>
 </ul>
 
 <p><strong>morphospace</strong></p>

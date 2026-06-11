@@ -23,6 +23,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+
     strategy:
       fail-fast: false
       matrix:
@@ -62,6 +65,8 @@ jobs:
         uses: bradyajohnston/setup-blender@v5
         with:
           version: "5.1"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Download wheels for this OS
         if: ${{ matrix.download_wheels }}

@@ -66,4 +66,4 @@ Optimize your Blender setup for the best TraitBlender experience. These configur
 ## Next Steps
 
 - **[Quick Start (GUI)](./quick-start.md)**
-- **[Quick Start (API)](./quick-start-api.md)**
+- **[Documentation](../documentation.md)**

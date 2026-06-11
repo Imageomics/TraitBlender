@@ -4,7 +4,7 @@
 
 | | |
 |--|--|
-| **TraitBlender** | **v2.2.0** |
+| **TraitBlender** | **v2.3.0** |
 | **Blender** | **5.1** and later |
 
 ??? note "System Requirements"
@@ -23,7 +23,7 @@
 
 You can install a downloaded release zip directly from the terminal:
 
-`blender --command extension install-file -r user_default --enable traitblender-v2.2.0-linux.zip`
+`blender --command extension install-file -r user_default --enable traitblender-v2.3.0-linux.zip`
 
 Use the zip that matches your OS:
 
@@ -46,7 +46,7 @@ After removing the extension, restart Blender. TraitBlender will no longer be av
 
 **Step 1: Download TraitBlender**
 
-- Download the latest release (**v2.2.0**) from [GitHub Releases](https://github.com/Imageomics/TraitBlender/releases)
+- Download the latest release (**v2.3.0**) from [GitHub Releases](https://github.com/Imageomics/TraitBlender/releases)
 - Save the `.zip` file to your computer
 
 **Step 2: Install in Blender**
@@ -75,7 +75,7 @@ To verify that TraitBlender is properly installed:
 
 **If something is wrong**
 
-- Use **Blender 5.1+** with **TraitBlender v2.2.0**
+- Use **Blender 5.1+** with **TraitBlender v2.3.0**
 - Check that the add-on is enabled in Preferences
 - Restart Blender completely
 
