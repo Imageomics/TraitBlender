@@ -31,3 +31,8 @@ diameter_0, diameter_1, ..., diameter_15
 ## Hyperparameters
 
 Circle Grid currently has **no extra hyperparameters** (`HYPERPARAMETERS = {}`), so you do not need a `hyperparams` block in the config for this morphospace.
+
+## Orientations
+
+Circle Grid includes built-in orientations (including **Default**). Custom Euler orientations from the Orientations panel / `imaging.custom_orientations` apply the same way as for other morphospaces — see [Morphospaces overview](overview.md#orientations).
+

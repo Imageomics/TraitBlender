@@ -75,6 +75,7 @@ nav:
       - Operators and Properties: api/scene-assets.md
     - Configuration:
       - Configuration Files: configuration/config-files.md
+      - Unit Tests: configuration/unit-tests.md
   - Morphospaces:
     - Overview: morphospaces/overview.md
     - Shell (Default): morphospaces/shell.md

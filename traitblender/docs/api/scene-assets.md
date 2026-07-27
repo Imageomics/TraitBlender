@@ -28,6 +28,16 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <hr>
 
+<p><code>bpy.context.scene.traitblender_setup.config_file</code></p>
+<p>Path to the YAML used by <strong>Configure Scene</strong> and by the <code>config_matches_scene</code> unit test. After a successful configure (including via the file browser), this property is updated to the absolute path that was loaded.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.configure_scene(filepath="")</code></p>
+<p>Load a YAML config and apply it to the scene. If <code>filepath</code> is empty and <code>config_file</code> is unset, opens a file browser. Persists the chosen path on <code>traitblender_setup.config_file</code>.</p>
+
+<hr>
+
 <p><code>bpy.ops.traitblender.show_configuration()</code></p>
 <p>Print the current configuration as YAML for inspection or copying.</p>
 
@@ -35,6 +45,11 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <p><code>bpy.ops.traitblender.export_config(filepath="")</code></p>
 <p>Export the current configuration to a YAML file.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.run_unit_test(test_name="help")</code></p>
+<p>Run an in-addon unit test by name. Use <code>test_name="help"</code> to list tests. See <a href="../configuration/unit-tests.md">Unit Tests</a>.</p>
 
 </details>
 
@@ -57,17 +72,17 @@ This reference focuses on the user-facing operators and properties you will use 
 <hr>
 
 <p><code>bpy.ops.traitblender.apply_orientation(orientation="")</code></p>
-<p>Apply a named morphospace orientation to the current sample. Pass <code>orientation</code> explicitly (recommended for scripts/pipeline); if empty, uses the Orientations panel selection. Folders and logs should use the same name string that was applied.</p>
+<p>Apply a named orientation to the current sample by <strong>name</strong> (built-in or custom). Pass <code>orientation</code> explicitly (recommended for scripts/pipeline); if empty, uses the Orientations panel selection. Imaging folders and logs should use the same name string that was applied.</p>
 
 <hr>
 
 <p><code>bpy.context.scene.traitblender_config.imaging.custom_orientations</code></p>
-<p>Named custom Euler orientations (<code>name</code>, <code>rotation</code> as <code>[rx, ry, rz]</code> radians). Applied in the specimen's local frame after Default (before bake). Merged with built-in morphospace orientations for Apply and the imaging pipeline.</p>
+<p>Named custom Euler orientations (<code>name</code>, <code>rotation</code> as <code>[rx, ry, rz]</code> radians). For every morphospace: run Default → apply Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake) → recenter at geometry bounds. Merged with built-ins for Apply and imaging; built-in names win on collision. YAML: <code>imaging.custom_orientations</code>.</p>
 
 <hr>
 
 <p><code>bpy.ops.traitblender.add_custom_orientation()</code> / <code>bpy.ops.traitblender.remove_custom_orientation()</code></p>
-<p>Add or remove a custom orientation entry.</p>
+<p>Add or remove a custom orientation entry in the Orientations panel (also reflected in Imaging checkboxes and YAML export).</p>
 
 </details>
 
@@ -167,7 +182,7 @@ This reference focuses on the user-facing operators and properties you will use 
 <hr>
 
 <p><code>bpy.context.scene.traitblender_setup</code></p>
-<p>Setup state for morphospace selection and scene initialization.</p>
+<p>Setup state for morphospace selection, <code>config_file</code>, and related UI.</p>
 
 <hr>
 
@@ -189,3 +204,4 @@ This reference focuses on the user-facing operators and properties you will use 
 ## Notes
 
 - The Python tooltip in Blender is usually enough to discover the matching API call for a given button or property.
+- After loading a config, use [`bpy.ops.traitblender.run_unit_test`](../configuration/unit-tests.md) (`config_matches_scene`) to verify YAML vs the live scene.

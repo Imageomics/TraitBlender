@@ -73,6 +73,10 @@ morphospace:
     use_inner_surface: true
 ```
 
+## Orientations
+
+Shell defines built-in named orientations (including **Default**) for placing specimens on the table. You can also define **custom Euler orientations** that work with Shell (and every other morphospace) in the Orientations panel or under `imaging.custom_orientations` in YAML — see [Morphospaces overview](overview.md#orientations) and [Configuration Files](../configuration/config-files.md).
+
 ## References
 
 - Contreras-Figueroa, R. & Aragón, L. (2023). A mathematical model for mollusc shells based on parametric surfaces and the application to *Conus* shells. *Diversity* **15**, 431. [https://doi.org/10.3390/d15030431](https://doi.org/10.3390/d15030431)

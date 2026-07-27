@@ -19,9 +19,11 @@ TraitBlender config files are **YAML** files that store the settings you see in 
   <li><code>metadata</code> – stamp text in the rendered images</li>
   <li><code>ruler</code> – ruler location / visibility</li>
   <li><code>transforms</code> – optional random variation on config values</li>
-  <li><code>imaging</code> – which orientations to render and how many images</li>
+  <li><code>imaging</code> – which orientations to render, custom Euler orientations, and how many images</li>
   <li><code>meshes</code> – mesh export options during simulation</li>
 </ul>
+
+<p>The Datasets panel <code>sample</code> controls (specimen location / rotation) are <strong>UI-only</strong>. A bare <code>sample:</code> key in YAML is ignored on load and is not written on export. See <a href="./unit-tests.md">Unit Tests</a> to verify a loaded file against the live scene.</p>
 
 <p><strong>Allowed values and ranges (quick reference)</strong></p>
 
@@ -425,4 +427,14 @@ transforms: []
 
 ## Using config files
 
-Use the GUI to export a YAML (recommended), then reuse it later by loading it back into the Configuration panel workflow.
+1. Export a YAML from the GUI (**Export Config as YAML**), or edit one by hand using the schema above.
+2. In **Museum Setup**, set **Config File** (or leave it empty and pick a file when prompted) and click **Configure Scene**.
+3. After a successful load, the chosen path is stored on `traitblender_setup.config_file` so the field and [unit tests](./unit-tests.md) stay in sync.
+
+### Custom orientations in YAML
+
+Under `imaging.custom_orientations`, map a unique name to Euler angles `[rx, ry, rz]` in **radians**. Built-in morphospace orientation names always win on collision. Customs are available for every morphospace: they run **Default**, apply the Euler in the specimen’s **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. List those names in `orientation_names` to include them in the imaging pipeline.
+
+### Verifying a load
+
+After Configure Scene, run `config_matches_scene` (see [Unit Tests](./unit-tests.md)) to confirm the YAML still matches the live scene—including Cycles/Eevee **render** vs **viewport** sampling keys.

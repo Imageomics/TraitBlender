@@ -18,7 +18,7 @@ TraitBlender is a Blender add-on for generating museum-style images and 3D meshe
 
 **Dataset import, editing, and saving** — Specimen trait values are read from CSV, TSV, or Excel. The built-in dataset editor supports filtering, sorting, pagination, and saving changes back to file, so you can curate and tweak trait tables without leaving Blender.
 
-**Built-in orientations** — Each morphospace defines named orientations (e.g. "Default", "Aperture view") that place specimens consistently on the table. The imaging pipeline can render multiple orientations per specimen so images are comparable across specimens and runs.
+**Built-in and custom orientations** — Each morphospace defines named orientations (e.g. "Default", "Aperture view") that place specimens consistently on the table. You can also add **custom Euler orientations** (name + radians) that run Default, then rotate in the specimen’s local frame, for any morphospace. The imaging pipeline can render multiple orientations per specimen so images are comparable across specimens and runs.
 
 **Stochastic transform pipeline** — Scene properties (e.g. camera location, focal length, lamp power) can be driven by configurable transforms with normal or other samplers. This adds controlled variation to images (e.g. small camera jitter) for robustness or data augmentation while keeping the setup reproducible via the same config and seed.
 

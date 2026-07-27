@@ -60,8 +60,10 @@ Before starting, ensure you have:
 
     ### Importing Configuration
 
-    1. In the **Museum Setup** panel, enter a path to a YAML config file in the **Config File** field
-    2. Click **Configure Scene** to load the configuration
+    1. In the **Museum Setup** panel, enter a path to a YAML config file in the **Config File** field (or leave it empty)
+    2. Click **Configure Scene** to load the configuration. If no path is set, a file browser opens; the path you pick is saved into **Config File** after a successful load
+
+    To confirm the YAML still matches the live scene afterward, see [Unit Tests](../configuration/unit-tests.md) (`config_matches_scene`).
 
     !!! warning "Scene Requirements"
         Configuration import only works if the museum scene has been loaded (via **Import Museum**). If you encounter issues, click **Clear Scene** and re-import the museum scene.
@@ -127,7 +129,9 @@ Before starting, ensure you have:
 
     Each morphospace ships built-in orientation functions. Select one from the dropdown and click **Apply** to orient the specimen. **Default** is also applied automatically when you generate a sample or run the imaging pipeline.
 
-    You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`).
+    You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`). Built-in names win if a custom name collides.
+
+    Scripts and the imaging pipeline should apply orientations **by name** (`bpy.ops.traitblender.apply_orientation(orientation="...")`) so output folders match the pose that was used.
 
 ??? note "Step 6: Transforms"
     Expand the **"6 Transforms"** panel.
