@@ -5,8 +5,8 @@ PLAN.md
 traitblender/site/
 
 # =============================================================================
-# RELEASE CHECKLIST — TraitBlender version (currently 2.3.0)
-# Search/replace 2.3.0 → X.Y.Z and v2.3.0 → vX.Y.Z unless noted below.
+# RELEASE CHECKLIST — TraitBlender version (currently 2.4.0)
+# Search/replace 2.4.0 → X.Y.Z and v2.4.0 → vX.Y.Z unless noted below.
 # =============================================================================
 
 # --- Addon package (extension build version; keep both in sync) ---

@@ -21,7 +21,7 @@ class ImagingOrientationItem(bpy.types.PropertyGroup):
     enabled: BoolProperty(
         name="Include",
         description="Include this orientation in the imaging pipeline",
-        default=True,
+        default=False,
     )
 
 
@@ -104,6 +104,34 @@ class ImagingConfig(TraitBlenderConfig):
 
         return "\n".join(lines)
 
+    def sync_orientation_options(self, context, enabled_names=None):
+        """
+        Rebuild orientation_options from the live morphospace + customs dict.
+
+        Args:
+            context: Blender context.
+            enabled_names: Optional set/list of names that should be enabled.
+                If None, preserve previous enabled flags; new names default to
+                enabled only when the name is ``Default``.
+        """
+        from ...morphospaces import get_orientation_names
+
+        morphospace_name = context.scene.traitblender_setup.available_morphospaces
+        all_names = (
+            get_orientation_names(morphospace_name, context) if morphospace_name else []
+        )
+        prev_enabled = {item.name: bool(item.enabled) for item in self.orientation_options}
+        enabled_set = set(enabled_names) if enabled_names is not None else None
+
+        self.orientation_options.clear()
+        for name in all_names:
+            item = self.orientation_options.add()
+            item.name = name
+            if enabled_set is not None:
+                item.enabled = name in enabled_set
+            else:
+                item.enabled = prev_enabled.get(name, name == "Default")
+
     def from_dict(self, data_dict):
         """Load imaging section; restore orientation_options and custom_orientations."""
         if not isinstance(data_dict, dict):
@@ -113,10 +141,16 @@ class ImagingConfig(TraitBlenderConfig):
         if "images_per_orientation" in data_dict:
             self.images_per_orientation = data_dict["images_per_orientation"]
 
+        enabled_from_yaml = {"Default"}
+        if "orientation_names" in data_dict:
+            names = data_dict["orientation_names"]
+            if isinstance(names, list):
+                enabled_from_yaml = {n for n in names if isinstance(n, str)}
+
         if "custom_orientations" in data_dict:
             customs = data_dict["custom_orientations"]
-            self.custom_orientations.clear()
             if isinstance(customs, dict):
+                self.custom_orientations.clear()
                 for name, rot in customs.items():
                     if not isinstance(name, str) or not name.strip():
                         continue
@@ -129,13 +163,23 @@ class ImagingConfig(TraitBlenderConfig):
                     item = self.custom_orientations.add()
                     item.name = name.strip()
                     item.rotation = (float(rot[0]), float(rot[1]), float(rot[2]))
+            elif customs is not None:
+                print(
+                    "TraitBlender: custom_orientations must be a mapping of "
+                    "name → [rx, ry, rz]; leaving existing customs unchanged."
+                )
 
-        if "orientation_names" in data_dict:
-            names = data_dict["orientation_names"]
-            if isinstance(names, list):
+        # Sync checkboxes now if possible (morphospace may still load later in YAML;
+        # configure_scene also syncs after the full from_dict).
+        try:
+            import bpy
+
+            self.sync_orientation_options(bpy.context, enabled_names=enabled_from_yaml)
+        except Exception as e:
+            print(f"TraitBlender: Could not sync imaging orientation_options: {e}")
+            if enabled_from_yaml is not None:
                 self.orientation_options.clear()
-                for n in names:
-                    if isinstance(n, str):
-                        item = self.orientation_options.add()
-                        item.name = n
-                        item.enabled = True
+                for n in enabled_from_yaml:
+                    item = self.orientation_options.add()
+                    item.name = n
+                    item.enabled = True

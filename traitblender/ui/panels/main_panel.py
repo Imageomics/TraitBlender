@@ -12,25 +12,17 @@ def _sync_imaging_orientations_timer():
     global _pending_orientation_sync
     if not _pending_orientation_sync:
         return None
-    scene_name, orientation_names = _pending_orientation_sync
+    scene_name, _orientation_names = _pending_orientation_sync
     _pending_orientation_sync = None
     scene = bpy.data.scenes.get(scene_name)
     if not scene or not hasattr(scene, "traitblender_config"):
         return None
-    config = scene.traitblender_config
-    if not hasattr(config, "imaging"):
-        return None
-    items = config.imaging.orientation_options
-    name_set = set(orientation_names)
-    # Remove orphaned entries (e.g. deleted custom orientations)
-    for i in range(len(items) - 1, -1, -1):
-        if items[i].name not in name_set:
-            items.remove(i)
-    for name in orientation_names:
-        if next((x for x in items if x.name == name), None) is None:
-            item = items.add()
-            item.name = name
-            item.enabled = True
+    imaging = scene.traitblender_config.imaging
+    try:
+        # Preserve current enabled flags; only add/remove to match live names.
+        imaging.sync_orientation_options(bpy.context, enabled_names=None)
+    except Exception as e:
+        print(f"TraitBlender: Imaging orientation sync failed: {e}")
     return None  # one-shot
 
 class TRAITBLENDER_PT_main_panel(Panel):
@@ -71,6 +63,15 @@ class TRAITBLENDER_PT_main_panel(Panel):
             self._draw_section_content(box, section_obj)
 
     def _draw_section_content(self, layout, section_obj):
+        # Bind Render to the real scene settings so the UI cannot drift from Blender.
+        if section_obj.__class__.__name__ == "RenderConfig":
+            scene = bpy.context.scene
+            layout.prop(scene.render, "engine", text="Engine")
+            eevee = getattr(scene, "eevee", None)
+            if eevee is not None and hasattr(eevee, "use_raytracing"):
+                layout.prop(eevee, "use_raytracing", text="Use Raytracing")
+            return
+
         for prop_name in section_obj.__class__.__annotations__.keys():
             if prop_name == "show":
                 continue
@@ -99,7 +100,7 @@ class TRAITBLENDER_PT_config_panel(Panel):
         config_sections = config.get_config_sections()
         if config_sections:
             for section_name, section_obj in config_sections.items():
-                if section_name in ["transforms", "sample", "morphospace"]:
+                if section_name in ["transforms", "sample", "morphospace", "imaging"]:
                     continue
                 self._draw_config_section(layout, section_name, section_obj)
         else:

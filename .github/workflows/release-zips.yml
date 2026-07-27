@@ -1,5 +1,5 @@
 # Build extension zips and attach them to a GitHub release when you publish one.
-# How to use: Create a release (draft or direct publish) with a tag (e.g. v2.3.0). When the release
+# How to use: Create a release (draft or direct publish) with a tag (e.g. v2.4.0). When the release
 # is published, this workflow runs, builds Windows/Mac/Linux zips, and uploads them as release assets.
 
 name: Release extension zips

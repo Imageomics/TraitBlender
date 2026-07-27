@@ -24,6 +24,7 @@ from . import (
     apply_orientation_op,
     custom_orientation_ops,
     render_image_op,
+    unit_test,
 )
 
 _dpg_operator_classes = []
@@ -60,6 +61,7 @@ classes = [
     custom_orientation_ops.TRAITBLENDER_OT_add_custom_orientation,
     custom_orientation_ops.TRAITBLENDER_OT_remove_custom_orientation,
     render_image_op.TRAITBLENDER_OT_render_image,
+    unit_test.TRAITBLENDER_OT_run_unit_test,
 ]
 
 

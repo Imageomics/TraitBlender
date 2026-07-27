@@ -6,7 +6,7 @@ Get up and running with TraitBlender's graphical interface in just a few minutes
 
 Before starting, ensure you have:
 
-- ✅ **Blender 5.1+** and **TraitBlender v2.3.0** ([supported versions](./installation.md#supported-versions))
+- ✅ **Blender 5.1+** and **TraitBlender v2.4.0** ([supported versions](./installation.md#supported-versions))
 - ✅ TraitBlender add-on installed ([Installation Guide](./installation.md))
 
 ??? note "Step 0: Enable TraitBlender"

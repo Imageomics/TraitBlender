@@ -23,12 +23,12 @@ authors:
     given-names: Josef
     orcid: "https://orcid.org/0000-0003-4624-9680"
 cff-version: 1.2.0
-date-released: "2026-06-11"
+date-released: "2026-07-27"
 doi: 10.5281/zenodo.14804133
 identifiers:
   - type: url
-    description: "The GitHub release URL for version 2.3.0."
-    value: "https://github.com/Imageomics/TraitBlender/releases/tag/v2.3.0"
+    description: "The GitHub release URL for version 2.4.0."
+    value: "https://github.com/Imageomics/TraitBlender/releases/tag/v2.4.0"
 keywords:
   - Imageomics
   - Blender
@@ -40,7 +40,7 @@ license: "MIT"
 message: "If you find this software helpful in your research, please cite this software release."
 repository-code: "https://github.com/Imageomics/TraitBlender"
 title: "TraitBlender"
-version: 2.3.0
+version: 2.4.0
 type: software
 contact:
   - family-names: Charpentier
