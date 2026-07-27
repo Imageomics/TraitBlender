@@ -26,7 +26,7 @@ class TRAITBLENDER_PG_orientation(bpy.types.PropertyGroup):
         try:
             setup = context.scene.traitblender_setup
             morphospace_name = setup.available_morphospaces
-            orientations = get_orientations_for_morphospace(morphospace_name)
+            orientations = get_orientations_for_morphospace(morphospace_name, context=context)
             for name, func in orientations.items():
                 if callable(func):
                     items.append((name, name, f"Apply {name} orientation"))

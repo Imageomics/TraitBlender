@@ -8,7 +8,7 @@ _pending_orientation_sync = None  # (scene_name, [orientation_names]) or None
 
 
 def _sync_imaging_orientations_timer():
-    """One-shot timer: add missing orientation_options for the pending scene."""
+    """One-shot timer: sync orientation_options to current built-in + custom names."""
     global _pending_orientation_sync
     if not _pending_orientation_sync:
         return None
@@ -21,6 +21,11 @@ def _sync_imaging_orientations_timer():
     if not hasattr(config, "imaging"):
         return None
     items = config.imaging.orientation_options
+    name_set = set(orientation_names)
+    # Remove orphaned entries (e.g. deleted custom orientations)
+    for i in range(len(items) - 1, -1, -1):
+        if items[i].name not in name_set:
+            items.remove(i)
     for name in orientation_names:
         if next((x for x in items if x.name == name), None) is None:
             item = items.add()
@@ -179,11 +184,26 @@ class TRAITBLENDER_PT_orientations_panel(Panel):
     def draw(self, context):
         layout = self.layout
         orientation_state = context.scene.traitblender_orientation
+        imaging = context.scene.traitblender_config.imaging
 
         layout.label(text="Apply orientation from the selected morphospace:")
         row = layout.row(align=True)
         row.prop(orientation_state, "orientation", text="")
         row.operator("traitblender.apply_orientation", text="Apply", icon='ORIENTATION_VIEW')
+
+        box = layout.box()
+        box.label(text="Custom orientations (radians)", icon='DRIVER_ROTATIONAL_DIFFERENCE')
+        box.label(text="Default → local Euler (X,Y,Z) → bounds center")
+
+        for i, item in enumerate(imaging.custom_orientations):
+            row = box.row(align=True)
+            row.prop(item, "name", text="")
+            row.prop(item, "rotation", text="")
+            op = row.operator("traitblender.remove_custom_orientation", text="", icon='X')
+            op.index = i
+
+        row = box.row(align=True)
+        row.operator("traitblender.add_custom_orientation", text="Add Custom", icon='ADD')
 
 class TRAITBLENDER_PT_transforms_panel(Panel):
     bl_label = "6 Transforms"
@@ -261,14 +281,20 @@ class TRAITBLENDER_PT_imaging_panel(Panel):
         row = layout.row(align=True)
         row.prop(config.imaging, "images_per_orientation", text="Images Per Orientation")
         
-        # Orientations (from current morphospace): sync via timer (cannot write in draw), then draw checkboxes
+        # Orientations (built-ins + customs): sync via timer (cannot write in draw), then draw checkboxes
         from ...core.morphospaces import get_orientation_names
         morphospace_name = setup.available_morphospaces
-        orientation_names = get_orientation_names(morphospace_name) if morphospace_name else []
+        orientation_names = (
+            get_orientation_names(morphospace_name, context) if morphospace_name else []
+        )
         if orientation_names:
             items = config.imaging.orientation_options
-            missing = [n for n in orientation_names if next((x for x in items if x.name == n), None) is None]
-            if missing:
+            current = [x.name for x in items]
+            needs_sync = (
+                any(n not in current for n in orientation_names)
+                or any(n not in orientation_names for n in current)
+            )
+            if needs_sync:
                 global _pending_orientation_sync
                 if _pending_orientation_sync is None:
                     _pending_orientation_sync = (context.scene.name, list(orientation_names))

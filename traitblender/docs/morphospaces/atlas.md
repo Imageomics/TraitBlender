@@ -69,6 +69,8 @@ ATLAS defines many named orientations for multi-view imaging:
 - **Default** — specimen centered on the table (no rotation).
 - **X / Y / Z *n*/4 π Rotation** — rotations in π/4 steps about each axis (for comparable views across specimens).
 
+You can also define **custom Euler orientations** (any morphospace) in the Orientations panel or in YAML under `imaging.custom_orientations` (name → `[rx, ry, rz]` in radians). Customs run Default, apply the Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds.
+
 Select an orientation in the **Orientations** panel and click **Apply**, or include multiple orientations in the imaging pipeline.
 
 ## References

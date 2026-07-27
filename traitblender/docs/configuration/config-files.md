@@ -95,7 +95,8 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <p><strong>imaging</strong></p>
 <ul>
   <li><code>include_images</code>: boolean</li>
-  <li><code>orientation_names</code>: list of strings (orientation names from the selected morphospace)</li>
+  <li><code>orientation_names</code>: list of strings (built-in and/or custom orientation names to include in the pipeline)</li>
+  <li><code>custom_orientations</code>: optional map of name → <code>[rx, ry, rz]</code> Euler angles in <strong>radians</strong>. Each custom orientation runs the morphospace Default, then applies the Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake), then recenters at geometry bounds. Available for all morphospaces; names must not collide with built-ins.</li>
   <li><code>images_per_orientation</code>: integer, ≥ 1</li>
 </ul>
 
@@ -221,6 +222,10 @@ imaging:
   include_images: true
   orientation_names: []
   images_per_orientation: 1
+  # Optional named Euler orientations (radians), usable by any morphospace:
+  # custom_orientations:
+  #   Side: [1.5708, 0.0, 0.0]
+  #   Dorsal: [0.0, 1.5708, 0.0]
 
 meshes:
   file_export_type: obj
@@ -364,7 +369,9 @@ output:
 
 imaging:
   include_images: true
-  orientation_names: ['Default']
+  orientation_names: ['Default', 'Side']
+  custom_orientations:
+    Side: [1.5708, 0.0, 0.0]
   images_per_orientation: 1
 
 metadata:

@@ -125,7 +125,9 @@ Before starting, ensure you have:
 ??? note "Step 5: Orientations"
     Expand the **"5 Orientations"** panel.
 
-    Each morphospace can define orientation functions in its `ORIENTATIONS` dictionary. Select an orientation from the dropdown and click **Apply** to orient the specimen. The selected orientation is also applied automatically when running the Imaging Pipeline.
+    Each morphospace ships built-in orientation functions. Select one from the dropdown and click **Apply** to orient the specimen. **Default** is also applied automatically when you generate a sample or run the imaging pipeline.
+
+    You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`).
 
 ??? note "Step 6: Transforms"
     Expand the **"6 Transforms"** panel.
@@ -151,7 +153,7 @@ Before starting, ensure you have:
 
     1. Use **Include Images** to control whether image files are rendered.
     2. Set the number of images per orientation if needed.
-    3. Choose which orientations are included for the imaging run.
+    3. Choose which orientations are included for the imaging run (built-ins and any custom orientations you defined).
 
 ??? note "Step 9: Simulation"
     Use the separate **Simulation** section below the numbered panels.

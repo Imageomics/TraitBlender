@@ -5,7 +5,7 @@ import re
 import csv
 from datetime import datetime
 
-from ...core.morphospaces import get_orientation_names
+from ...core.morphospaces import get_orientation_names, apply_orientation_by_name
 from ...core.meshes import export_current_sample
 
 
@@ -13,6 +13,21 @@ def _sanitize_orientation_for_path(name):
     """Make orientation name safe for directory/file names."""
     s = name.replace(" ", "_").replace(",", "")
     return re.sub(r"[^\w\-]", "", s) or "orientation"
+
+
+def _enabled_orientation_names(context, morphospace_name):
+    """
+    Build the imaging orientation list from one source of truth.
+
+    Order and identity come from ``get_orientation_names`` (same dict used to apply).
+    Enablement comes from imaging.orientation_options checkboxes keyed by that name.
+    """
+    names = get_orientation_names(morphospace_name, context) if morphospace_name else []
+    if not names:
+        return []
+    options = context.scene.traitblender_config.imaging.orientation_options
+    enabled = {item.name: bool(item.enabled) for item in options}
+    return [n for n in names if enabled.get(n, False)]
 
 
 class TRAITBLENDER_OT_imaging_pipeline(Operator):
@@ -71,8 +86,8 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
             # Optional mesh export: once per specimen, at Default orientation only
             if self._save_meshes and not self._exported_mesh_for_specimen:
                 try:
-                    context.scene.traitblender_orientation.orientation = "Default"
-                    bpy.ops.traitblender.apply_orientation()
+                    apply_orientation_by_name(context, "Default", sample_name=name)
+                    self._last_applied_orientation = "Default"
                     mesh_dir = os.path.join(self._mesh_root, name)
                     os.makedirs(mesh_dir, exist_ok=True)
                     self._mesh_path = os.path.join(mesh_dir, f"{name}")
@@ -85,16 +100,18 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
                     # Don't crash the imaging pipeline if mesh export fails
                     print(f"TraitBlender: Mesh export failed for '{name}': {e}")
 
-        # Set and apply this orientation at start of each orientation block
-        current_ui_orientation = getattr(context.scene.traitblender_orientation, "orientation", "")
+        # Apply this orientation by name (same string used for folders / CSV / logs)
         if (
             self._img_idx == 0
-            or current_ui_orientation != orientation_name
             or self._last_applied_orientation != orientation_name
         ):
-            context.scene.traitblender_orientation.orientation = orientation_name
-            bpy.ops.traitblender.apply_orientation()
+            apply_orientation_by_name(context, orientation_name, sample_name=name)
             self._last_applied_orientation = orientation_name
+            # Best-effort UI sync only; not used for apply or paths
+            try:
+                context.scene.traitblender_orientation.orientation = orientation_name
+            except Exception:
+                pass
 
         # Reset and run pipeline for this image
         bpy.ops.traitblender.reset_pipeline()
@@ -188,11 +205,7 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
             return {'CANCELLED'}
 
         morphospace_name = setup.available_morphospaces
-        allowed = set(get_orientation_names(morphospace_name)) if morphospace_name else set()
-        self._orientations = [
-            item.name for item in config.imaging.orientation_options
-            if item.enabled and item.name in allowed
-        ]
+        self._orientations = _enabled_orientation_names(context, morphospace_name)
         if not self._orientations:
             self.report({'ERROR'}, "No orientations selected for imaging. Enable at least one in the Imaging panel.")
             return {'CANCELLED'}

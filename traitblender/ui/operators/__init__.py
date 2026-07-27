@@ -22,6 +22,7 @@ from . import (
     generate_morphospace_sample_op,
     imaging_pipeline_op,
     apply_orientation_op,
+    custom_orientation_ops,
     render_image_op,
 )
 
@@ -56,6 +57,8 @@ classes = [
     generate_morphospace_sample_op.TRAITBLENDER_OT_generate_morphospace_sample,
     imaging_pipeline_op.TRAITBLENDER_OT_imaging_pipeline,
     apply_orientation_op.TRAITBLENDER_OT_apply_orientation,
+    custom_orientation_ops.TRAITBLENDER_OT_add_custom_orientation,
+    custom_orientation_ops.TRAITBLENDER_OT_remove_custom_orientation,
     render_image_op.TRAITBLENDER_OT_render_image,
 ]
 

@@ -56,8 +56,18 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <hr>
 
-<p><code>bpy.ops.traitblender.apply_orientation()</code></p>
-<p>Apply the selected morphospace orientation to the current sample.</p>
+<p><code>bpy.ops.traitblender.apply_orientation(orientation="")</code></p>
+<p>Apply a named morphospace orientation to the current sample. Pass <code>orientation</code> explicitly (recommended for scripts/pipeline); if empty, uses the Orientations panel selection. Folders and logs should use the same name string that was applied.</p>
+
+<hr>
+
+<p><code>bpy.context.scene.traitblender_config.imaging.custom_orientations</code></p>
+<p>Named custom Euler orientations (<code>name</code>, <code>rotation</code> as <code>[rx, ry, rz]</code> radians). Applied in the specimen's local frame after Default (before bake). Merged with built-in morphospace orientations for Apply and the imaging pipeline.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.add_custom_orientation()</code> / <code>bpy.ops.traitblender.remove_custom_orientation()</code></p>
+<p>Add or remove a custom orientation entry.</p>
 
 </details>
 
