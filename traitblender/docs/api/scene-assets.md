@@ -203,5 +203,4 @@ This reference focuses on the user-facing operators and properties you will use 
 
 ## Notes
 
-- The Python tooltip in Blender is usually enough to discover the matching API call for a given button or property.
-- After loading a config, use [`bpy.ops.traitblender.run_unit_test`](../configuration/unit-tests.md) (`config_matches_scene`) to verify YAML vs the live scene.
+- The [Python tooltip](../getting-started/blender-optimization.md#python-tooltips) in Blender is usually enough to discover the matching API call for a given button or property.
