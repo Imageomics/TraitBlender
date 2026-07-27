@@ -63,13 +63,46 @@ class TRAITBLENDER_PT_main_panel(Panel):
             self._draw_section_content(box, section_obj)
 
     def _draw_section_content(self, layout, section_obj):
-        # Bind Render to the real scene settings so the UI cannot drift from Blender.
+        # Bind Render to live scene settings; show engine-specific options only.
         if section_obj.__class__.__name__ == "RenderConfig":
             scene = bpy.context.scene
             layout.prop(scene.render, "engine", text="Engine")
-            eevee = getattr(scene, "eevee", None)
-            if eevee is not None and hasattr(eevee, "use_raytracing"):
-                layout.prop(eevee, "use_raytracing", text="Use Raytracing")
+            eng = scene.render.engine or ""
+            if eng == "CYCLES":
+                cycles = getattr(scene, "cycles", None)
+                if cycles is not None:
+                    box = layout.box()
+                    box.label(text="Cycles · Render", icon='RENDER_STILL')
+                    row = box.row(align=True)
+                    row.prop(cycles, "use_adaptive_sampling", text="Noise Threshold")
+                    sub = row.row(align=True)
+                    sub.active = bool(cycles.use_adaptive_sampling)
+                    sub.prop(cycles, "adaptive_threshold", text="")
+                    box.prop(cycles, "samples", text="Max Samples")
+                    box.prop(cycles, "adaptive_min_samples", text="Min Samples")
+                    box.prop(cycles, "time_limit", text="Time Limit")
+                    if hasattr(cycles, "use_denoising"):
+                        box.prop(cycles, "use_denoising", text="Denoise")
+
+                    box = layout.box()
+                    box.label(text="Cycles · Viewport", icon='VIEW3D')
+                    row = box.row(align=True)
+                    row.prop(cycles, "use_preview_adaptive_sampling", text="Noise Threshold")
+                    sub = row.row(align=True)
+                    sub.active = bool(cycles.use_preview_adaptive_sampling)
+                    sub.prop(cycles, "preview_adaptive_threshold", text="")
+                    box.prop(cycles, "preview_samples", text="Max Samples")
+                    box.prop(cycles, "preview_adaptive_min_samples", text="Min Samples")
+                    if hasattr(cycles, "use_preview_denoising"):
+                        box.prop(cycles, "use_preview_denoising", text="Denoise")
+            elif "EEVEE" in eng.upper():
+                eevee = getattr(scene, "eevee", None)
+                if eevee is not None:
+                    layout.label(text="Eevee Sampling", icon='RENDER_STILL')
+                    if hasattr(eevee, "use_raytracing"):
+                        layout.prop(eevee, "use_raytracing", text="Use Raytracing")
+                    if hasattr(eevee, "taa_render_samples"):
+                        layout.prop(eevee, "taa_render_samples", text="Samples")
             return
 
         for prop_name in section_obj.__class__.__annotations__.keys():

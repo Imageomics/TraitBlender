@@ -109,17 +109,24 @@ class TraitBlenderConfig(bpy.types.PropertyGroup):
         for prop_name, value in data_dict.items():
             if prop_name not in annotations:
                 continue
+            # Bare YAML keys like `sample:` become None — never assign onto PointerProperties.
+            if value is None:
+                continue
+
             current_prop = getattr(self, prop_name, None)
             # Duck-type nested sections: isinstance(PropertyGroup, TraitBlenderConfig)
             # can fail across Blender register/reload boundaries.
             from_dict_fn = getattr(current_prop, "from_dict", None)
-            if callable(from_dict_fn) and isinstance(value, (dict, list)):
-                from_dict_fn(value)
-            else:
-                try:
-                    setattr(self, prop_name, value)
-                except Exception as e:
-                    print(f"TraitBlender: Failed to set config '{prop_name}': {e}")
+            if callable(from_dict_fn):
+                if isinstance(value, (dict, list)):
+                    from_dict_fn(value)
+                # Nested section with a non-mapping value: ignore
+                continue
+
+            try:
+                setattr(self, prop_name, value)
+            except Exception as e:
+                print(f"TraitBlender: Failed to set config '{prop_name}': {e}")
 
     def to_dict(self):
         """Convert the configuration to a dictionary."""

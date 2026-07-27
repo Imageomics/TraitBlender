@@ -68,8 +68,20 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 
 <p><strong>render</strong></p>
 <ul>
-  <li><code>engine</code>: <code>CYCLES</code> | Eevee (<code>BLENDER_EEVEE_NEXT</code> or <code>BLENDER_EEVEE</code>, depending on Blender version; YAML values are normalized on load) | <code>BLENDER_WORKBENCH</code></li>
-  <li><code>eevee_use_raytracing</code>: boolean</li>
+  <li><code>engine</code>: <code>CYCLES</code> | Eevee (<code>BLENDER_EEVEE</code> / <code>BLENDER_EEVEE_NEXT</code>; both accepted) | <code>BLENDER_WORKBENCH</code></li>
+  <li><code>cycles</code> (used when <code>engine</code> is <code>CYCLES</code>; written on export only for Cycles):
+    <ul>
+      <li><code>use_adaptive_sampling</code>, <code>adaptive_threshold</code>, <code>samples</code>, <code>adaptive_min_samples</code>, <code>time_limit</code>, <code>use_denoising</code> — final render sampling</li>
+      <li><code>use_preview_adaptive_sampling</code>, <code>preview_adaptive_threshold</code>, <code>preview_samples</code>, <code>preview_adaptive_min_samples</code>, <code>use_preview_denoising</code> — viewport sampling</li>
+    </ul>
+  </li>
+  <li><code>eevee</code> (used when engine is Eevee; written on export only for Eevee):
+    <ul>
+      <li><code>use_raytracing</code>: boolean</li>
+      <li><code>taa_render_samples</code>: integer (Samples)</li>
+    </ul>
+  </li>
+  <li>Legacy flat <code>eevee_use_raytracing</code> is still accepted on load</li>
 </ul>
 
 <p><strong>output</strong></p>
@@ -184,8 +196,18 @@ mat:
   roughness: 1.0
 
 render:
-  engine: BLENDER_EEVEE_NEXT  # or BLENDER_EEVEE on Blender 5.1+; both accepted in YAML
-  eevee_use_raytracing: false
+  engine: BLENDER_EEVEE  # or CYCLES / BLENDER_EEVEE_NEXT
+  eevee:
+    use_raytracing: false
+    taa_render_samples: 64
+  # When using Cycles, use a cycles: block instead, for example:
+  # engine: CYCLES
+  # cycles:
+  #   use_adaptive_sampling: true
+  #   adaptive_threshold: 0.01
+  #   samples: 4096
+  #   adaptive_min_samples: 0
+  #   time_limit: 0.0
 
 output:
   rendering_directory: ""   # The directory where simulation output will be written
@@ -358,8 +380,13 @@ mat:
   scale: [0.15, 0.15, 1.0]
 
 render:
-  eevee_use_raytracing: false
   engine: CYCLES
+  cycles:
+    use_adaptive_sampling: true
+    adaptive_threshold: 0.01
+    samples: 4096
+    adaptive_min_samples: 0
+    time_limit: 0.0
 
 output:
   image_format: PNG

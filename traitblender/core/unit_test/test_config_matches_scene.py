@@ -109,6 +109,17 @@ def _live_value(section, key: str, context):
     if cls_name == "RenderConfig" and key == "engine":
         return normalize_render_engine_value(context.scene.render.engine)
 
+    # Always compare Cycles/Eevee YAML keys to live scene RNA (not PropertyGroup getters).
+    if cls_name == "CyclesRenderConfig":
+        cycles = getattr(context.scene, "cycles", None)
+        if cycles is not None and hasattr(cycles, key):
+            return getattr(cycles, key)
+
+    if cls_name == "EeveeRenderConfig":
+        eevee = getattr(context.scene, "eevee", None)
+        if eevee is not None and hasattr(eevee, key):
+            return getattr(eevee, key)
+
     if cls_name == "ImagingConfig":
         snap = _live_imaging_snapshot(section)
         if key in snap:
@@ -180,11 +191,77 @@ def _compare_section(path: str, expected: dict, section, context, mismatches: li
                 )
             continue
 
+        # Nested config subsection (e.g. render.cycles / render.eevee)
+        if isinstance(exp_val, dict):
+            # Prefer comparing Cycles/Eevee blocks straight to scene RNA.
+            if path == "render" and key == "cycles":
+                cycles = getattr(context.scene, "cycles", None)
+                if cycles is None:
+                    _add_mismatch(
+                        mismatches, child_path, exp_val, None, "scene.cycles is missing"
+                    )
+                    continue
+                for ck, cv in exp_val.items():
+                    cpath = f"{child_path}.{ck}"
+                    if not hasattr(cycles, ck):
+                        _add_mismatch(
+                            mismatches, cpath, cv, None, f"scene.cycles has no attribute {ck!r}"
+                        )
+                        continue
+                    try:
+                        actual = getattr(cycles, ck)
+                    except Exception as e:
+                        _add_mismatch(mismatches, cpath, cv, None, f"failed to read: {e}")
+                        continue
+                    if not _values_equal(cv, actual):
+                        _add_mismatch(mismatches, cpath, cv, actual, "value mismatch")
+                continue
+
+            if path == "render" and key == "eevee":
+                eevee = getattr(context.scene, "eevee", None)
+                if eevee is None:
+                    _add_mismatch(
+                        mismatches, child_path, exp_val, None, "scene.eevee is missing"
+                    )
+                    continue
+                for ek, ev in exp_val.items():
+                    epath = f"{child_path}.{ek}"
+                    if not hasattr(eevee, ek):
+                        _add_mismatch(
+                            mismatches, epath, ev, None, f"scene.eevee has no attribute {ek!r}"
+                        )
+                        continue
+                    try:
+                        actual = getattr(eevee, ek)
+                    except Exception as e:
+                        _add_mismatch(mismatches, epath, ev, None, f"failed to read: {e}")
+                        continue
+                    if not _values_equal(ev, actual):
+                        _add_mismatch(mismatches, epath, ev, actual, "value mismatch")
+                continue
+
+            child = getattr(section, key, None)
+            if child is not None and callable(getattr(child, "from_dict", None)):
+                _compare_section(child_path, exp_val, child, context, mismatches)
+                continue
+            _add_mismatch(
+                mismatches,
+                child_path,
+                exp_val,
+                None,
+                "nested mapping could not be compared (no matching subsection)",
+            )
+            continue
+
         try:
             actual = _live_value(section, key, context)
         except Exception as e:
             _add_mismatch(mismatches, child_path, exp_val, None, f"failed to read: {e}")
             continue
+
+        if key == "engine" and section.__class__.__name__ == "RenderConfig":
+            # already handled via _live_value
+            pass
 
         if not _values_equal(exp_val, actual):
             reason = "value mismatch"
@@ -205,7 +282,8 @@ def _compare_section(path: str, expected: dict, section, context, mismatches: li
             _add_mismatch(mismatches, child_path, exp_val, actual, reason)
 
 
-# Sections that are UI-only / not meaningful to compare from YAML
+# Sections that are UI-only / not meaningful to compare from YAML.
+# Bare ``sample:`` (null) or ``sample: {}`` must never count as a mismatch.
 _SKIP_ROOT_KEYS = frozenset({"sample"})
 
 
@@ -215,8 +293,8 @@ def _compare_root(expected: dict, root, context, mismatches: list) -> None:
     for key, exp_val in expected.items():
         if key in _SKIP_ROOT_KEYS:
             continue
-        # Bare `sample:` / null section in YAML — nothing to check
-        if exp_val is None:
+        # Bare section keys like `sample:` → None, or empty `{}` — nothing to check
+        if exp_val is None or exp_val == {}:
             continue
 
         if key not in annotations:

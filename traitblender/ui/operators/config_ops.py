@@ -71,6 +71,8 @@ class TRAITBLENDER_OT_configure_scene(Operator):
         if not config_file_path:
             self.report({'ERROR'}, "No configuration file specified")
             return {'CANCELLED'}
+
+        config_file_path = os.path.abspath(os.path.expanduser(config_file_path))
         
         if not os.path.exists(config_file_path):
             self.report({'ERROR'}, f"Configuration file not found: {config_file_path}")
@@ -84,6 +86,10 @@ class TRAITBLENDER_OT_configure_scene(Operator):
             if not config_data:
                 self.report({'ERROR'}, "Configuration file is empty or invalid")
                 return {'CANCELLED'}
+
+            # Persist path so the UI field and config_matches_scene test see it
+            # (file-browser invoke only sets the operator filepath, not setup.config_file).
+            context.scene.traitblender_setup.config_file = config_file_path
             
             # Apply the configuration using the from_dict method
             context.scene.traitblender_config.from_dict(config_data)

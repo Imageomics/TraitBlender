@@ -47,3 +47,7 @@ class SampleConfig(TraitBlenderConfig):
     def _to_yaml(self, indent_level=0, parent_path=""):
         """Override to prevent this configuration from appearing in YAML output."""
         return ""
+
+    def from_dict(self, data_dict):
+        """UI-only section — ignore YAML (including bare ``sample:`` / null / {})."""
+        return
