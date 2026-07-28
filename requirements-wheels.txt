@@ -1,7 +1,8 @@
 # Pin versions with CPython 3.13 wheels (Blender 5.1+). Listed packages only (--no-deps):
 #   py -3.13 build_zips/download_wheels.py windows|mac|linux
-# vtk 9.4+ has cp313 wheels (9.2.x does not).
-vtk==9.4.2
+# vtk 9.4+ has cp313 wheels (9.2.x does not). Prefer 9.6.2+ for Blender 5.1 ABI
+# compatibility on Linux/headless (older wheels can segfault on import vtk).
+vtk==9.6.2
 numpy==2.2.6
 scipy==1.16.0
 pandas==2.2.3
