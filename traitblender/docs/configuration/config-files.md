@@ -117,7 +117,7 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <p><strong>meshes</strong></p>
 <ul>
   <li><code>save_meshes</code>: boolean</li>
-  <li><code>orient_before_export</code>: boolean (default <code>true</code>). When saving meshes in the imaging pipeline, apply the morphospace <strong>Default</strong> orientation before export. Set to <code>false</code> to export the generated mesh as-is (recommended for ATLAS, where the SSM already provides a consistent PCA-aligned frame). Imaging orientations are still applied afterward for renders.</li>
+  <li><code>orient_before_export</code>: boolean (default <code>true</code>). When saving meshes in the imaging pipeline, apply the morphospace <strong>Default</strong> orientation before export. Set to <code>false</code> to export the generated mesh as-is (recommended for MorphoWeave, where the SSM already provides a consistent PCA-aligned frame). Imaging orientations are still applied afterward for renders.</li>
   <li><code>file_export_type</code>: <code>obj</code> or <code>ply</code></li>
 </ul>
 
@@ -275,7 +275,7 @@ imaging:
 meshes:
   file_export_type: obj
   save_meshes: true
-  # ATLAS: keep SSM/PCA frame (skip Default table placement before export)
+  # MorphoWeave: keep SSM/PCA frame (skip Default table placement before export)
   # orient_before_export: false
 ```
 
@@ -450,7 +450,7 @@ When `meshes.save_meshes` is `true`, the simulation pipeline writes one mesh per
 | Value | Mesh file contents |
 |-------|--------------------|
 | `true` (default) | Morphospace **Default** applied first (table placement). Same behavior as earlier TraitBlender releases. |
-| `false` | Export the mesh as generated, with no Default/table orientation. Prefer this for **ATLAS**, where the SSM already lives in a shared PCA-aligned frame. Imaging orientations still apply afterward for rendered images only. |
+| `false` | Export the mesh as generated, with no Default/table orientation. Prefer this for **MorphoWeave**, where the SSM already lives in a shared PCA-aligned frame. Imaging orientations still apply afterward for rendered images only. |
 
 ```yaml
 meshes:

@@ -80,7 +80,7 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
 
             dataset.sample = name
             # When exporting unoriented meshes, skip Default on generate so the file
-            # matches the morphospace/SSM frame (e.g. ATLAS PCA alignment).
+            # matches the morphospace/SSM frame (e.g. MorphoWeave PCA alignment).
             apply_default = (not self._save_meshes) or self._orient_before_export
             bpy.ops.traitblender.generate_morphospace_sample(
                 apply_default_orientation=apply_default

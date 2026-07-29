@@ -151,7 +151,7 @@ This reference focuses on the user-facing operators and properties you will use 
 <hr>
 
 <p><code>bpy.context.scene.traitblender_config.meshes.orient_before_export</code></p>
-<p>If <code>True</code> (default), apply Default orientation before pipeline mesh export (backward compatible). If <code>False</code>, export the generated mesh as-is—recommended for ATLAS PCA-aligned meshes. Does not affect imaging orientations used for renders. See <a href="../configuration/config-files.md#mesh-export-in-the-imaging-pipeline">Configuration Files</a>.</p>
+<p>If <code>True</code> (default), apply Default orientation before pipeline mesh export (backward compatible). If <code>False</code>, export the generated mesh as-is—recommended for MorphoWeave PCA-aligned meshes. Does not affect imaging orientations used for renders. See <a href="../configuration/config-files.md#mesh-export-in-the-imaging-pipeline">Configuration Files</a>.</p>
 
 <hr>
 

@@ -113,7 +113,7 @@ def make_euler_orientation(rx, ry, rz, default_fn=None):
     before bake), then origin at geometry bounds and table center.
 
     Local composition uses ``R_obj @ R_local`` so axes follow the specimen after Default
-    (works for Shell aperture alignment, ATLAS table Default, etc.).
+    (works for Shell aperture alignment, MorphoWeave table Default, etc.).
 
     Args:
         rx, ry, rz: Local Euler rotation in radians (object rotation_euler order).

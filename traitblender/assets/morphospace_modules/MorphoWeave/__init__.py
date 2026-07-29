@@ -1,20 +1,21 @@
 """
-ATLAS morphospace: template-centered PCA on dense correspondences + Local RBF warp.
+MorphoWeave morphospace: template-centered PCA on dense correspondences + Local RBF warp.
 
-Traits ``pc1`` … ``pcK`` are σ-multiples (ATLAS DATABASE sliders). Reconstruction:
-``target = template_dense + Σ z_i √(λ_i) mode_i``, then Local RBF mesh warp (LPS/RAS aware).
+Traits ``pc1`` … ``pcK`` are σ-multiples (MorphoWeave Model Library / SSM Explorer sliders).
+Reconstruction: ``target = template_dense + Σ z_i √(λ_i) mode_i``, then Local RBF mesh warp
+(LPS/RAS aware).
 """
 
 from __future__ import annotations
 
 from .morphospace import (
-    generate_atlas_sample,
+    generate_morphoweave_sample,
     pc_values_from_trait_kwargs,
     resolve_n_modes_for_hyperparams,
 )
 from .orientations import ORIENTATIONS
 
-NAME = "ATLAS"
+NAME = "MorphoWeave"
 
 HYPERPARAMETERS = {
     "database_dir": "",
@@ -33,9 +34,9 @@ def get_trait_parameters_with_defaults(merged_hyperparameters):
     return {f"pc{i}": 0.0 for i in range(1, n + 1)}
 
 
-def sample(name="ATLAS", hyperparameters=None, **traits):
+def sample(name="MorphoWeave", hyperparameters=None, **traits):
     """Generate a specimen; PC coefficients are passed as pc1, pc2, … keyword traits."""
-    return generate_atlas_sample(
+    return generate_morphoweave_sample(
         name,
         hyperparameters or {},
         pc_values_from_trait_kwargs(traits),
@@ -48,6 +49,6 @@ __all__ = [
     "HYPERPARAMETERS",
     "ORIENTATIONS",
     "get_trait_parameters_with_defaults",
-    "generate_atlas_sample",
+    "generate_morphoweave_sample",
     "resolve_n_modes_for_hyperparams",
 ]

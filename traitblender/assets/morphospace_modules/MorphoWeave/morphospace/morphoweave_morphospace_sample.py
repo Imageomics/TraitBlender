@@ -1,9 +1,9 @@
-"""Blender mesh creation for an ATLAS warped template."""
+"""Blender mesh creation for a MorphoWeave warped template."""
 
 import bpy
 
 
-class AtlasMorphospaceSample:
+class MorphoWeaveMorphospaceSample:
     def __init__(self, name: str, vertices: list, faces: list):
         self.name = name
         self.vertices = vertices
