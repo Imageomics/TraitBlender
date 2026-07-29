@@ -67,7 +67,7 @@ If you use TraitBlender in your research, please cite my work:
                           Porto, Arthur and
                           Uyeda, Josef C},
           title        = {TraitBlender},
-          month        = jun,
+          month        = jul,
           year         = 2026,
           publisher    = {Zenodo},
           version      = {v2.4.0},
