@@ -25,7 +25,19 @@ class MeshesConfig(TraitBlenderConfig):
 
     save_meshes: BoolProperty(
         name="Save Meshes",
-        description="If enabled, export a 3D model for each specimen during the imaging pipeline (Default orientation only)",
+        description=(
+            "If enabled, export a 3D model for each specimen during the imaging pipeline"
+        ),
         default=False,
+    )
+
+    orient_before_export: BoolProperty(
+        name="Orient Before Export",
+        description=(
+            "If enabled (default), apply the morphospace Default orientation before exporting "
+            "meshes (table placement). Disable to export the generated mesh as-is—useful for "
+            "ATLAS, where the SSM already provides a consistent PCA-aligned frame"
+        ),
+        default=True,
     )
 

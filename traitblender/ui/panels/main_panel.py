@@ -292,6 +292,10 @@ class TRAITBLENDER_PT_meshes_panel(Panel):
         row = box.row(align=True)
         row.prop(config.meshes, "save_meshes", text="Save meshes in imaging pipeline")
 
+        if config.meshes.save_meshes:
+            row = box.row(align=True)
+            row.prop(config.meshes, "orient_before_export", text="Orient before export")
+
         row = box.row(align=True)
         row.operator("traitblender.export_mesh", text="Export Mesh")
 

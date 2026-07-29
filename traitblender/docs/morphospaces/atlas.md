@@ -73,6 +73,18 @@ You can also define **custom Euler orientations** (any morphospace) in the Orien
 
 Select an orientation in the **Orientations** panel and click **Apply**, or include multiple orientations in the imaging pipeline.
 
+## Mesh export
+
+For 3D analysis, prefer exporting ATLAS meshes **without** Default table placement so they stay in the SSM/PCA frame:
+
+```yaml
+meshes:
+  save_meshes: true
+  orient_before_export: false
+```
+
+(`orient_before_export` defaults to `true` for backward compatibility with other morphospaces.) Imaging orientations still apply to rendered views. See [Configuration Files — Mesh export](../configuration/config-files.md#mesh-export-in-the-imaging-pipeline).
+
 ## References
 
 - Porto, A. (2025). ATLAS: Automated Template-based Landmark Alignment System. GitHub repository. https://github.com/agporto/ATLAS

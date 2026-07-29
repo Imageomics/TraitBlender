@@ -155,7 +155,8 @@ Before starting, ensure you have:
 
     1. Choose the mesh export type.
     2. Enable **Save Meshes** if you want the simulation pipeline to export meshes.
-    3. You can also use **Export Mesh** to save the current sample manually.
+    3. Optionally disable **Orient before export** to save meshes in the morphospace/SSM frame (recommended for ATLAS); leave it on (default) to apply Default table placement first.
+    4. You can also use **Export Mesh** to save the current sample manually.
 
 ??? note "Step 8: Imaging"
     Expand the **"8 Imaging"** panel.
@@ -171,10 +172,10 @@ Before starting, ensure you have:
     2. Click **Simulate Dataset**.
 
     The simulation pipeline will:
+    - Export meshes when enabled (optionally after Default if **Orient before export** is on; see Step 7)
     - Apply any configured transforms
     - Render from the current camera view
     - Save images when enabled
-    - Export meshes when enabled
     - Include metadata if configured
 
 ## Next Steps

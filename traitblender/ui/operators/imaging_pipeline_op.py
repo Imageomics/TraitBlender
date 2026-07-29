@@ -47,6 +47,7 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
     _include_images = True
     _render_dir = ""
     _save_meshes = False
+    _orient_before_export = True
     _mesh_root = ""
     _exported_mesh_for_specimen = False
     _mesh_path = ""
@@ -78,16 +79,22 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
                     bpy.data.objects.remove(prev_obj, do_unlink=True)
 
             dataset.sample = name
-            bpy.ops.traitblender.generate_morphospace_sample()
+            # When exporting unoriented meshes, skip Default on generate so the file
+            # matches the morphospace/SSM frame (e.g. ATLAS PCA alignment).
+            apply_default = (not self._save_meshes) or self._orient_before_export
+            bpy.ops.traitblender.generate_morphospace_sample(
+                apply_default_orientation=apply_default
+            )
             self._exported_mesh_for_specimen = False
             self._mesh_path = ""
             self._last_applied_orientation = ""
 
-            # Optional mesh export: once per specimen, at Default orientation only
+            # Optional mesh export: once per specimen, before imaging orientations/transforms
             if self._save_meshes and not self._exported_mesh_for_specimen:
                 try:
-                    apply_orientation_by_name(context, "Default", sample_name=name)
-                    self._last_applied_orientation = "Default"
+                    if self._orient_before_export:
+                        apply_orientation_by_name(context, "Default", sample_name=name)
+                        self._last_applied_orientation = "Default"
                     mesh_dir = os.path.join(self._mesh_root, name)
                     os.makedirs(mesh_dir, exist_ok=True)
                     self._mesh_path = os.path.join(mesh_dir, f"{name}")
@@ -130,7 +137,8 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
 
         # Directory structure:
         # - Always: render_dir / images / specimen_name / orientation_sanitized /
-        # - If save_meshes: render_dir / meshes / specimen_name / (one model at Default only)
+        # - If save_meshes: render_dir / meshes / specimen_name /
+        #   (Default-oriented if meshes.orient_before_export, else as generated)
         orient_subdir = _sanitize_orientation_for_path(orientation_name)
         images_dir = os.path.join(self._render_dir, "images", name, orient_subdir)
         # Keep configs under images when meshes are enabled so the dataset root splits into images/ + meshes/
@@ -222,6 +230,9 @@ class TRAITBLENDER_OT_imaging_pipeline(Operator):
         self._images_per_orientation = config.imaging.images_per_orientation
         self._render_dir = render_dir
         self._save_meshes = bool(getattr(config.meshes, "save_meshes", False))
+        self._orient_before_export = bool(
+            getattr(config.meshes, "orient_before_export", True)
+        )
         self._mesh_root = os.path.join(render_dir, "meshes")
         self._specimen_idx = 0
         self._orientation_idx = 0

@@ -117,6 +117,7 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <p><strong>meshes</strong></p>
 <ul>
   <li><code>save_meshes</code>: boolean</li>
+  <li><code>orient_before_export</code>: boolean (default <code>true</code>). When saving meshes in the imaging pipeline, apply the morphospace <strong>Default</strong> orientation before export. Set to <code>false</code> to export the generated mesh as-is (recommended for ATLAS, where the SSM already provides a consistent PCA-aligned frame). Imaging orientations are still applied afterward for renders.</li>
   <li><code>file_export_type</code>: <code>obj</code> or <code>ply</code></li>
 </ul>
 
@@ -254,6 +255,7 @@ imaging:
 meshes:
   file_export_type: obj
   save_meshes: false
+  orient_before_export: true
 ```
 
  </details>
@@ -273,6 +275,8 @@ imaging:
 meshes:
   file_export_type: obj
   save_meshes: true
+  # ATLAS: keep SSM/PCA frame (skip Default table placement before export)
+  # orient_before_export: false
 ```
 
  </details>
@@ -436,6 +440,24 @@ transforms: []
 Under `imaging.custom_orientations`, map a unique name to Euler angles `[rx, ry, rz]` in **radians**. Built-in morphospace orientation names always win on collision. Customs are available for every morphospace: they run **Default**, apply the Euler in the specimen’s **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. List those names in `orientation_names` to include them in the imaging pipeline.
 
 Names should be simple identifiers: letters, digits, underscores, and hyphens only (e.g. `Side`, `Left-view`). Avoid spaces, quotes, and backslashes—unusual characters can break YAML export/import round-trips.
+
+### Mesh export in the imaging pipeline
+
+When `meshes.save_meshes` is `true`, the simulation pipeline writes one mesh per specimen under `rendering_directory/meshes/<specimen>/` **before** imaging orientations and transform randomization run for that specimen’s renders.
+
+`meshes.orient_before_export` (default `true`) controls the pose of that file:
+
+| Value | Mesh file contents |
+|-------|--------------------|
+| `true` (default) | Morphospace **Default** applied first (table placement). Same behavior as earlier TraitBlender releases. |
+| `false` | Export the mesh as generated, with no Default/table orientation. Prefer this for **ATLAS**, where the SSM already lives in a shared PCA-aligned frame. Imaging orientations still apply afterward for rendered images only. |
+
+```yaml
+meshes:
+  file_export_type: obj   # or ply
+  save_meshes: true
+  orient_before_export: false
+```
 
 ### Verifying a load
 
