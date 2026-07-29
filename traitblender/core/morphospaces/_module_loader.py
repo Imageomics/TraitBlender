@@ -56,6 +56,7 @@ def _load_by_folder(folder_name):
 def resolve_morphospace_to_folder(identifier):
     """
     Resolve a morphospace identifier (NAME or folder) to the folder name for loading.
+    - Legacy aliases (e.g. ATLAS → MorphoWeave) are applied first.
     - If identifier is a folder that exists, return it.
     - Else treat identifier as NAME and search for a module whose NAME matches.
 
@@ -79,6 +80,25 @@ def resolve_morphospace_to_folder(identifier):
         if module is not None and getattr(module, 'NAME', item) == identifier:
             return item
     return None
+
+
+def normalize_morphospace_name(identifier):
+    """
+    Map a config/UI morphospace identifier to the current module NAME.
+
+    Used so legacy YAML values (e.g. ``ATLAS``) select the renamed module
+    (``MorphoWeave``) instead of failing the enum and falling back to Shell.
+    Unknown identifiers are returned unchanged.
+    """
+    if not identifier:
+        return identifier
+    folder_name = resolve_morphospace_to_folder(identifier)
+    if folder_name is None:
+        return identifier
+    module = _load_by_folder(folder_name)
+    if module is None:
+        return folder_name
+    return getattr(module, "NAME", folder_name)
 
 
 def load_morphospace_module(identifier):

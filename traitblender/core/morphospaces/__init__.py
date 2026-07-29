@@ -11,7 +11,11 @@ from .trait_params import (
     get_trait_parameters_for_morphospace,
     get_trait_parameters_with_defaults_for_morphospace,
 )
-from ._module_loader import load_morphospace_module, resolve_morphospace_to_folder
+from ._module_loader import (
+    load_morphospace_module,
+    normalize_morphospace_name,
+    resolve_morphospace_to_folder,
+)
 
 __all__ = [
     'list_morphospaces',
@@ -24,5 +28,6 @@ __all__ = [
     'get_trait_parameters_for_morphospace',
     'get_trait_parameters_with_defaults_for_morphospace',
     'load_morphospace_module',
+    'normalize_morphospace_name',
     'resolve_morphospace_to_folder',
 ]
