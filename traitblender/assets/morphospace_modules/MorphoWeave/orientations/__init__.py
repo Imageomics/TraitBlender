@@ -1,5 +1,5 @@
 """
-ATLAS specimen orientations.
+MorphoWeave specimen orientations.
 
 Default: table placement only (tb_location). Other views: rotate one axis by n·π/4
 (n = 1..7), origin to bounds, tb_location reset — then apply_orientation bakes rotation.
@@ -13,7 +13,7 @@ from math import gcd
 import bpy
 
 
-def _orient_atlas_default(sample_obj):
+def _orient_morphoweave_default(sample_obj):
     sample_obj.tb_location = (0.0, 0.0, 0.0)
 
 
@@ -28,13 +28,13 @@ def _pi_multiplier_label(n_quarters: int) -> str:
     return f"{num}/{den}"
 
 
-def _make_atlas_axis_rotation(axis: str, n_quarters: int):
+def _make_morphoweave_axis_rotation(axis: str, n_quarters: int):
     angle = (math.pi / 4.0) * n_quarters
     label = _pi_multiplier_label(n_quarters)
     name = f"{axis} {label} π Rotation"
 
     def orient(sample_obj):
-        _orient_atlas_default(sample_obj)
+        _orient_morphoweave_default(sample_obj)
         if axis == "X":
             sample_obj.tb_rotation = (angle, 0.0, 0.0)
         elif axis == "Y":
@@ -48,15 +48,15 @@ def _make_atlas_axis_rotation(axis: str, n_quarters: int):
         sample_obj.tb_location = (0.0, 0.0, 0.0)
         bpy.context.view_layer.update()
 
-    orient.__name__ = f"_orient_atlas_{axis}_{n_quarters}q"
+    orient.__name__ = f"_orient_morphoweave_{axis}_{n_quarters}q"
     return name, orient
 
 
 def _build_orientations() -> dict:
-    out: dict = {"Default": _orient_atlas_default}
+    out: dict = {"Default": _orient_morphoweave_default}
     for axis in ("X", "Y", "Z"):
         for n in range(1, 8):
-            key, fn = _make_atlas_axis_rotation(axis, n)
+            key, fn = _make_morphoweave_axis_rotation(axis, n)
             out[key] = fn
     return out
 

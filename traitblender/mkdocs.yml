@@ -80,7 +80,7 @@ nav:
     - Overview: morphospaces/overview.md
     - Shell (Default): morphospaces/shell.md
     - Circle Grid: morphospaces/circle-grid.md
-    - ATLAS: morphospaces/atlas.md
+    - MorphoWeave: morphospaces/morphoweave.md
   - Tutorials: tutorials.md
 
 extra:

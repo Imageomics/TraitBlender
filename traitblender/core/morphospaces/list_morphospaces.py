@@ -6,7 +6,7 @@ from ..helpers import get_asset_path
 from .get_orientations import get_orientations_for_morphospace
 
 # GUI dropdown order (folder names under morphospace_modules/)
-_MORPHOSPACE_ORDER = ("Shell", "CircleGrid", "ATLAS")
+_MORPHOSPACE_ORDER = ("Shell", "CircleGrid", "MorphoWeave")
 
 
 def list_morphospaces():

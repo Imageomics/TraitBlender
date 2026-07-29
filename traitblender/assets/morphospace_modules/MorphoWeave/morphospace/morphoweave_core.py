@@ -1,7 +1,7 @@
 """
-ATLAS DATABASE core (PCA + Local RBF), matching agporto/ATLAS DATABASE explorer.
+MorphoWeave Model Library core (PCA + Local RBF), matching agporto/SlicerMorphoWeave.
 
-Ported from the working ATLASViewer reference implementation:
+Ported from the MorphoWeave / former ATLASViewer reference implementation:
   - Template-centered PCA: target = template_dense + sum_i (z_i * sqrt(lambda_i) * mode_i)
   - Local RBF: k=min(32, n_landmarks), Gaussian weights, h = 75th percentile k-th NN distance
   - LPS/RAS: dense landmarks and SSM in RAS; template PLY typically LPS on disk
@@ -21,7 +21,7 @@ _MODEL_SUFFIXES = (".ply", ".vtk", ".vtp", ".stl", ".obj")
 
 
 def resolve_database_paths(database_dir: str | Path) -> dict[str, Path]:
-    """Resolve model, dense, sparse (optional), and ssm paths in an ATLAS DATABASE folder."""
+    """Resolve model, dense, sparse (optional), and ssm paths in a MorphoWeave Model Library / DATABASE folder."""
     root = Path(database_dir).expanduser().resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"Database folder not found: {root}")
@@ -254,7 +254,7 @@ def ssm_std_devs(eigenvalues: np.ndarray) -> np.ndarray:
     return np.sqrt(np.maximum(np.asarray(eigenvalues, dtype=np.float64).ravel(), 0.0))
 
 
-def atlas_pc_coefficients(
+def morphoweave_pc_coefficients(
     sigma_weights: np.ndarray | Sequence[float],
     eigenvalues: np.ndarray,
 ) -> np.ndarray:
@@ -287,7 +287,7 @@ def reconstruct_dense_target(
     if k == 0 or np.allclose(z[:k], 0.0):
         return template.copy()
 
-    coeff = atlas_pc_coefficients(z[:k], ev[:k])
+    coeff = morphoweave_pc_coefficients(z[:k], ev[:k])
     agg = np.tensordot(modes_arr[..., :k], coeff, axes=(2, 0))
     return template + agg
 

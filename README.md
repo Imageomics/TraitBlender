@@ -14,7 +14,7 @@ TraitBlender is a Blender add-on for generating museum-style images and 3D meshe
 
 - **Shell (Default)** — A 3D shell morphospace that combines the parametric coiling model of [Contreras-Figueroa & Aragón (2023)](https://doi.org/10.3390/d15030431) with thickness allometry from [Okabe & Yoshimura (2017)](https://doi.org/10.1038/srep42445). Traits control whorl expansion, aperture shape, ribbing, and scaling; hyperparameters tune mesh resolution and options.
 - **Circle Grid** — A simple morphospace (e.g. for testing): a gridded plane of circles with configurable traits.
-- **ATLAS** — Deforms a template mesh from an [ATLAS DATABASE](https://github.com/agporto/ATLAS) export using PCA on dense correspondences and local RBF interpolation (same workflow as the ATLAS DATABASE explorer).
+- **MorphoWeave** — Deforms a template mesh from a [MorphoWeave](https://github.com/agporto/SlicerMorphoWeave) export using PCA on dense correspondences and local RBF interpolation (same workflow as the MorphoWeave Model Library / SSM Explorer).
 
 **Dataset import, editing, and saving** — Specimen trait values are read from CSV, TSV, or Excel. The built-in dataset editor supports filtering, sorting, pagination, and saving changes back to file, so you can curate and tweak trait tables without leaving Blender.
 

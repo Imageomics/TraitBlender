@@ -77,7 +77,7 @@ class TRAITBLENDER_OT_generate_morphospace_sample(Operator):
 
             # Map dataset columns to function parameters (excluding hyperparameters).
             # Case-insensitive match so e.g. dataset column "S" maps to param "S".
-            # Morphospaces with **traits (e.g. ATLAS pc1..pcN) pass all non-species trait columns.
+            # Morphospaces with **traits (e.g. MorphoWeave pc1..pcN) pass all non-species trait columns.
             params = {}
             for column_name, value in row_data.items():
                 param_name = column_name.lower().replace(' ', '_')

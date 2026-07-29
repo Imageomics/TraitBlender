@@ -78,11 +78,11 @@ Before starting, ensure you have:
 
     - **Shell (Default)** — parametric mollusc shells ([Contreras-Figueroa & Aragón](https://www.mdpi.com/1424-2818/15/3/431); thickness from [Okabe & Yoshimura](https://doi.org/10.1038/srep42445))
     - **Circle Grid** — simple test morphospace (cube with a 4×4 grid of circles)
-    - **ATLAS** — deform a template mesh from an [ATLAS DATABASE](https://github.com/agporto/ATLAS) export using PCA + local RBF ([details](../morphospaces/atlas.md))
+    - **MorphoWeave** — deform a template mesh from a [MorphoWeave](https://github.com/agporto/SlicerMorphoWeave) export using PCA + local RBF ([details](../morphospaces/morphoweave.md))
 
     Select the morphospace that matches your dataset.
 
-    For **ATLAS**, set **`database_dir`** under Configuration → morphospace hyperparameters before generating samples.
+    For **MorphoWeave**, set **`database_dir`** under Configuration → morphospace hyperparameters before generating samples.
 
 ??? note "Step 4: Import and Manage Datasets"
     Expand the **"4 Datasets"** panel.
@@ -155,7 +155,7 @@ Before starting, ensure you have:
 
     1. Choose the mesh export type.
     2. Enable **Save Meshes** if you want the simulation pipeline to export meshes.
-    3. Optionally disable **Orient before export** to save meshes in the morphospace/SSM frame (recommended for ATLAS); leave it on (default) to apply Default table placement first.
+    3. Optionally disable **Orient before export** to save meshes in the morphospace/SSM frame (recommended for MorphoWeave); leave it on (default) to apply Default table placement first.
     4. You can also use **Export Mesh** to save the current sample manually.
 
 ??? note "Step 8: Imaging"

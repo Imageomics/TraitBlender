@@ -1,5 +1,5 @@
 """
-ATLAS morphospace sample generation (TraitBlender wrapper around atlas_core).
+MorphoWeave morphospace sample generation (TraitBlender wrapper around morphoweave_core).
 """
 
 from __future__ import annotations
@@ -9,8 +9,8 @@ from pathlib import Path
 import bpy
 import numpy as np
 
-from .atlas_core import build_deformed_mesh_arrays, load_ssm, resolve_database_paths
-from .atlas_morphospace_sample import AtlasMorphospaceSample
+from .morphoweave_core import build_deformed_mesh_arrays, load_ssm, resolve_database_paths
+from .morphoweave_morphospace_sample import MorphoWeaveMorphospaceSample
 
 
 def resolve_n_modes_for_hyperparams(hyperparameters: dict | None) -> int | None:
@@ -49,30 +49,31 @@ def pc_values_from_trait_kwargs(traits: dict) -> list[float]:
 
 
 def _log(msg: str) -> None:
-    print(f"[ATLAS] {msg}")
+    print(f"[MorphoWeave] {msg}")
 
 
-def generate_atlas_sample(
+def generate_morphoweave_sample(
     name: str,
     hyperparameters: dict | None,
     pc_values: list[float],
-) -> AtlasMorphospaceSample:
+) -> MorphoWeaveMorphospaceSample:
     hp = dict(hyperparameters or {})
     db_raw = (hp.get("database_dir") or hp.get("database_path") or "").strip()
     if not db_raw:
         raise ValueError(
-            "ATLAS morphospace: set hyperparameter 'database_dir' to your DATABASE folder "
+            "MorphoWeave morphospace: set hyperparameter 'database_dir' to your "
+            "MorphoWeave Model Library / DATABASE folder "
             "(manifest + template model + dense correspondences + ssm_model.npz)."
         )
     db_root = Path(bpy.path.abspath(db_raw))
     if not db_root.is_dir():
-        raise ValueError(f"ATLAS database_dir is not a directory: {db_root}")
+        raise ValueError(f"MorphoWeave database_dir is not a directory: {db_root}")
 
     n_comp_cfg = max(0, int(hp.get("n_components", 10)))
     scale = float(hp.get("scale", 1.0))
 
     if scale <= 0.0:
-        raise ValueError("ATLAS hyperparameter 'scale' must be positive")
+        raise ValueError("MorphoWeave hyperparameter 'scale' must be positive")
 
     paths = resolve_database_paths(db_root)
     ssm = load_ssm(paths)
@@ -117,4 +118,4 @@ def generate_atlas_sample(
 
     _log(f"  mesh: {vertices.shape[0]} verts, {len(faces)} faces")
     verts = [tuple(map(float, row)) for row in vertices]
-    return AtlasMorphospaceSample(name, verts, faces)
+    return MorphoWeaveMorphospaceSample(name, verts, faces)

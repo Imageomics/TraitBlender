@@ -36,7 +36,7 @@ class MeshesConfig(TraitBlenderConfig):
         description=(
             "If enabled (default), apply the morphospace Default orientation before exporting "
             "meshes (table placement). Disable to export the generated mesh as-is—useful for "
-            "ATLAS, where the SSM already provides a consistent PCA-aligned frame"
+            "MorphoWeave, where the SSM already provides a consistent PCA-aligned frame"
         ),
         default=True,
     )

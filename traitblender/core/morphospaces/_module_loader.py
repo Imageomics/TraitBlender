@@ -11,6 +11,11 @@ from ..helpers.constants import ADDON_PACKAGE
 # Namespace under which morphospace modules are registered (avoids Blender "top-level module" warning)
 _MORPHOSPACE_NAMESPACE = f"{ADDON_PACKAGE}._morphospace"
 
+# Legacy display / config names → folder (MorphoWeave was previously published as ATLAS)
+_LEGACY_NAME_TO_FOLDER = {
+    "ATLAS": "MorphoWeave",
+}
+
 
 def _ensure_morphospace_namespace():
     """Ensure the _morphospace namespace exists in sys.modules so child modules are not top-level."""
@@ -59,6 +64,9 @@ def resolve_morphospace_to_folder(identifier):
     """
     if not identifier:
         return None
+    legacy = _LEGACY_NAME_TO_FOLDER.get(identifier)
+    if legacy is not None:
+        identifier = legacy
     morphospace_modules_path = get_asset_path("morphospace_modules")
     folder_path = os.path.join(morphospace_modules_path, identifier)
     if os.path.isdir(folder_path) and os.path.exists(os.path.join(folder_path, "__init__.py")):

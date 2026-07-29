@@ -323,7 +323,7 @@ class TRAITBLENDER_PG_dataset(bpy.types.PropertyGroup):
     def _ensure_virtual_dataset_traits_synced(self) -> None:
         """
         No filepath: in-memory CSV. Morphospaces with ``get_trait_parameters_with_defaults``
-        (e.g. ATLAS ``n_components``) may change expected trait columns — rewrite CSV to match
+        (e.g. MorphoWeave ``n_components``) may change expected trait columns — rewrite CSV to match
         so the editor and ``loc()`` stay consistent.
         """
         if self.filepath:
