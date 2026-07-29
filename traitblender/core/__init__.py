@@ -45,8 +45,8 @@ from .datasets import launch_dataset_viewer_with_string
 # Mesh exports
 from .meshes import export_current_sample
 
-# Config, morphospaces (placeholder for future development)
-# from .morphospaces import *
+# In-addon unit tests
+from .unit_test import TESTS, list_tests, run_test, help_tests, test_config_matches_scene
 
 __all__ = [
     # Helper functions
@@ -77,4 +77,11 @@ __all__ = [
 
     # Meshes
     "export_current_sample",
+
+    # Unit tests
+    "TESTS",
+    "list_tests",
+    "help_tests",
+    "run_test",
+    "test_config_matches_scene",
 ]

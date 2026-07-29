@@ -69,7 +69,21 @@ ATLAS defines many named orientations for multi-view imaging:
 - **Default** — specimen centered on the table (no rotation).
 - **X / Y / Z *n*/4 π Rotation** — rotations in π/4 steps about each axis (for comparable views across specimens).
 
+You can also define **custom Euler orientations** (any morphospace) in the Orientations panel or in YAML under `imaging.custom_orientations` (name → `[rx, ry, rz]` in radians). Customs run Default, apply the Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds.
+
 Select an orientation in the **Orientations** panel and click **Apply**, or include multiple orientations in the imaging pipeline.
+
+## Mesh export
+
+For 3D analysis, prefer exporting ATLAS meshes **without** Default table placement so they stay in the SSM/PCA frame:
+
+```yaml
+meshes:
+  save_meshes: true
+  orient_before_export: false
+```
+
+(`orient_before_export` defaults to `true` for backward compatibility with other morphospaces.) Imaging orientations still apply to rendered views. See [Configuration Files — Mesh export](../configuration/config-files.md#mesh-export-in-the-imaging-pipeline).
 
 ## References
 

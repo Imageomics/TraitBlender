@@ -1,6 +1,6 @@
 # Same as requirements-wheels.txt but without dearpygui (headless / no GUI CSV editor).
 # Regenerate: py -3.13 build_zips/download_wheels.py linux-headless
-vtk==9.4.2
+vtk==9.6.2
 numpy==2.2.6
 scipy==1.16.0
 pandas==2.2.3

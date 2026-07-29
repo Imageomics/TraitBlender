@@ -2,6 +2,7 @@
 
 Optimize your Blender setup for the best TraitBlender experience. These configuration changes will improve performance, enable useful features, and make your workflow smoother.
 
+<a id="python-tooltips"></a>
 ??? tip "Python Tooltips"
     Python tooltips show you the exact Python commands for UI operations, which is helpful when transitioning between GUI and API workflows.
 

@@ -35,7 +35,13 @@ from .transform_sampler_helper import (
     format_parameter_value,
 )
 from .clear_scene import clear_scene
-from .orientation_helpers import bake_rotation_to_mesh
+from .orientation_helpers import (
+    bake_rotation_to_mesh,
+    make_euler_orientation,
+    is_valid_custom_orientation_name,
+    custom_orientation_name_error,
+    unique_custom_orientation_name,
+)
 # Import table location functions
 try:
     from ..ui.properties.tb_location import _get_tb_location, _set_tb_location
@@ -87,6 +93,10 @@ __all__ = [
     "clear_scene",
     # Orientation
     "bake_rotation_to_mesh",
+    "make_euler_orientation",
+    "is_valid_custom_orientation_name",
+    "custom_orientation_name_error",
+    "unique_custom_orientation_name",
     # Table location functions
     "z_dist_to_lowest",
     "_get_tb_location",

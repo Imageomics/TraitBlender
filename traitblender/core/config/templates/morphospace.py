@@ -101,7 +101,17 @@ class MorphospaceConfig(TraitBlenderConfig):
         if not data_dict or not isinstance(data_dict, dict):
             return
         if "name" in data_dict:
-            self.name = data_dict["name"]
+            import bpy
+
+            setup = bpy.context.scene.traitblender_setup
+            # Avoid morphospace-switch confirm popup mid Configure Scene (it reverts the enum).
+            setup.suppress_morphospace_update = True
+            try:
+                self.name = data_dict["name"]
+                setup.prev_morphospace = setup.available_morphospaces
+                setup.pending_morphospace = ""
+            finally:
+                setup.suppress_morphospace_update = False
         hyperparams = data_dict.get("hyperparams")
         if isinstance(hyperparams, dict):
             module_keys = get_hyperparameters_for_morphospace(self.name).keys()

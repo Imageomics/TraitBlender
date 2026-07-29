@@ -22,7 +22,7 @@ TraitBlender is a powerful Blender add-on designed for researchers and instituti
 <div align="center">
 <img src="./images/shell-specimen.png" alt="Museum-style shell specimen imaging with TraitBlender" width="540"/>
 <p><em>An example shell generated with TraitBlender, with added materials for styling.</em></p>
-<p><strong>TraitBlender v2.3.0</strong> · <strong>Blender 5.1+</strong>. See the <a href="getting-started/installation.md#supported-versions">installation guide</a>.</p>
+<p><strong>TraitBlender v2.4.0</strong> · <strong>Blender 5.1+</strong>. See the <a href="getting-started/installation.md#supported-versions">installation guide</a>.</p>
 </div>
 
 ---
@@ -67,10 +67,10 @@ If you use TraitBlender in your research, please cite my work:
                           Porto, Arthur and
                           Uyeda, Josef C},
           title        = {TraitBlender},
-          month        = jun,
+          month        = jul,
           year         = 2026,
           publisher    = {Zenodo},
-          version      = {v2.3.0},
+          version      = {v2.4.0},
           doi          = {10.5281/zenodo.14804133},
           url          = {https://github.com/Imageomics/TraitBlender},
         }

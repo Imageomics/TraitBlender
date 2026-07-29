@@ -46,9 +46,18 @@ mat:
   roughness: 1.0
   scale: [0.15, 0.15, 1.0]
 render:
-  eevee_use_raytracing: false
-  # Eevee id is version-specific (BLENDER_EEVEE_NEXT vs BLENDER_EEVEE); normalized on load.
-  engine: BLENDER_EEVEE_NEXT
+  # Eevee id is version-specific (BLENDER_EEVEE_NEXT vs BLENDER_EEVEE); both accepted in YAML.
+  engine: BLENDER_EEVEE
+  eevee:
+    use_raytracing: false
+    taa_render_samples: 64
+  # When engine is CYCLES, export uses a cycles: block instead, e.g.:
+  # cycles:
+  #   use_adaptive_sampling: true
+  #   adaptive_threshold: 0.01
+  #   samples: 4096
+  #   adaptive_min_samples: 0
+  #   time_limit: 0.0
 output:
   image_format: PNG
   images_per_view: 1

@@ -1,5 +1,6 @@
 import bpy
 from bpy.types import Operator
+from bpy.props import BoolProperty
 import inspect
 from ...core.morphospaces import load_morphospace_module
 import traceback
@@ -12,6 +13,16 @@ class TRAITBLENDER_OT_generate_morphospace_sample(Operator):
     bl_label = "Generate Morphospace Sample"
     bl_description = "Generate a morphospace sample using selected morphospace and dataset row"
     bl_options = {'REGISTER', 'UNDO'}
+
+    apply_default_orientation: BoolProperty(
+        name="Apply Default Orientation",
+        description=(
+            "Apply the morphospace Default orientation after generation. "
+            "Disable when the imaging pipeline will export an unoriented mesh first"
+        ),
+        default=True,
+        options={'SKIP_SAVE'},
+    )
 
     def execute(self, context):
         setup = context.scene.traitblender_setup
@@ -110,24 +121,25 @@ class TRAITBLENDER_OT_generate_morphospace_sample(Operator):
                 scene.traitblender_sample.rest_rotation = tuple(generated_obj.rotation_euler)
                 scene.traitblender_sample.last_baked_rotation = (0.0, 0.0, 0.0)
 
-                try:
-                    bpy.context.scene.traitblender_orientation.orientation = 'Default'
-                    print(f"Set orientation to: {bpy.context.scene.traitblender_orientation.orientation}")
-                except Exception as e:
-                    traceback.print_exc()
-                    self.report({'Error'}, f"Failed to set orientation: {e}")
-                    return {'CANCELLED'}
+                if self.apply_default_orientation:
+                    try:
+                        bpy.context.scene.traitblender_orientation.orientation = 'Default'
+                        print(f"Set orientation to: {bpy.context.scene.traitblender_orientation.orientation}")
+                    except Exception as e:
+                        traceback.print_exc()
+                        self.report({'ERROR'}, f"Failed to set orientation: {e}")
+                        return {'CANCELLED'}
 
-                try:
-                    bpy.ops.traitblender.apply_orientation()
-                    print(f"Successfully applied orientation: {bpy.context.scene.traitblender_orientation.orientation}")        
-                except Exception as e:
-                    traceback.print_exc()
-                    self.report({'Error'}, f"Failed to apply orientation: {e}")
-                    return {'CANCELLED'}
+                    try:
+                        bpy.ops.traitblender.apply_orientation()
+                        print(f"Successfully applied orientation: {bpy.context.scene.traitblender_orientation.orientation}")
+                    except Exception as e:
+                        traceback.print_exc()
+                        self.report({'ERROR'}, f"Failed to apply orientation: {e}")
+                        return {'CANCELLED'}
 
-                if "Table" not in bpy.data.objects:
-                    self.report({'WARNING'}, "Table object missing - run Import Museum first for correct orientation")
+                    if "Table" not in bpy.data.objects:
+                        self.report({'WARNING'}, "Table object missing - run Import Museum first for correct orientation")
               
                 bpy.context.view_layer.update()
 

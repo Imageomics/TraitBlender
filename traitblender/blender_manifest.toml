@@ -3,7 +3,7 @@
 schema_version = "1.0.0"
 
 id = "traitblender"
-version = "2.3.0"
+version = "2.4.0"
 name = "TraitBlender"
 tagline = "Generate museum-style images for morphological datasets"
 maintainer = "Caleb Charpentier <calebcharpentier00@gmail.com>"
@@ -31,7 +31,7 @@ wheels = [
   "./wheels/scipy-1.16.0-cp313-cp313-win_amd64.whl",
   "./wheels/six-1.17.0-py2.py3-none-any.whl",
   "./wheels/tzdata-2026.1-py2.py3-none-any.whl",
-  "./wheels/vtk-9.4.2-cp313-cp313-win_amd64.whl",
+  "./wheels/vtk-9.6.2-cp313-cp313-win_amd64.whl",
 ]
 
 
@@ -48,7 +48,7 @@ pytz = "./wheels/pytz-2026.1.post1-py2.py3-none-any.whl"
 scipy = "./wheels/scipy-1.16.0-cp313-cp313-win_amd64.whl"
 six = "./wheels/six-1.17.0-py2.py3-none-any.whl"
 tzdata = "./wheels/tzdata-2026.1-py2.py3-none-any.whl"
-vtk = "./wheels/vtk-9.4.2-cp313-cp313-win_amd64.whl"
+vtk = "./wheels/vtk-9.6.2-cp313-cp313-win_amd64.whl"
 
 
 [permissions]

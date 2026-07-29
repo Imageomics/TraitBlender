@@ -6,7 +6,7 @@ Get up and running with TraitBlender's graphical interface in just a few minutes
 
 Before starting, ensure you have:
 
-- ✅ **Blender 5.1+** and **TraitBlender v2.3.0** ([supported versions](./installation.md#supported-versions))
+- ✅ **Blender 5.1+** and **TraitBlender v2.4.0** ([supported versions](./installation.md#supported-versions))
 - ✅ TraitBlender add-on installed ([Installation Guide](./installation.md))
 
 ??? note "Step 0: Enable TraitBlender"
@@ -24,6 +24,9 @@ Before starting, ensure you have:
     3. After a moment, the scene will load with a museum table, lighting, and camera setup
     4. Press `0` on your numpad (or `0` with Emulate Numpad enabled) to switch to Camera View
     5. You should now be looking through the camera at the empty mat lying on the table
+
+    !!! note "Single scene"
+        TraitBlender assumes one active Blender scene (and its view layer). Operators, config, imaging sync, and orientations all use that active scene—multi-scene / multi-window setups are not supported. Keep your museum work in a single scene.
 
     ### Add a Ruler
 
@@ -60,8 +63,10 @@ Before starting, ensure you have:
 
     ### Importing Configuration
 
-    1. In the **Museum Setup** panel, enter a path to a YAML config file in the **Config File** field
-    2. Click **Configure Scene** to load the configuration
+    1. In the **Museum Setup** panel, enter a path to a YAML config file in the **Config File** field (or leave it empty)
+    2. Click **Configure Scene** to load the configuration. If no path is set, a file browser opens; the path you pick is saved into **Config File** after a successful load
+
+    To confirm the YAML still matches the live scene afterward, see [Unit Tests](../configuration/unit-tests.md) (`config_matches_scene`).
 
     !!! warning "Scene Requirements"
         Configuration import only works if the museum scene has been loaded (via **Import Museum**). If you encounter issues, click **Clear Scene** and re-import the museum scene.
@@ -125,7 +130,13 @@ Before starting, ensure you have:
 ??? note "Step 5: Orientations"
     Expand the **"5 Orientations"** panel.
 
-    Each morphospace can define orientation functions in its `ORIENTATIONS` dictionary. Select an orientation from the dropdown and click **Apply** to orient the specimen. The selected orientation is also applied automatically when running the Imaging Pipeline.
+    Each morphospace ships built-in orientation functions. Select one from the dropdown and click **Apply** to orient the specimen. **Default** is also applied automatically when you generate a sample or run the imaging pipeline.
+
+    You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`). Built-in names win if a custom name collides.
+
+    Use simple names: letters, digits, underscores, and hyphens only (e.g. `Side`, `Dorsal_01`). Spaces, quotes, and other special characters are rejected, as are names that duplicate another custom or a built-in orientation.
+
+    Scripts and the imaging pipeline should apply orientations **by name** (`bpy.ops.traitblender.apply_orientation(orientation="...")`) so output folders match the pose that was used.
 
 ??? note "Step 6: Transforms"
     Expand the **"6 Transforms"** panel.
@@ -144,14 +155,15 @@ Before starting, ensure you have:
 
     1. Choose the mesh export type.
     2. Enable **Save Meshes** if you want the simulation pipeline to export meshes.
-    3. You can also use **Export Mesh** to save the current sample manually.
+    3. Optionally disable **Orient before export** to save meshes in the morphospace/SSM frame (recommended for ATLAS); leave it on (default) to apply Default table placement first.
+    4. You can also use **Export Mesh** to save the current sample manually.
 
 ??? note "Step 8: Imaging"
     Expand the **"8 Imaging"** panel.
 
     1. Use **Include Images** to control whether image files are rendered.
     2. Set the number of images per orientation if needed.
-    3. Choose which orientations are included for the imaging run.
+    3. Choose which orientations are included for the imaging run (built-ins and any custom orientations you defined).
 
 ??? note "Step 9: Simulation"
     Use the separate **Simulation** section below the numbered panels.
@@ -160,10 +172,10 @@ Before starting, ensure you have:
     2. Click **Simulate Dataset**.
 
     The simulation pipeline will:
+    - Export meshes when enabled (optionally after Default if **Orient before export** is on; see Step 7)
     - Apply any configured transforms
     - Render from the current camera view
     - Save images when enabled
-    - Export meshes when enabled
     - Include metadata if configured
 
 ## Next Steps

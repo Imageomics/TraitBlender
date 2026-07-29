@@ -4,6 +4,46 @@ import os
 from bpy.types import Operator
 from bpy.props import StringProperty
 from ...core.datasets.traitblender_dataset import update_filepath, _normalize_dataset_path
+from ...core.helpers.render_engine_compat import (
+    normalize_render_engine_value,
+    try_set_render_engine,
+)
+
+
+def _apply_render_engine_from_config(context, config_data):
+    """
+    Force-apply render.engine from YAML after the rest of config load.
+
+    Returns (wanted, actual) or None if YAML has no render.engine.
+    """
+    render = config_data.get("render")
+    if not isinstance(render, dict) or "engine" not in render:
+        return None
+
+    raw = render["engine"]
+    wanted = normalize_render_engine_value(raw)
+    scene = context.scene
+    try:
+        actual = try_set_render_engine(scene, raw)
+    except Exception as e:
+        print(f"TraitBlender: Failed to set render.engine from YAML {raw!r}: {e}")
+        return wanted, scene.render.engine
+
+    context.view_layer.update()
+    if hasattr(context, "window_manager"):
+        for window in context.window_manager.windows:
+            screen = window.screen
+            if screen is None:
+                continue
+            for area in screen.areas:
+                area.tag_redraw()
+
+    actual = scene.render.engine
+    print(
+        f"TraitBlender: Configure Scene render.engine "
+        f"yaml={raw!r} wanted={wanted!r} actual={actual!r}"
+    )
+    return wanted, actual
 
 
 class TRAITBLENDER_OT_configure_scene(Operator):
@@ -12,7 +52,8 @@ class TRAITBLENDER_OT_configure_scene(Operator):
     bl_idname = "traitblender.configure_scene"
     bl_label = "Configure Scene"
     bl_description = "Load and apply configuration from YAML file"
-    bl_options = {'REGISTER', 'UNDO'}
+    # No UNDO: a full YAML apply must not be partially reverted by the undo stack
+    bl_options = {'REGISTER'}
     
     filepath: StringProperty(
         name="Config File Path",
@@ -30,6 +71,8 @@ class TRAITBLENDER_OT_configure_scene(Operator):
         if not config_file_path:
             self.report({'ERROR'}, "No configuration file specified")
             return {'CANCELLED'}
+
+        config_file_path = os.path.abspath(os.path.expanduser(config_file_path))
         
         if not os.path.exists(config_file_path):
             self.report({'ERROR'}, f"Configuration file not found: {config_file_path}")
@@ -43,9 +86,49 @@ class TRAITBLENDER_OT_configure_scene(Operator):
             if not config_data:
                 self.report({'ERROR'}, "Configuration file is empty or invalid")
                 return {'CANCELLED'}
+
+            # Persist path so the UI field and config_matches_scene test see it
+            # (file-browser invoke only sets the operator filepath, not setup.config_file).
+            context.scene.traitblender_setup.config_file = config_file_path
             
             # Apply the configuration using the from_dict method
             context.scene.traitblender_config.from_dict(config_data)
+
+            # Force render.engine last so nothing else in from_dict can leave it stale.
+            engine_result = _apply_render_engine_from_config(context, config_data)
+            if engine_result is not None:
+                wanted, actual = engine_result
+                if actual != wanted:
+                    self.report(
+                        {'WARNING'},
+                        f"Render engine YAML asked for {wanted} but scene is {actual}",
+                    )
+
+            # Final imaging sync after morphospace + customs are both loaded.
+            # Default policy: only "Default" enabled unless YAML lists orientation_names.
+            imaging = context.scene.traitblender_config.imaging
+            enabled = {"Default"}
+            if isinstance(config_data.get("imaging"), dict):
+                names = config_data["imaging"].get("orientation_names")
+                if isinstance(names, list):
+                    enabled = {n for n in names if isinstance(n, str)}
+            try:
+                imaging.sync_orientation_options(context, enabled_names=enabled)
+            except Exception as e:
+                print(f"TraitBlender: Post-configure orientation sync failed: {e}")
+
+            missing = [
+                name
+                for name in ("Camera", "Mat", "Lamp")
+                if name not in bpy.data.objects
+            ]
+            if missing:
+                self.report(
+                    {'WARNING'},
+                    "Museum objects missing ("
+                    + ", ".join(missing)
+                    + "); run Import Museum first so those settings can apply.",
+                )
 
             # Force an explicit dataset import after config load.
             # Do not rely on property update callbacks here; they may not run when
@@ -61,7 +144,15 @@ class TRAITBLENDER_OT_configure_scene(Operator):
                     if not (dataset.csv or "").strip():
                         self.report({'WARNING'}, f"Dataset path set but CSV is empty after import: {p}")
             
-            self.report({'INFO'}, f"Configuration loaded successfully from {config_file_path}")
+            self.report(
+                {'INFO'},
+                f"Configuration loaded from {config_file_path}"
+                + (
+                    f" (render.engine={context.scene.render.engine})"
+                    if engine_result is not None
+                    else ""
+                ),
+            )
             return {'FINISHED'}
             
         except yaml.YAMLError as e:

@@ -28,6 +28,16 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <hr>
 
+<p><code>bpy.context.scene.traitblender_setup.config_file</code></p>
+<p>Path to the YAML used by <strong>Configure Scene</strong> and by the <code>config_matches_scene</code> unit test. After a successful configure (including via the file browser), this property is updated to the absolute path that was loaded.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.configure_scene(filepath="")</code></p>
+<p>Load a YAML config and apply it to the scene. If <code>filepath</code> is empty and <code>config_file</code> is unset, opens a file browser. Persists the chosen path on <code>traitblender_setup.config_file</code>.</p>
+
+<hr>
+
 <p><code>bpy.ops.traitblender.show_configuration()</code></p>
 <p>Print the current configuration as YAML for inspection or copying.</p>
 
@@ -35,6 +45,11 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <p><code>bpy.ops.traitblender.export_config(filepath="")</code></p>
 <p>Export the current configuration to a YAML file.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.run_unit_test(test_name="help")</code></p>
+<p>Run an in-addon unit test by name. Use <code>test_name="help"</code> to list tests. See <a href="../configuration/unit-tests.md">Unit Tests</a>.</p>
 
 </details>
 
@@ -56,8 +71,18 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <hr>
 
-<p><code>bpy.ops.traitblender.apply_orientation()</code></p>
-<p>Apply the selected morphospace orientation to the current sample.</p>
+<p><code>bpy.ops.traitblender.apply_orientation(orientation="")</code></p>
+<p>Apply a named orientation to the current sample by <strong>name</strong> (built-in or custom). Pass <code>orientation</code> explicitly (recommended for scripts/pipeline); if empty, uses the Orientations panel selection. Imaging folders and logs should use the same name string that was applied.</p>
+
+<hr>
+
+<p><code>bpy.context.scene.traitblender_config.imaging.custom_orientations</code></p>
+<p>Named custom Euler orientations (<code>name</code>, <code>rotation</code> as <code>[rx, ry, rz]</code> radians). For every morphospace: run Default → apply Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake) → recenter at geometry bounds. Merged with built-ins for Apply and imaging; built-in names win on collision. YAML: <code>imaging.custom_orientations</code>.</p>
+
+<hr>
+
+<p><code>bpy.ops.traitblender.add_custom_orientation()</code> / <code>bpy.ops.traitblender.remove_custom_orientation()</code></p>
+<p>Add or remove a custom orientation entry in the Orientations panel (also reflected in Imaging checkboxes and YAML export).</p>
 
 </details>
 
@@ -125,6 +150,11 @@ This reference focuses on the user-facing operators and properties you will use 
 
 <hr>
 
+<p><code>bpy.context.scene.traitblender_config.meshes.orient_before_export</code></p>
+<p>If <code>True</code> (default), apply Default orientation before pipeline mesh export (backward compatible). If <code>False</code>, export the generated mesh as-is—recommended for ATLAS PCA-aligned meshes. Does not affect imaging orientations used for renders. See <a href="../configuration/config-files.md#mesh-export-in-the-imaging-pipeline">Configuration Files</a>.</p>
+
+<hr>
+
 <p><code>bpy.ops.traitblender.export_mesh()</code></p>
 <p>Export the current sample as a mesh file using the selected format.</p>
 
@@ -157,7 +187,7 @@ This reference focuses on the user-facing operators and properties you will use 
 <hr>
 
 <p><code>bpy.context.scene.traitblender_setup</code></p>
-<p>Setup state for morphospace selection and scene initialization.</p>
+<p>Setup state for morphospace selection, <code>config_file</code>, and related UI.</p>
 
 <hr>
 
@@ -178,4 +208,6 @@ This reference focuses on the user-facing operators and properties you will use 
 
 ## Notes
 
-- The Python tooltip in Blender is usually enough to discover the matching API call for a given button or property.
+- The [Python tooltip](../getting-started/blender-optimization.md#python-tooltips) in Blender is usually enough to discover the matching API call for a given button or property.
+- TraitBlender assumes a **single active scene** (and view layer). Config, operators, imaging sync, and orientations all use that context—multi-scene setups are not supported.
+- Custom orientation names must be unique identifiers (letters, digits, `_`, `-` only) and must not collide with built-ins; see [Configuration Files](../configuration/config-files.md#custom-orientations-in-yaml).

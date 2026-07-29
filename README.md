@@ -4,7 +4,7 @@
   <img src="traitblender/docs/images/logo.svg" alt="TraitBlender logo" width="360"/>
 </p>
 
-TraitBlender is a Blender add-on for generating museum-style images and 3D meshes of specimens from theoretical morphospaces. **v2.3.0** targets **Blender 5.1+** (Python 3.13 wheels) on Windows, macOS, and Linux.
+TraitBlender is a Blender add-on for generating museum-style images and 3D meshes of specimens from theoretical morphospaces. **v2.4.0** targets **Blender 5.1+** (Python 3.13 wheels) on Windows, macOS, and Linux.
 
 ## Features
 
@@ -18,7 +18,7 @@ TraitBlender is a Blender add-on for generating museum-style images and 3D meshe
 
 **Dataset import, editing, and saving** — Specimen trait values are read from CSV, TSV, or Excel. The built-in dataset editor supports filtering, sorting, pagination, and saving changes back to file, so you can curate and tweak trait tables without leaving Blender.
 
-**Built-in orientations** — Each morphospace defines named orientations (e.g. "Default", "Aperture view") that place specimens consistently on the table. The imaging pipeline can render multiple orientations per specimen so images are comparable across specimens and runs.
+**Built-in and custom orientations** — Each morphospace defines named orientations (e.g. "Default", "Aperture view") that place specimens consistently on the table. You can also add **custom Euler orientations** (name + radians) that run Default, then rotate in the specimen’s local frame, for any morphospace. The imaging pipeline can render multiple orientations per specimen so images are comparable across specimens and runs.
 
 **Stochastic transform pipeline** — Scene properties (e.g. camera location, focal length, lamp power) can be driven by configurable transforms with normal or other samplers. This adds controlled variation to images (e.g. small camera jitter) for robustness or data augmentation while keeping the setup reproducible via the same config and seed.
 
@@ -32,6 +32,6 @@ For installation, quick start, and full documentation, see the [docs](https://im
 
 You can also install a release zip from the command line:
 
-`blender --command extension install-file -r user_default --enable traitblender-v2.3.0-linux.zip`
+`blender --command extension install-file -r user_default --enable traitblender-v2.4.0-linux.zip`
 
 Use the zip that matches your OS (for example: `...-windows.zip`, `...-mac.zip`, or `...-linux.zip`, `...-linux-headless.zip`).

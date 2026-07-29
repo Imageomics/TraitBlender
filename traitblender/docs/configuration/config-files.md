@@ -19,9 +19,11 @@ TraitBlender config files are **YAML** files that store the settings you see in 
   <li><code>metadata</code> – stamp text in the rendered images</li>
   <li><code>ruler</code> – ruler location / visibility</li>
   <li><code>transforms</code> – optional random variation on config values</li>
-  <li><code>imaging</code> – which orientations to render and how many images</li>
+  <li><code>imaging</code> – which orientations to render, custom Euler orientations, and how many images</li>
   <li><code>meshes</code> – mesh export options during simulation</li>
 </ul>
+
+<p>The Datasets panel <code>sample</code> controls (specimen location / rotation) are <strong>UI-only</strong>. A bare <code>sample:</code> key in YAML is ignored on load and is not written on export. See <a href="./unit-tests.md">Unit Tests</a> to verify a loaded file against the live scene.</p>
 
 <p><strong>Allowed values and ranges (quick reference)</strong></p>
 
@@ -68,8 +70,20 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 
 <p><strong>render</strong></p>
 <ul>
-  <li><code>engine</code>: <code>CYCLES</code> | Eevee (<code>BLENDER_EEVEE_NEXT</code> or <code>BLENDER_EEVEE</code>, depending on Blender version; YAML values are normalized on load) | <code>BLENDER_WORKBENCH</code></li>
-  <li><code>eevee_use_raytracing</code>: boolean</li>
+  <li><code>engine</code>: <code>CYCLES</code> | Eevee (<code>BLENDER_EEVEE</code> / <code>BLENDER_EEVEE_NEXT</code>; both accepted) | <code>BLENDER_WORKBENCH</code></li>
+  <li><code>cycles</code> (used when <code>engine</code> is <code>CYCLES</code>; written on export only for Cycles):
+    <ul>
+      <li><code>use_adaptive_sampling</code>, <code>adaptive_threshold</code>, <code>samples</code>, <code>adaptive_min_samples</code>, <code>time_limit</code>, <code>use_denoising</code> — final render sampling</li>
+      <li><code>use_preview_adaptive_sampling</code>, <code>preview_adaptive_threshold</code>, <code>preview_samples</code>, <code>preview_adaptive_min_samples</code>, <code>use_preview_denoising</code> — viewport sampling</li>
+    </ul>
+  </li>
+  <li><code>eevee</code> (used when engine is Eevee; written on export only for Eevee):
+    <ul>
+      <li><code>use_raytracing</code>: boolean</li>
+      <li><code>taa_render_samples</code>: integer (Samples)</li>
+    </ul>
+  </li>
+  <li>Legacy flat <code>eevee_use_raytracing</code> is still accepted on load</li>
 </ul>
 
 <p><strong>output</strong></p>
@@ -95,13 +109,15 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <p><strong>imaging</strong></p>
 <ul>
   <li><code>include_images</code>: boolean</li>
-  <li><code>orientation_names</code>: list of strings (orientation names from the selected morphospace)</li>
+  <li><code>orientation_names</code>: list of strings (built-in and/or custom orientation names to include in the pipeline)</li>
+  <li><code>custom_orientations</code>: optional map of name → <code>[rx, ry, rz]</code> Euler angles in <strong>radians</strong>. Each custom orientation runs the morphospace Default, then applies the Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake), then recenters at geometry bounds. Available for all morphospaces. Names must be unique identifiers (letters, digits, <code>_</code>, <code>-</code> only) and must not collide with built-ins or other customs; invalid YAML entries are skipped on load.</li>
   <li><code>images_per_orientation</code>: integer, ≥ 1</li>
 </ul>
 
 <p><strong>meshes</strong></p>
 <ul>
   <li><code>save_meshes</code>: boolean</li>
+  <li><code>orient_before_export</code>: boolean (default <code>true</code>). When saving meshes in the imaging pipeline, apply the morphospace <strong>Default</strong> orientation before export. Set to <code>false</code> to export the generated mesh as-is (recommended for ATLAS, where the SSM already provides a consistent PCA-aligned frame). Imaging orientations are still applied afterward for renders.</li>
   <li><code>file_export_type</code>: <code>obj</code> or <code>ply</code></li>
 </ul>
 
@@ -183,8 +199,18 @@ mat:
   roughness: 1.0
 
 render:
-  engine: BLENDER_EEVEE_NEXT  # or BLENDER_EEVEE on Blender 5.1+; both accepted in YAML
-  eevee_use_raytracing: false
+  engine: BLENDER_EEVEE  # or CYCLES / BLENDER_EEVEE_NEXT
+  eevee:
+    use_raytracing: false
+    taa_render_samples: 64
+  # When using Cycles, use a cycles: block instead, for example:
+  # engine: CYCLES
+  # cycles:
+  #   use_adaptive_sampling: true
+  #   adaptive_threshold: 0.01
+  #   samples: 4096
+  #   adaptive_min_samples: 0
+  #   time_limit: 0.0
 
 output:
   rendering_directory: ""   # The directory where simulation output will be written
@@ -221,10 +247,15 @@ imaging:
   include_images: true
   orientation_names: []
   images_per_orientation: 1
+  # Optional named Euler orientations (radians), usable by any morphospace:
+  # custom_orientations:
+  #   Side: [1.5708, 0.0, 0.0]
+  #   Dorsal: [0.0, 1.5708, 0.0]
 
 meshes:
   file_export_type: obj
   save_meshes: false
+  orient_before_export: true
 ```
 
  </details>
@@ -244,6 +275,8 @@ imaging:
 meshes:
   file_export_type: obj
   save_meshes: true
+  # ATLAS: keep SSM/PCA frame (skip Default table placement before export)
+  # orient_before_export: false
 ```
 
  </details>
@@ -353,8 +386,13 @@ mat:
   scale: [0.15, 0.15, 1.0]
 
 render:
-  eevee_use_raytracing: false
   engine: CYCLES
+  cycles:
+    use_adaptive_sampling: true
+    adaptive_threshold: 0.01
+    samples: 4096
+    adaptive_min_samples: 0
+    time_limit: 0.0
 
 output:
   image_format: PNG
@@ -364,7 +402,9 @@ output:
 
 imaging:
   include_images: true
-  orientation_names: ['Default']
+  orientation_names: ['Default', 'Side']
+  custom_orientations:
+    Side: [1.5708, 0.0, 0.0]
   images_per_orientation: 1
 
 metadata:
@@ -391,4 +431,34 @@ transforms: []
 
 ## Using config files
 
-Use the GUI to export a YAML (recommended), then reuse it later by loading it back into the Configuration panel workflow.
+1. Export a YAML from the GUI (**Export Config as YAML**), or edit one by hand using the schema above.
+2. In **Museum Setup**, set **Config File** (or leave it empty and pick a file when prompted) and click **Configure Scene**.
+3. After a successful load, the chosen path is stored on `traitblender_setup.config_file` so the field and [unit tests](./unit-tests.md) stay in sync.
+
+### Custom orientations in YAML
+
+Under `imaging.custom_orientations`, map a unique name to Euler angles `[rx, ry, rz]` in **radians**. Built-in morphospace orientation names always win on collision. Customs are available for every morphospace: they run **Default**, apply the Euler in the specimen’s **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. List those names in `orientation_names` to include them in the imaging pipeline.
+
+Names must be simple identifiers: letters, digits, underscores, and hyphens only (e.g. `Side`, `Left-view`). Spaces, quotes, and other special characters are rejected in the UI, and names must not collide with another custom or a built-in orientation. Invalid entries in YAML are skipped on load.
+
+### Mesh export in the imaging pipeline
+
+When `meshes.save_meshes` is `true`, the simulation pipeline writes one mesh per specimen under `rendering_directory/meshes/<specimen>/` **before** imaging orientations and transform randomization run for that specimen’s renders.
+
+`meshes.orient_before_export` (default `true`) controls the pose of that file:
+
+| Value | Mesh file contents |
+|-------|--------------------|
+| `true` (default) | Morphospace **Default** applied first (table placement). Same behavior as earlier TraitBlender releases. |
+| `false` | Export the mesh as generated, with no Default/table orientation. Prefer this for **ATLAS**, where the SSM already lives in a shared PCA-aligned frame. Imaging orientations still apply afterward for rendered images only. |
+
+```yaml
+meshes:
+  file_export_type: obj   # or ply
+  save_meshes: true
+  orient_before_export: false
+```
+
+### Verifying a load
+
+After Configure Scene, run `config_matches_scene` (see [Unit Tests](./unit-tests.md)) to confirm the YAML still matches the live scene—including Cycles/Eevee **render** vs **viewport** sampling keys.

@@ -50,11 +50,13 @@ class TraitBlenderConfig(bpy.types.PropertyGroup):
                     continue
 
                 if isinstance(prop_value, TraitBlenderConfig):
-                    result.append(f"{indent}{prop_name}:")
                     current_path = f"{parent_path}.{prop_name}" if parent_path else prop_name
                     nested_yaml = prop_value._to_yaml(indent_level + 1, current_path)
-                    if nested_yaml.strip():
-                        result.append(nested_yaml)
+                    # Skip empty sections (e.g. sample is UI-only and returns "")
+                    if not nested_yaml.strip():
+                        continue
+                    result.append(f"{indent}{prop_name}:")
+                    result.append(nested_yaml)
                 else:
                     current_path = f"{parent_path}.{prop_name}" if parent_path else prop_name
                     prop_type = get_property_type(current_path)
@@ -103,17 +105,28 @@ class TraitBlenderConfig(bpy.types.PropertyGroup):
         if not isinstance(data_dict, dict):
             raise ValueError("Input must be a dictionary")
 
+        annotations = getattr(self.__class__, "__annotations__", {}) or {}
         for prop_name, value in data_dict.items():
-            if prop_name not in self.__class__.__annotations__:
+            if prop_name not in annotations:
                 continue
-            current_prop = getattr(self, prop_name)
-            if isinstance(current_prop, TraitBlenderConfig) and isinstance(value, (dict, list)):
-                current_prop.from_dict(value)
-            else:
-                try:
-                    setattr(self, prop_name, value)
-                except Exception:
-                    pass
+            # Bare YAML keys like `sample:` become None — never assign onto PointerProperties.
+            if value is None:
+                continue
+
+            current_prop = getattr(self, prop_name, None)
+            # Duck-type nested sections: isinstance(PropertyGroup, TraitBlenderConfig)
+            # can fail across Blender register/reload boundaries.
+            from_dict_fn = getattr(current_prop, "from_dict", None)
+            if callable(from_dict_fn):
+                if isinstance(value, (dict, list)):
+                    from_dict_fn(value)
+                # Nested section with a non-mapping value: ignore
+                continue
+
+            try:
+                setattr(self, prop_name, value)
+            except Exception as e:
+                print(f"TraitBlender: Failed to set config '{prop_name}': {e}")
 
     def to_dict(self):
         """Convert the configuration to a dictionary."""

@@ -8,24 +8,21 @@ _pending_orientation_sync = None  # (scene_name, [orientation_names]) or None
 
 
 def _sync_imaging_orientations_timer():
-    """One-shot timer: add missing orientation_options for the pending scene."""
+    """One-shot timer: sync orientation_options to current built-in + custom names."""
     global _pending_orientation_sync
     if not _pending_orientation_sync:
         return None
-    scene_name, orientation_names = _pending_orientation_sync
+    scene_name, _orientation_names = _pending_orientation_sync
     _pending_orientation_sync = None
     scene = bpy.data.scenes.get(scene_name)
     if not scene or not hasattr(scene, "traitblender_config"):
         return None
-    config = scene.traitblender_config
-    if not hasattr(config, "imaging"):
-        return None
-    items = config.imaging.orientation_options
-    for name in orientation_names:
-        if next((x for x in items if x.name == name), None) is None:
-            item = items.add()
-            item.name = name
-            item.enabled = True
+    imaging = scene.traitblender_config.imaging
+    try:
+        # Preserve current enabled flags; only add/remove to match live names.
+        imaging.sync_orientation_options(bpy.context, enabled_names=None)
+    except Exception as e:
+        print(f"TraitBlender: Imaging orientation sync failed: {e}")
     return None  # one-shot
 
 class TRAITBLENDER_PT_main_panel(Panel):
@@ -66,6 +63,48 @@ class TRAITBLENDER_PT_main_panel(Panel):
             self._draw_section_content(box, section_obj)
 
     def _draw_section_content(self, layout, section_obj):
+        # Bind Render to live scene settings; show engine-specific options only.
+        if section_obj.__class__.__name__ == "RenderConfig":
+            scene = bpy.context.scene
+            layout.prop(scene.render, "engine", text="Engine")
+            eng = scene.render.engine or ""
+            if eng == "CYCLES":
+                cycles = getattr(scene, "cycles", None)
+                if cycles is not None:
+                    box = layout.box()
+                    box.label(text="Cycles · Render", icon='RENDER_STILL')
+                    row = box.row(align=True)
+                    row.prop(cycles, "use_adaptive_sampling", text="Noise Threshold")
+                    sub = row.row(align=True)
+                    sub.active = bool(cycles.use_adaptive_sampling)
+                    sub.prop(cycles, "adaptive_threshold", text="")
+                    box.prop(cycles, "samples", text="Max Samples")
+                    box.prop(cycles, "adaptive_min_samples", text="Min Samples")
+                    box.prop(cycles, "time_limit", text="Time Limit")
+                    if hasattr(cycles, "use_denoising"):
+                        box.prop(cycles, "use_denoising", text="Denoise")
+
+                    box = layout.box()
+                    box.label(text="Cycles · Viewport", icon='VIEW3D')
+                    row = box.row(align=True)
+                    row.prop(cycles, "use_preview_adaptive_sampling", text="Noise Threshold")
+                    sub = row.row(align=True)
+                    sub.active = bool(cycles.use_preview_adaptive_sampling)
+                    sub.prop(cycles, "preview_adaptive_threshold", text="")
+                    box.prop(cycles, "preview_samples", text="Max Samples")
+                    box.prop(cycles, "preview_adaptive_min_samples", text="Min Samples")
+                    if hasattr(cycles, "use_preview_denoising"):
+                        box.prop(cycles, "use_preview_denoising", text="Denoise")
+            elif "EEVEE" in eng.upper():
+                eevee = getattr(scene, "eevee", None)
+                if eevee is not None:
+                    layout.label(text="Eevee Sampling", icon='RENDER_STILL')
+                    if hasattr(eevee, "use_raytracing"):
+                        layout.prop(eevee, "use_raytracing", text="Use Raytracing")
+                    if hasattr(eevee, "taa_render_samples"):
+                        layout.prop(eevee, "taa_render_samples", text="Samples")
+            return
+
         for prop_name in section_obj.__class__.__annotations__.keys():
             if prop_name == "show":
                 continue
@@ -94,7 +133,7 @@ class TRAITBLENDER_PT_config_panel(Panel):
         config_sections = config.get_config_sections()
         if config_sections:
             for section_name, section_obj in config_sections.items():
-                if section_name in ["transforms", "sample", "morphospace"]:
+                if section_name in ["transforms", "sample", "morphospace", "imaging"]:
                     continue
                 self._draw_config_section(layout, section_name, section_obj)
         else:
@@ -179,11 +218,26 @@ class TRAITBLENDER_PT_orientations_panel(Panel):
     def draw(self, context):
         layout = self.layout
         orientation_state = context.scene.traitblender_orientation
+        imaging = context.scene.traitblender_config.imaging
 
         layout.label(text="Apply orientation from the selected morphospace:")
         row = layout.row(align=True)
         row.prop(orientation_state, "orientation", text="")
         row.operator("traitblender.apply_orientation", text="Apply", icon='ORIENTATION_VIEW')
+
+        box = layout.box()
+        box.label(text="Custom orientations (radians)", icon='DRIVER_ROTATIONAL_DIFFERENCE')
+        box.label(text="Default → local Euler (X,Y,Z) → bounds center")
+
+        for i, item in enumerate(imaging.custom_orientations):
+            row = box.row(align=True)
+            row.prop(item, "name", text="")
+            row.prop(item, "rotation", text="")
+            op = row.operator("traitblender.remove_custom_orientation", text="", icon='X')
+            op.index = i
+
+        row = box.row(align=True)
+        row.operator("traitblender.add_custom_orientation", text="Add Custom", icon='ADD')
 
 class TRAITBLENDER_PT_transforms_panel(Panel):
     bl_label = "6 Transforms"
@@ -238,6 +292,10 @@ class TRAITBLENDER_PT_meshes_panel(Panel):
         row = box.row(align=True)
         row.prop(config.meshes, "save_meshes", text="Save meshes in imaging pipeline")
 
+        if config.meshes.save_meshes:
+            row = box.row(align=True)
+            row.prop(config.meshes, "orient_before_export", text="Orient before export")
+
         row = box.row(align=True)
         row.operator("traitblender.export_mesh", text="Export Mesh")
 
@@ -261,14 +319,20 @@ class TRAITBLENDER_PT_imaging_panel(Panel):
         row = layout.row(align=True)
         row.prop(config.imaging, "images_per_orientation", text="Images Per Orientation")
         
-        # Orientations (from current morphospace): sync via timer (cannot write in draw), then draw checkboxes
+        # Orientations (built-ins + customs): sync via timer (cannot write in draw), then draw checkboxes
         from ...core.morphospaces import get_orientation_names
         morphospace_name = setup.available_morphospaces
-        orientation_names = get_orientation_names(morphospace_name) if morphospace_name else []
+        orientation_names = (
+            get_orientation_names(morphospace_name, context) if morphospace_name else []
+        )
         if orientation_names:
             items = config.imaging.orientation_options
-            missing = [n for n in orientation_names if next((x for x in items if x.name == n), None) is None]
-            if missing:
+            current = [x.name for x in items]
+            needs_sync = (
+                any(n not in current for n in orientation_names)
+                or any(n not in orientation_names for n in current)
+            )
+            if needs_sync:
                 global _pending_orientation_sync
                 if _pending_orientation_sync is None:
                     _pending_orientation_sync = (context.scene.name, list(orientation_names))
