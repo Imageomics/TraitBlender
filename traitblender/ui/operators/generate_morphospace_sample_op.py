@@ -127,7 +127,7 @@ class TRAITBLENDER_OT_generate_morphospace_sample(Operator):
                         print(f"Set orientation to: {bpy.context.scene.traitblender_orientation.orientation}")
                     except Exception as e:
                         traceback.print_exc()
-                        self.report({'Error'}, f"Failed to set orientation: {e}")
+                        self.report({'ERROR'}, f"Failed to set orientation: {e}")
                         return {'CANCELLED'}
 
                     try:
@@ -135,7 +135,7 @@ class TRAITBLENDER_OT_generate_morphospace_sample(Operator):
                         print(f"Successfully applied orientation: {bpy.context.scene.traitblender_orientation.orientation}")
                     except Exception as e:
                         traceback.print_exc()
-                        self.report({'Error'}, f"Failed to apply orientation: {e}")
+                        self.report({'ERROR'}, f"Failed to apply orientation: {e}")
                         return {'CANCELLED'}
 
                     if "Table" not in bpy.data.objects:
