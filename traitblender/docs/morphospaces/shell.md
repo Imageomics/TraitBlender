@@ -79,5 +79,5 @@ Shell defines built-in named orientations (including **Default**) for placing sp
 
 ## References
 
-- Contreras-Figueroa, R. & Aragón, L. (2023). A mathematical model for mollusc shells based on parametric surfaces and the application to *Conus* shells. *Diversity* **15**, 431. [https://doi.org/10.3390/d15030431](https://doi.org/10.3390/d15030431)
+- Contreras-Figueroa, G. & Aragón, J. L. (2023). A mathematical model for mollusc shells based on parametric surfaces and the construction of theoretical morphospaces. *Diversity* **15**, 431. [https://doi.org/10.3390/d15030431](https://doi.org/10.3390/d15030431)
 - Okabe, T. & Yoshimura, J. (2017). Optimal designs of mollusk shells from bivalves to snails. *Scientific Reports* **7**, 42445. [https://doi.org/10.1038/srep42445](https://doi.org/10.1038/srep42445)

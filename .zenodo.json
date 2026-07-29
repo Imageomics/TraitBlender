@@ -52,6 +52,33 @@
     {
       "id": "021nxhr62::2118240"
     }
+  ],
+  "references": [
+    "Blender Development Team (2026). Blender (Version 5.1) [Computer software]. https://www.blender.org",
+    "Contreras-Figueroa, G. & Aragón, J. L. (2023). A mathematical model for mollusc shells based on parametric surfaces and the construction of theoretical morphospaces. Diversity 15, 431. https://doi.org/10.3390/d15030431",
+    "Okabe, T. & Yoshimura, J. (2017). Optimal designs of mollusk shells from bivalves to snails. Scientific Reports 7, 42445. https://doi.org/10.1038/srep42445",
+    "Porto, A. MorphoWeave: Atlas-based 3D landmark transfer and statistical shape modeling. GitHub repository. https://github.com/agporto/SlicerMorphoWeave"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://www.blender.org",
+      "relation": "requires",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.3390/d15030431",
+      "relation": "cites",
+      "resource_type": "publication-article"
+    },
+    {
+      "identifier": "10.1038/srep42445",
+      "relation": "cites",
+      "resource_type": "publication-article"
+    },
+    {
+      "identifier": "https://github.com/agporto/SlicerMorphoWeave",
+      "relation": "cites",
+      "resource_type": "software"
+    }
   ]
 }
-
