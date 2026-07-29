@@ -20,6 +20,6 @@ Built-in orientation functions live with each morphospace (always including **De
 2. Applies the Euler in the specimen’s **local** frame (relative to the post-Default pose, before bake)
 3. Recenters at geometry bounds
 
-Customs show up in the Apply dropdown and Imaging checkboxes, and persist via YAML (`imaging.custom_orientations`). Built-in names win if a custom name collides. Prefer simple names (letters, digits, `_`, `-`); avoid spaces, quotes, and backslashes so configs round-trip cleanly. See the [configuration reference](../configuration/config-files.md) and [API](../api/scene-assets.md).
+Customs show up in the Apply dropdown and Imaging checkboxes, and persist via YAML (`imaging.custom_orientations`). Built-in names win if a custom name would collide—the UI and YAML load reject duplicates and non-identifier names (letters, digits, `_`, `-` only). See the [configuration reference](../configuration/config-files.md) and [API](../api/scene-assets.md).
 
 Follow the links above for the full list of parameters, default values, and ranges that make sense in practice.

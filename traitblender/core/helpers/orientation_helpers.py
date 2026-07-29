@@ -2,8 +2,79 @@
 Orientation helpers: bake rotation into mesh, and build custom Euler orientations.
 """
 
+from __future__ import annotations
+
+import re
+
 import bpy
 from mathutils import Euler
+
+# Custom orientation names: YAML-safe identifiers (see docs).
+CUSTOM_ORIENTATION_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
+_custom_name_update_guard: set[int] = set()
+
+
+def is_valid_custom_orientation_name(name: str) -> bool:
+    """True if name is non-empty and uses only letters, digits, underscores, hyphens."""
+    return bool(name) and CUSTOM_ORIENTATION_NAME_RE.fullmatch(name) is not None
+
+
+def custom_orientation_name_error(
+    name: str,
+    imaging,
+    *,
+    morphospace_name: str | None = None,
+    exclude_index: int | None = None,
+) -> str | None:
+    """
+    Return a user-facing error if ``name`` is invalid or conflicts; else None.
+
+    Conflicts include other custom orientations and built-ins for ``morphospace_name``.
+    """
+    cleaned = (name or "").strip()
+    if not cleaned:
+        return "Custom orientation name cannot be empty"
+    if not is_valid_custom_orientation_name(cleaned):
+        return (
+            "Custom orientation names may only use letters, digits, "
+            "underscores, and hyphens (no spaces or special characters)"
+        )
+    for i, item in enumerate(getattr(imaging, "custom_orientations", []) or []):
+        if exclude_index is not None and i == exclude_index:
+            continue
+        if (getattr(item, "name", "") or "").strip() == cleaned:
+            return f"Custom orientation name '{cleaned}' is already used"
+    if morphospace_name:
+        from ..morphospaces.get_orientations import get_builtin_orientation_names
+
+        builtins = set(get_builtin_orientation_names(morphospace_name) or [])
+        if cleaned in builtins:
+            return f"'{cleaned}' is already a built-in orientation name"
+    return None
+
+
+def unique_custom_orientation_name(
+    imaging,
+    base: str = "Custom",
+    morphospace_name: str | None = None,
+    exclude_index: int | None = None,
+) -> str:
+    """Allocate a valid custom name that does not collide with customs or built-ins."""
+    base = base if is_valid_custom_orientation_name(base) else "Custom"
+    candidate = base
+    n = 0
+    while custom_orientation_name_error(
+        candidate,
+        imaging,
+        morphospace_name=morphospace_name,
+        exclude_index=exclude_index,
+    ):
+        n += 1
+        candidate = f"{base}_{n}"
+        if n > 10000:
+            return f"Custom_{n}"
+    return candidate
 
 
 def bake_rotation_to_mesh(object_name):

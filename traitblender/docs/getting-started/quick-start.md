@@ -134,7 +134,7 @@ Before starting, ensure you have:
 
     You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`). Built-in names win if a custom name collides.
 
-    Use simple names: letters, digits, underscores, and hyphens only (e.g. `Side`, `Dorsal_01`). Avoid spaces, quotes, and backslashes so YAML export/import round-trips cleanly.
+    Use simple names: letters, digits, underscores, and hyphens only (e.g. `Side`, `Dorsal_01`). Spaces, quotes, and other special characters are rejected, as are names that duplicate another custom or a built-in orientation.
 
     Scripts and the imaging pipeline should apply orientations **by name** (`bpy.ops.traitblender.apply_orientation(orientation="...")`) so output folders match the pose that was used.
 

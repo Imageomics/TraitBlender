@@ -27,18 +27,21 @@ class TRAITBLENDER_OT_apply_orientation(Operator):
     )
 
     def execute(self, context):
-        orientation_key = (self.orientation or "").strip()
-        if not orientation_key:
-            orientation_key = context.scene.traitblender_orientation.orientation
+        explicit = (self.orientation or "").strip()
+        orientation_key = explicit or context.scene.traitblender_orientation.orientation
 
         try:
             applied = apply_orientation_by_name(context, orientation_key)
         except ValueError as e:
             msg = str(e)
-            # Quiet no-op when nothing is selected / orientation unavailable in UI
-            if msg in (
-                "No orientation name provided",
-            ) or msg.startswith("Orientation '") and " not found for morphospace " in msg:
+            # Quiet no-op only when relying on the UI enum (no explicit argument)
+            if not explicit and (
+                msg == "No orientation name provided"
+                or (
+                    msg.startswith("Orientation '")
+                    and " not found for morphospace " in msg
+                )
+            ):
                 return {'FINISHED'}
             self.report({'ERROR'}, msg)
             return {'CANCELLED'}

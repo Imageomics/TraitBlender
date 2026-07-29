@@ -33,6 +33,20 @@ def _custom_orientations_from_context(context):
     return out
 
 
+def get_builtin_orientation_names(morphospace_name):
+    """
+    Built-in ORIENTATIONS keys for a morphospace (no custom Eulers).
+
+    Returns:
+        list[str]: e.g. ['Default', ...], or empty if unavailable.
+    """
+    module = load_morphospace_module(morphospace_name)
+    if module is None:
+        return []
+    base = getattr(module, "ORIENTATIONS", {}) or {}
+    return list(base.keys()) if base else []
+
+
 def get_orientations_for_morphospace(morphospace_name, context=None):
     """
     Get the ORIENTATIONS dictionary for a morphospace, merged with custom local Eulers

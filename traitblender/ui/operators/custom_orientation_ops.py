@@ -6,15 +6,7 @@ import bpy
 from bpy.types import Operator
 from bpy.props import IntProperty
 
-
-def _unique_custom_name(imaging, base="Custom"):
-    existing = {(item.name or "").strip() for item in imaging.custom_orientations}
-    if base not in existing:
-        return base
-    i = 1
-    while f"{base}.{i:03d}" in existing:
-        i += 1
-    return f"{base}.{i:03d}"
+from ...core.helpers.orientation_helpers import unique_custom_orientation_name
 
 
 class TRAITBLENDER_OT_add_custom_orientation(Operator):
@@ -22,14 +14,29 @@ class TRAITBLENDER_OT_add_custom_orientation(Operator):
 
     bl_idname = "traitblender.add_custom_orientation"
     bl_label = "Add Custom Orientation"
-    bl_description = "Add a custom local Euler orientation (radians) available for all morphospaces"
+    bl_description = (
+        "Add a custom local Euler orientation (radians). "
+        "Names must be unique and use only letters, digits, underscores, and hyphens"
+    )
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         imaging = context.scene.traitblender_config.imaging
+        morphospace_name = context.scene.traitblender_setup.available_morphospaces
         item = imaging.custom_orientations.add()
-        item.name = _unique_custom_name(imaging)
+        idx = len(imaging.custom_orientations) - 1
+        name = unique_custom_orientation_name(
+            imaging,
+            morphospace_name=morphospace_name,
+            exclude_index=idx,
+        )
+        item.validated_name = name
+        item.name = name
         item.rotation = (0.0, 0.0, 0.0)
+        try:
+            imaging.sync_orientation_options(context, enabled_names=None)
+        except Exception as e:
+            print(f"TraitBlender: Imaging orientation sync after add failed: {e}")
         self.report({'INFO'}, f"Added custom orientation: {item.name}")
         return {'FINISHED'}
 
@@ -51,10 +58,9 @@ class TRAITBLENDER_OT_remove_custom_orientation(Operator):
             return {'CANCELLED'}
         name = imaging.custom_orientations[self.index].name
         imaging.custom_orientations.remove(self.index)
-        # Drop pipeline checkbox entry if present
-        for i, opt in enumerate(list(imaging.orientation_options)):
-            if opt.name == name:
-                imaging.orientation_options.remove(i)
-                break
+        try:
+            imaging.sync_orientation_options(context, enabled_names=None)
+        except Exception as e:
+            print(f"TraitBlender: Imaging orientation sync after remove failed: {e}")
         self.report({'INFO'}, f"Removed custom orientation: {name}")
         return {'FINISHED'}

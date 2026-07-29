@@ -2,6 +2,8 @@
 Imaging pipeline configuration: selected orientations and images per orientation.
 """
 
+from __future__ import annotations
+
 import bpy
 from bpy.props import (
     BoolProperty,
@@ -12,6 +14,12 @@ from bpy.props import (
 )
 
 from .. import config_subsection_register, TraitBlenderConfig
+from ...helpers.orientation_helpers import (
+    _custom_name_update_guard,
+    custom_orientation_name_error,
+    is_valid_custom_orientation_name,
+    unique_custom_orientation_name,
+)
 
 
 class ImagingOrientationItem(bpy.types.PropertyGroup):
@@ -25,13 +33,94 @@ class ImagingOrientationItem(bpy.types.PropertyGroup):
     )
 
 
+def _morphospace_name_from_context(context):
+    try:
+        return context.scene.traitblender_setup.available_morphospaces
+    except Exception:
+        return None
+
+
+def _custom_item_index(imaging, item) -> int | None:
+    ptr = item.as_pointer()
+    for i, other in enumerate(imaging.custom_orientations):
+        if other.as_pointer() == ptr:
+            return i
+    return None
+
+
+def _update_custom_orientation_name(self, context):
+    """Reject invalid / duplicate names; revert to last good name when needed."""
+    ptr = self.as_pointer()
+    if ptr in _custom_name_update_guard:
+        return
+
+    try:
+        imaging = context.scene.traitblender_config.imaging
+    except Exception:
+        return
+
+    morphospace_name = _morphospace_name_from_context(context)
+    idx = _custom_item_index(imaging, self)
+    proposed = (self.name or "").strip()
+    err = custom_orientation_name_error(
+        proposed,
+        imaging,
+        morphospace_name=morphospace_name,
+        exclude_index=idx,
+    )
+
+    last_ok = (self.validated_name or "").strip()
+    if err is None:
+        _custom_name_update_guard.add(ptr)
+        try:
+            if self.name != proposed:
+                self.name = proposed
+            if self.validated_name != proposed:
+                self.validated_name = proposed
+        finally:
+            _custom_name_update_guard.discard(ptr)
+        return
+
+    print(f"TraitBlender: {err}")
+    fallback = last_ok if (
+        last_ok
+        and custom_orientation_name_error(
+            last_ok,
+            imaging,
+            morphospace_name=morphospace_name,
+            exclude_index=idx,
+        )
+        is None
+    ) else unique_custom_orientation_name(
+        imaging,
+        morphospace_name=morphospace_name,
+        exclude_index=idx,
+    )
+    _custom_name_update_guard.add(ptr)
+    try:
+        self.name = fallback
+        self.validated_name = fallback
+    finally:
+        _custom_name_update_guard.discard(ptr)
+
+
 class ImagingCustomOrientationItem(bpy.types.PropertyGroup):
     """User-defined Euler orientation: name + (rx, ry, rz) in radians."""
 
     name: StringProperty(
         name="Name",
-        description="Display name for this custom orientation (must be unique)",
+        description=(
+            "Unique name: letters, digits, underscores, and hyphens only "
+            "(must not match another custom or a built-in orientation)"
+        ),
         default="Custom",
+        update=_update_custom_orientation_name,
+    )
+    validated_name: StringProperty(
+        name="Validated Name",
+        description="Last accepted custom orientation name",
+        default="",
+        options={'HIDDEN', 'SKIP_SAVE'},
     )
     rotation: FloatVectorProperty(
         name="Rotation",
@@ -98,7 +187,7 @@ class ImagingConfig(TraitBlenderConfig):
             lines.append(f"{indent}custom_orientations:")
             for item in customs:
                 name = item.name.strip()
-                key = name if name.replace("_", "").replace("-", "").isalnum() else repr(name)
+                key = name if is_valid_custom_orientation_name(name) else repr(name)
                 rx, ry, rz = float(item.rotation[0]), float(item.rotation[1]), float(item.rotation[2])
                 lines.append(f"{indent}  {key}: [{rx}, {ry}, {rz}]")
 
@@ -147,6 +236,12 @@ class ImagingConfig(TraitBlenderConfig):
             if isinstance(names, list):
                 enabled_from_yaml = {n for n in names if isinstance(n, str)}
 
+        morphospace_name = None
+        try:
+            morphospace_name = bpy.context.scene.traitblender_setup.available_morphospaces
+        except Exception:
+            pass
+
         if "custom_orientations" in data_dict:
             customs = data_dict["custom_orientations"]
             if isinstance(customs, dict):
@@ -160,8 +255,19 @@ class ImagingConfig(TraitBlenderConfig):
                             f"(expected [rx, ry, rz])."
                         )
                         continue
+                    cleaned = name.strip()
+                    err = custom_orientation_name_error(
+                        cleaned,
+                        self,
+                        morphospace_name=morphospace_name,
+                    )
+                    if err is not None:
+                        print(f"TraitBlender: Skipping custom orientation '{cleaned}': {err}")
+                        continue
                     item = self.custom_orientations.add()
-                    item.name = name.strip()
+                    # Set validated_name first so update accepts the name
+                    item.validated_name = cleaned
+                    item.name = cleaned
                     item.rotation = (float(rot[0]), float(rot[1]), float(rot[2]))
             elif customs is not None:
                 print(
@@ -172,8 +278,6 @@ class ImagingConfig(TraitBlenderConfig):
         # Sync checkboxes now if possible (morphospace may still load later in YAML;
         # configure_scene also syncs after the full from_dict).
         try:
-            import bpy
-
             self.sync_orientation_options(bpy.context, enabled_names=enabled_from_yaml)
         except Exception as e:
             print(f"TraitBlender: Could not sync imaging orientation_options: {e}")
