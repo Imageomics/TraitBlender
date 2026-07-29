@@ -110,7 +110,7 @@ TraitBlender config files are **YAML** files that store the settings you see in 
 <ul>
   <li><code>include_images</code>: boolean</li>
   <li><code>orientation_names</code>: list of strings (built-in and/or custom orientation names to include in the pipeline)</li>
-  <li><code>custom_orientations</code>: optional map of name → <code>[rx, ry, rz]</code> Euler angles in <strong>radians</strong>. Each custom orientation runs the morphospace Default, then applies the Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake), then recenters at geometry bounds. Available for all morphospaces; names must not collide with built-ins.</li>
+  <li><code>custom_orientations</code>: optional map of name → <code>[rx, ry, rz]</code> Euler angles in <strong>radians</strong>. Each custom orientation runs the morphospace Default, then applies the Euler in the specimen's <strong>local</strong> frame (relative to the post-Default pose, before bake), then recenters at geometry bounds. Available for all morphospaces; names must not collide with built-ins. Use simple keys: letters, digits, <code>_</code>, and <code>-</code> only (no spaces, quotes, or backslashes) so YAML export round-trips reliably.</li>
   <li><code>images_per_orientation</code>: integer, ≥ 1</li>
 </ul>
 
@@ -434,6 +434,8 @@ transforms: []
 ### Custom orientations in YAML
 
 Under `imaging.custom_orientations`, map a unique name to Euler angles `[rx, ry, rz]` in **radians**. Built-in morphospace orientation names always win on collision. Customs are available for every morphospace: they run **Default**, apply the Euler in the specimen’s **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. List those names in `orientation_names` to include them in the imaging pipeline.
+
+Names should be simple identifiers: letters, digits, underscores, and hyphens only (e.g. `Side`, `Left-view`). Avoid spaces, quotes, and backslashes—unusual characters can break YAML export/import round-trips.
 
 ### Verifying a load
 

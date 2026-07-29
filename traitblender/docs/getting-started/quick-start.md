@@ -25,6 +25,9 @@ Before starting, ensure you have:
     4. Press `0` on your numpad (or `0` with Emulate Numpad enabled) to switch to Camera View
     5. You should now be looking through the camera at the empty mat lying on the table
 
+    !!! note "Single scene"
+        TraitBlender assumes one active Blender scene (and its view layer). Operators, config, imaging sync, and orientations all use that active scene—multi-scene / multi-window setups are not supported. Keep your museum work in a single scene.
+
     ### Add a Ruler
 
     If the ruler object is missing or you need another copy, click **Add Ruler** in the **Museum Setup** panel. Each click appends a ruler from the museum scene and applies the ruler settings from your configuration (location, rotation, visibility). Blender assigns duplicate names automatically (e.g. `Ruler.001`).
@@ -130,6 +133,8 @@ Before starting, ensure you have:
     Each morphospace ships built-in orientation functions. Select one from the dropdown and click **Apply** to orient the specimen. **Default** is also applied automatically when you generate a sample or run the imaging pipeline.
 
     You can add **custom orientations** in the same panel: give each a name and Euler angles `(rx, ry, rz)` in **radians**. Customs run Default first, then apply that Euler in the specimen's **local** frame (relative to the post-Default pose, before bake), then recenter at geometry bounds. They appear in the dropdown and in the Imaging panel checkboxes, and can be saved/loaded via YAML (`imaging.custom_orientations`). Built-in names win if a custom name collides.
+
+    Use simple names: letters, digits, underscores, and hyphens only (e.g. `Side`, `Dorsal_01`). Avoid spaces, quotes, and backslashes so YAML export/import round-trips cleanly.
 
     Scripts and the imaging pipeline should apply orientations **by name** (`bpy.ops.traitblender.apply_orientation(orientation="...")`) so output folders match the pose that was used.
 

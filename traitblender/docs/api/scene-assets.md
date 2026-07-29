@@ -204,3 +204,5 @@ This reference focuses on the user-facing operators and properties you will use 
 ## Notes
 
 - The [Python tooltip](../getting-started/blender-optimization.md#python-tooltips) in Blender is usually enough to discover the matching API call for a given button or property.
+- TraitBlender assumes a **single active scene** (and view layer). Config, operators, imaging sync, and orientations all use that context—multi-scene setups are not supported.
+- Custom orientation names should be simple identifiers (letters, digits, `_`, `-`) so YAML export/import round-trips; see [Configuration Files](../configuration/config-files.md#custom-orientations-in-yaml).
