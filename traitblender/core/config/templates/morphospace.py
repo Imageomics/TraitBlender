@@ -9,26 +9,7 @@ from bpy.props import StringProperty
 import yaml
 from .. import config_subsection_register, TraitBlenderConfig
 from ...helpers import get_property, set_property
-from ...morphospaces import get_hyperparameters_for_morphospace, normalize_morphospace_name
-
-_SET_AVAILABLE_MORPHOSPACE = set_property(
-    "bpy.context.scene.traitblender_setup.available_morphospaces",
-    object_dependencies=None,
-    fail_silently=True,
-)
-
-
-def _set_morphospace_name(self, value):
-    """Apply legacy aliases (e.g. ATLAS → MorphoWeave) before writing the enum."""
-    if value:
-        canonical = normalize_morphospace_name(value)
-        if canonical != value:
-            print(
-                f"TraitBlender: morphospace '{value}' is now '{canonical}' "
-                f"(legacy alias); update configs when convenient."
-            )
-            value = canonical
-    _SET_AVAILABLE_MORPHOSPACE(self, value)
+from ...morphospaces import get_hyperparameters_for_morphospace
 
 
 @config_subsection_register("morphospace")
@@ -42,7 +23,7 @@ class MorphospaceConfig(TraitBlenderConfig):
         description="Selected morphospace module (syncs with morphospaces panel)",
         default="Shell (Default)",
         get=get_property("bpy.context.scene.traitblender_setup.available_morphospaces", object_dependencies=None, default="Shell (Default)"),
-        set=_set_morphospace_name,
+        set=set_property("bpy.context.scene.traitblender_setup.available_morphospaces", object_dependencies=None, fail_silently=True),
     )
 
     hyperparams_state: StringProperty(

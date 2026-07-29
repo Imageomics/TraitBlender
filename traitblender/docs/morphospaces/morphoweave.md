@@ -38,8 +38,6 @@ Traits are **multiples of the per-mode standard deviation** (σ), the same units
         scale: 1.0
     ```
 
-    Legacy configs that still use `name: ATLAS` are accepted and mapped to **MorphoWeave** automatically (the module was renamed; MorphoWeave is the same morphospace).
-
     **ShapeCommons / Slicer exports:** Template meshes from ShapeCommons and many Slicer exports are stored in **LPS**. TraitBlender always applies the LPS↔RAS conversion required for correct alignment with the SSM and dense landmarks (you do not need to configure this).
 
 ## Traits (dataset columns)

@@ -11,11 +11,6 @@ from ..helpers.constants import ADDON_PACKAGE
 # Namespace under which morphospace modules are registered (avoids Blender "top-level module" warning)
 _MORPHOSPACE_NAMESPACE = f"{ADDON_PACKAGE}._morphospace"
 
-# Legacy display / config names → folder (MorphoWeave was previously published as ATLAS)
-_LEGACY_NAME_TO_FOLDER = {
-    "ATLAS": "MorphoWeave",
-}
-
 
 def _ensure_morphospace_namespace():
     """Ensure the _morphospace namespace exists in sys.modules so child modules are not top-level."""
@@ -56,7 +51,6 @@ def _load_by_folder(folder_name):
 def resolve_morphospace_to_folder(identifier):
     """
     Resolve a morphospace identifier (NAME or folder) to the folder name for loading.
-    - Legacy aliases (e.g. ATLAS → MorphoWeave) are applied first.
     - If identifier is a folder that exists, return it.
     - Else treat identifier as NAME and search for a module whose NAME matches.
 
@@ -65,9 +59,6 @@ def resolve_morphospace_to_folder(identifier):
     """
     if not identifier:
         return None
-    legacy = _LEGACY_NAME_TO_FOLDER.get(identifier)
-    if legacy is not None:
-        identifier = legacy
     morphospace_modules_path = get_asset_path("morphospace_modules")
     folder_path = os.path.join(morphospace_modules_path, identifier)
     if os.path.isdir(folder_path) and os.path.exists(os.path.join(folder_path, "__init__.py")):
@@ -80,25 +71,6 @@ def resolve_morphospace_to_folder(identifier):
         if module is not None and getattr(module, 'NAME', item) == identifier:
             return item
     return None
-
-
-def normalize_morphospace_name(identifier):
-    """
-    Map a config/UI morphospace identifier to the current module NAME.
-
-    Used so legacy YAML values (e.g. ``ATLAS``) select the renamed module
-    (``MorphoWeave``) instead of failing the enum and falling back to Shell.
-    Unknown identifiers are returned unchanged.
-    """
-    if not identifier:
-        return identifier
-    folder_name = resolve_morphospace_to_folder(identifier)
-    if folder_name is None:
-        return identifier
-    module = _load_by_folder(folder_name)
-    if module is None:
-        return folder_name
-    return getattr(module, "NAME", folder_name)
 
 
 def load_morphospace_module(identifier):
